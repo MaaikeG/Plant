@@ -14,20 +14,19 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define LOGO16_GLCD_WIDTH  16 
 
 void setupOLED() {
-   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3D (for the 128x64)
-  // init done
-  
-  // Clear the buffer.
   display.clearDisplay();
+}
 
-  // text display tests
+void clearDisplay() {
+  display.clearDisplay();
+}
+
+void writeText(char text[], int x, int y) {
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.println("Hello, world!");
-  display.setTextColor(BLACK, WHITE); // 'inverted' text
-  display.println(3.141592);
+  display.setCursor(x,y);
+  display.println(text);
   display.display();
 }
 

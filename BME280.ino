@@ -19,19 +19,14 @@ void setupBME() {
     }
 }
 
-void printValues() {
-    Serial.print("Temperature = ");
-    Serial.print(bme.readTemperature());
-    Serial.println(" *C");
+float getTemperature() {
+  return bme.readTemperature();
+}
 
-    Serial.print("Pressure = ");
+float getHumidity() {
+  return bme.readHumidity();
+}
 
-    Serial.print(bme.readPressure() / 100.0F);
-    Serial.println(" hPa");
-
-    Serial.print("Humidity = ");
-    Serial.print(bme.readHumidity());
-    Serial.println(" %");
-
-    Serial.println();
+float getPressure() {
+  return bme.readPressure() / 100.0F;
 }
