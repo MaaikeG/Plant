@@ -75,9 +75,6 @@
     <ProjectCapability Include="VisualMicro" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BME280.ino">
-      <FileType>CppCode</FileType>
-    </None>
     <None Include="OLED.ino">
       <FileType>CppCode</FileType>
     </None>
