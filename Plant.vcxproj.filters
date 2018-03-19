@@ -16,7 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Plant.ino" />
-    <None Include="OLED.ino" />
     <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
