@@ -87,7 +87,11 @@
     <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Amux.h" />
     <ClInclude Include="__vm\.Plant.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Amux.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>

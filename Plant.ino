@@ -1,11 +1,13 @@
+#include "Amux.h"
 #include <Wire.h>
+
+Amux amux(A0, D2);
 
 void setup()   {                
   Serial.begin(9600);
   Wire.begin(D5, D6);
   setupOLED();
   setupBME();
-  setupAMUX();
   printSensorValues();
 }
 
@@ -30,12 +32,15 @@ void printSensorValues() {
   sprintf(res, "Pressure: %s hPa", buff);
   writeText(res, 0, 16);
 
-  dtostrf(getSoilMoisture(), 2, 1, buff);
+  dtostrf(percentifyAnalogInput(amux.getSoilMoisture()), 2, 1, buff);
   sprintf(res, "Soil moisture: %s%%", buff);
   writeText(res, 0, 32);
 
-  dtostrf(getLightIntensity(), 2, 1, buff);
+  dtostrf(percentifyAnalogInput(amux.getLightIntensity()), 2, 1, buff);
   sprintf(res, "Light: %s%%", buff);
   writeText(res, 0, 38);
 }
 
+uint8_t percentifyAnalogInput(uint16_t value) {
+	return (value / 1023.0) * 100;
+}
