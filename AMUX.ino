@@ -6,7 +6,7 @@ void setupAMUX() {
   pinMode(AMUX_SEL, OUTPUT);
 }
 
-int getSoilMoisture() {
+float getSoilMoisture() {
   int val;
   digitalWrite(AMUX_SEL, HIGH);
   delay(100); // TODO: make clockwatch!
@@ -16,7 +16,7 @@ int getSoilMoisture() {
   return (val / 1023.0) *100;
 }
 
-int getLightIntensity() {
+float getLightIntensity() {
   digitalWrite(AMUX_SEL, LOW);
   delay(100); // wait shortly for sensor value to stabilize (make clockwatch!)
   int val = analogRead(AMUX_OUT);
