@@ -84,6 +84,7 @@
     <None Include="Plant.ino">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Plant.vsarduino.h" />

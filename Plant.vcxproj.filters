@@ -18,6 +18,7 @@
     <None Include="Plant.ino" />
     <None Include="BME280.ino" />
     <None Include="OLED.ino" />
+    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Plant.vsarduino.h">
