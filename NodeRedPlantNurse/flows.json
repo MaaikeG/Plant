@@ -1,0 +1,72 @@
+[
+    {
+        "id": "3d2431d.466d3ce",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4aff7920.82eac8",
+        "type": "tls-config",
+        "z": "",
+        "name": "GeoTrust",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "GeoTrust_Primary_CA.pem",
+        "verifyservercert": false
+    },
+    {
+        "id": "ad1b817.507cd8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "PlantNurseSuperMegaMax",
+        "broker": "m23.cloudmqtt.com",
+        "port": "28205",
+        "tls": "4aff7920.82eac8",
+        "clientid": "NodeRed",
+        "usetls": true,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "ca0a91ca.9c096",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "Test",
+        "topic": "test",
+        "qos": "2",
+        "broker": "ad1b817.507cd8",
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "1d52d7f4.05ffe8"
+            ]
+        ]
+    },
+    {
+        "id": "1d52d7f4.05ffe8",
+        "type": "debug",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 660,
+        "y": 200,
+        "wires": []
+    }
+]
