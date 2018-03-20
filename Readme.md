@@ -1,7 +1,8 @@
 # PlantNurseSuperMegaMax
+
 Utrecht university interaction technology project
 
-# Installation
+## Installation
 
 1. Download the zip and extract it
 2. Run `npm install` in /NodeRedPlantNurse
