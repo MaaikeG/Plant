@@ -15,8 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Plant.ino" />
     <None Include="Readme.md" />
+    <None Include="PlantNurseThing.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Plant.vsarduino.h">
