@@ -1,6 +1,12 @@
 # PlantNurseSuperMegaMax
 Utrecht university interaction technology project
 
+# Installation
+
+1. Download the zip and extract it
+2. Run `npm install` in /NodeRedPlantNurse
+3. To Run the NodeRed server, run `npm run dev`
+
 ## Pin mapping
 
 | Pin  | Use                                                          |      |      |
