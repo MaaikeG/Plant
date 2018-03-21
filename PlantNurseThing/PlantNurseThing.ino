@@ -1,3 +1,4 @@
+#include "ServoRegulator.h"
 #include "Amux.h"
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -10,6 +11,7 @@
 Amux amux(A0, D2);
 Adafruit_BME280 Bme280;
 SSD1306 Oled(0x3c, I2C_SDA, I2C_SCL);
+ServoRegulator servoRegulator(D3);
 
 void setup()   {                
   Serial.begin(9600);
@@ -21,6 +23,7 @@ void setup()   {
 
 void loop() {
   printSensorValues();
+  servoRegulator.water();
   delay(2000);
 }
 

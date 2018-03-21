@@ -28,6 +28,9 @@
     <ClInclude Include="__vm\.PlantNurseSuperMegaMax.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="__vm\.PlantNurseThing.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Amux.cpp">

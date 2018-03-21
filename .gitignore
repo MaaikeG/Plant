@@ -1,0 +1,6 @@
+
+*.d
+PlantNurseThing/Debug/Amux.cpp.o
+PlantNurseThing/Debug/Adafruit_BME280_Library-master/Adafruit_BME280.cpp.o
+*.buildinfo
+PlantNurseThing/Debug/*
