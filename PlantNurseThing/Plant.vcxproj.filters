@@ -19,13 +19,7 @@
     <None Include="PlantNurseThing.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.Plant.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Amux.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="__vm\.PlantNurseSuperMegaMax.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.PlantNurseThing.vsarduino.h">
