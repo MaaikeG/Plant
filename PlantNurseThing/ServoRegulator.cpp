@@ -1,7 +1,3 @@
-// 
-// 
-// 
-
 #include "ServoRegulator.h"
 
 ServoRegulator::ServoRegulator(uint8_t _servoPin) {
