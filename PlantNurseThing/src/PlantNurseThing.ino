@@ -4,6 +4,7 @@
 #include "DebouncedButton.h"
 #include "SensorsController.h"
 #include "WateringController.h"
+#include "ScreenCarousel.h"
 
 #define I2C_SDA D5
 #define I2C_SCL D6
@@ -11,8 +12,9 @@
 #define waterFrequency 5000 //temp
 #define wateringDuration 1000
 
-SensorsController sensorsController(Amux(A0,D2));
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
+SensorsController sensorsController(Amux(A0,D2));
+ScreenCarousel screenCarousel(&oled, sensorsController);
 WateringController wateringController(D1, &oled); 
 Ticker printSensorValuesTicker;
 bool printSensorValuesNextIteration = true;
@@ -74,16 +76,5 @@ void printSensorValues() {
   sprintf(res, "Humidity: %s%%", buff);
   oled.drawString(0, 10, res);
 
-  dtostrf(sensorsController.getPressure(), 4, 1, buff);
-  sprintf(res, "Pressure: %s hPa", buff);
-  oled.drawString(0, 20, res);
 
-  dtostrf(sensorsController.getSoilMoisture(), 2, 1, buff);
-  sprintf(res, "Soil moisture: %s%%", buff);
-  oled.drawString(0, 30, res);
-
-  dtostrf(sensorsController.getLightIntensity(), 2, 1, buff);
-  sprintf(res, "Light: %s%%", buff);
-  oled.drawString(0, 40, res);
-  oled.display();
 }
