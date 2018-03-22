@@ -12,6 +12,8 @@ void ServoRegulator::water() {
 		servo.write(pos);              // tell servo to go to position in variable 'pos'
 		delay(15);                       // waits 15ms for the servo to reach the position
 	}
+
+	
 	for (pos = 90; pos >= 0; pos -= 1)     // goes from 180 degrees to 0 degrees
 	{
 		servo.write(pos);              // tell servo to go to position in variable 'pos'
