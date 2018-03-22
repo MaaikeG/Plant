@@ -44,7 +44,6 @@ void loop() {
   if(manualModeToggleButton.read() == LOW){
     if(!manualModeToggled){
       setManualMode(!isInManualMode);
-      Serial.println("test");
       manualModeToggled = true;
     }
   }else{
