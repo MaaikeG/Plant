@@ -2,6 +2,7 @@ server.key
 server.crt
 .flows.json.backup
 .nodered
+!.nodered/package.json
 
 
 # Logs
