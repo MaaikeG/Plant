@@ -1,4 +1,4 @@
-#include "ServoRegulator.h"
+#include "WateringController.h"
 #include "Amux.h"
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -10,21 +10,16 @@
 #define I2C_SDA D5
 #define I2C_SCL D6
 
-#define waterFrequency 5000 //temp
-#define wateringDuration 1000
-
 Amux amux(A0, D2);
 Adafruit_BME280 bme280;
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-ServoRegulator servoRegulator(D1); 
+WateringController wateringController(D1, &oled); 
 Ticker printSensorValuesTicker;
 bool printSensorValuesNextIteration = true;
 
 bool isInManualMode;
 DebouncedButton manualModeToggleButton(D3);
 bool manualModeToggled;
-
-unsigned long lastWatering;
 
 void setup()   {
   Serial.begin(9600);
@@ -42,12 +37,11 @@ void setup()   {
 }
 
 void loop() {
-  if(!isInManualMode && millis() - lastWatering > waterFrequency /* replace by real condition later*/){
-    servoRegulator.startWatering();
-    lastWatering = millis();
-  }else if(!isInManualMode && millis() - lastWatering > wateringDuration && servoRegulator.isWatering){
-    servoRegulator.stopWatering();
-  }else if(printSensorValuesNextIteration){
+  if(!isInManualMode){
+    wateringController.update();
+  }
+
+  if(printSensorValuesNextIteration && !wateringController.isWatering){
     printSensorValuesNextIteration = false;
     printSensorValues();
   }
@@ -60,6 +54,7 @@ void loop() {
   }else{
     manualModeToggled = false;
   }
+  oled.display();
 }
 
 void setManualMode(bool value){
@@ -74,23 +69,22 @@ void printSensorValues() {
   dtostrf(bme280.readTemperature(), 2, 1, buff);
   sprintf(res, "Temperature: %s C", buff);
   oled.drawString(0, 0, res);
-
+ 
   dtostrf(bme280.readHumidity(), 2, 1, buff);
   sprintf(res, "Humidity: %s%%", buff);
   oled.drawString(0, 10, res);
-
+ 
   dtostrf(bme280.readPressure(), 4, 1, buff);
   sprintf(res, "Pressure: %s hPa", buff);
   oled.drawString(0, 20, res);
-
+ 
   dtostrf(percentifyAnalogInput(amux.getSoilMoisture()), 2, 1, buff);
   sprintf(res, "Soil moisture: %s%%", buff);
   oled.drawString(0, 30, res);
-
+ 
   dtostrf(percentifyAnalogInput(amux.getLightIntensity()), 2, 1, buff);
   sprintf(res, "Light: %s%%", buff);
   oled.drawString(0, 40, res);
-  oled.display();
 }
 
 uint8_t percentifyAnalogInput(uint16_t value) {
