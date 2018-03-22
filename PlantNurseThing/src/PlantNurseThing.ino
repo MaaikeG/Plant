@@ -10,16 +10,21 @@
 #define I2C_SDA D5
 #define I2C_SCL D6
 
+#define waterFrequency 5000 //temp
+#define wateringDuration 1000
+
 Amux amux(A0, D2);
 Adafruit_BME280 bme280;
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-//ServoRegulator servoRegulator(/*D3 is FLASH button, so don't use it for this*/); 
+ServoRegulator servoRegulator(D1); 
 Ticker printSensorValuesTicker;
 bool printSensorValuesNextIteration = true;
 
 bool isInManualMode;
 DebouncedButton manualModeToggleButton(D3);
 bool manualModeToggled;
+
+unsigned long lastWatering;
 
 void setup()   {
   Serial.begin(9600);
@@ -37,10 +42,16 @@ void setup()   {
 }
 
 void loop() {
-  if(printSensorValuesNextIteration){
+  if(!isInManualMode && millis() - lastWatering > waterFrequency /* replace by real condition later*/){
+    servoRegulator.startWatering();
+    lastWatering = millis();
+  }else if(!isInManualMode && millis() - lastWatering > wateringDuration && servoRegulator.isWatering){
+    servoRegulator.stopWatering();
+  }else if(printSensorValuesNextIteration){
     printSensorValuesNextIteration = false;
     printSensorValues();
   }
+
   if(manualModeToggleButton.read() == LOW){
     if(!manualModeToggled){
       setManualMode(!isInManualMode);

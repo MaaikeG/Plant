@@ -13,7 +13,7 @@ Utrecht university interaction technology project
 | Pin  | Use                                                          |      |      |
 | ---- | ------------------------------------------------------------ | ---- | ---- |
 | D0   |                                                              |      |      |
-| D1   |                                                              |      |      |
+| D1   | Servo                                                        |      |      |
 | D2   | Selector pin for Amux-board                                  |      |      |
 | D3   | Built in Flash button                                        |      |      |
 | D4   |                                                              |      |      |

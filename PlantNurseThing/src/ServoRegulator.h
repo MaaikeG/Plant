@@ -1,8 +1,5 @@
-// ServoRegulator.h
-
 #ifndef _SERVOREGULATOR_h
 #define _SERVOREGULATOR_h
-#define SERVO D3
 
 #include <Servo.h>
 
@@ -20,7 +17,9 @@ private:
 
 public:
 	ServoRegulator(uint8_t _servoPin);
-	void water();
+	void startWatering();
+	void stopWatering();
+	bool isWatering;
 };
 
 #endif
