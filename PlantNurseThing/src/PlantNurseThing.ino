@@ -4,6 +4,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #include <SSD1306.h>
+#include <Ticker.h>
 
 #define I2C_SDA D5
 #define I2C_SCL D6
@@ -11,7 +12,9 @@
 Amux amux(A0, D2);
 Adafruit_BME280 Bme280;
 SSD1306 Oled(0x3c, I2C_SDA, I2C_SCL);
-ServoRegulator servoRegulator(D3);
+//ServoRegulator servoRegulator(/*D3 is FLASH button, so don't use it for this*/); 
+Ticker printSensorValuesTicker;
+bool printSensorValuesNextIteration = true;
 
 void setup()   {
   Serial.begin(9600);
@@ -19,12 +22,17 @@ void setup()   {
   Bme280.begin();
   Oled.init();
   Oled.flipScreenVertically();
+  printSensorValuesTicker.attach_ms(2000, [](){
+    // set a flag because actually running it takes too long, because at the moment we water and the same time, because we don't have a better way to activate that yet
+    printSensorValuesNextIteration = true;
+  });
 }
 
 void loop() {
-  printSensorValues();
-  servoRegulator.water();
-  delay(2000);
+  if(printSensorValuesNextIteration){
+    printSensorValuesNextIteration = false;
+    printSensorValues();
+  }
 }
 
 void printSensorValues() {
