@@ -4,6 +4,8 @@ Amux::Amux(uint8_t _inputPin, uint8_t _selectorPin)
 {
 	inputPin = _inputPin;
 	selectorPin = _selectorPin;
+	pinMode(inputPin, INPUT);
+	pinMode(selectorPin, OUTPUT);
 }
 
 uint16_t Amux::getSoilMoisture()
