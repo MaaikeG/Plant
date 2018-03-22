@@ -1,7 +1,7 @@
 #include "SensorsController.h"
 
-SensorsController::SensorsController(Amux _amux):
-    amux(_amux)
+SensorsController::SensorsController(uint8_t amuxInputPin, uint8_t amuxSelectorPin):
+amux(amuxInputPin, amuxSelectorPin)
 {
     Wire.begin(D5, D6);
     Bme280.begin();

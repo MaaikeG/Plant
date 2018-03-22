@@ -24,7 +24,7 @@ class SensorsController
 	uint8_t percentifyAnalogInput(uint16_t value);
 
  public:
-	SensorsController(Amux _amux);
+	SensorsController(uint8_t amuxInputPin, uint8_t amuxSelectorPin);
 	void updateSensorValues();
 
 	float getTemperature();

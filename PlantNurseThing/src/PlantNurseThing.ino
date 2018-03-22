@@ -11,7 +11,7 @@
 #define waterFrequency 5000 //temp
 #define wateringDuration 1000
 
-SensorsController sensorsController(Amux(A0,D2));
+SensorsController sensorsController(A0,D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
 WateringController wateringController(D1, &oled); 
 Ticker printSensorValuesTicker;
