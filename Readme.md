@@ -15,7 +15,7 @@ Utrecht university interaction technology project
 | D0   |                                                              |      |      |
 | D1   |                                                              |      |      |
 | D2   | Selector pin for Amux-board                                  |      |      |
-| D3   |                                                              |      |      |
+| D3   | Built in Flash button                                        |      |      |
 | D4   |                                                              |      |      |
 | D5   | I2C SDA                                                      |      |      |
 | D6   | I2C SCL                                                      |      |      |
