@@ -4,6 +4,10 @@
 #include "DebouncedButton.h"
 #include "SensorsController.h"
 #include "WateringController.h"
+#include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include "WiFiManager.h"
 
 #define I2C_SDA D5
 #define I2C_SCL D6
@@ -33,6 +37,17 @@ void setup()   {
   pinMode(LED_BUILTIN, OUTPUT);
   setManualMode(false);
   manualModeToggleButton.begin();
+
+  WiFiManager wifiManager;
+  wifiManager.setAPCallback(configModeCallback);
+  if(!wifiManager.autoConnect()) {
+    Serial.println("failed to connect and hit timeout");
+    //reset and try again, or maybe put it to deep sleep
+    ESP.reset();
+    delay(1000);
+  } 
+
+  Serial.println("connected!");
 }
 
 void loop() {
@@ -86,4 +101,11 @@ void printSensorValues() {
   sprintf(res, "Light: %s%%", buff);
   oled.drawString(0, 40, res);
   oled.display();
+}
+
+void configModeCallback (WiFiManager *myWiFiManager) {
+  Serial.println("Entered config mode");
+  Serial.println(WiFi.softAPIP());
+  //if you used auto generated SSID, print it
+  Serial.println(myWiFiManager->getConfigPortalSSID());
 }
