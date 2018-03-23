@@ -15,6 +15,9 @@
 #define waterFrequency 5000 //temp
 #define wateringDuration 1000
 
+#define APSsid "PlanetNurseSuperMegaMax Access Point"
+#define APPassword "plantNurse"
+
 SensorsController sensorsController(A0,D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
 WateringController wateringController(D1, &oled); 
@@ -40,7 +43,7 @@ void setup()   {
 
   WiFiManager wifiManager;
   wifiManager.setAPCallback(configModeCallback);
-  if(!wifiManager.autoConnect()) {
+  if(!wifiManager.autoConnect(APSsid, APPassword)) {
     Serial.println("failed to connect and hit timeout");
     //reset and try again, or maybe put it to deep sleep
     ESP.reset();
@@ -51,6 +54,15 @@ void setup()   {
 }
 
 void loop() {
+  if(manualModeToggleButton.read() == LOW){
+    if(!manualModeToggled){
+      setManualMode(!isInManualMode);
+      manualModeToggled = true;
+    }
+  }else{
+    manualModeToggled = false;
+  }
+  
   if(!isInManualMode){
     wateringController.update();
   }
@@ -61,14 +73,6 @@ void loop() {
     printSensorValues();
   }
 
-  if(manualModeToggleButton.read() == LOW){
-    if(!manualModeToggled){
-      setManualMode(!isInManualMode);
-      manualModeToggled = true;
-    }
-  }else{
-    manualModeToggled = false;
-  }
   oled.display();
 }
 
@@ -104,8 +108,20 @@ void printSensorValues() {
 }
 
 void configModeCallback (WiFiManager *myWiFiManager) {
-  Serial.println("Entered config mode");
-  Serial.println(WiFi.softAPIP());
-  //if you used auto generated SSID, print it
-  Serial.println(myWiFiManager->getConfigPortalSSID());
+  oled.clear();
+  oled.drawString(0, 0, "Entered config mode");
+  
+  String ipLabel = "ip: ";
+  oled.drawString(0, 10, ipLabel);
+  oled.drawString(oled.getStringWidth(ipLabel), 10, WiFi.softAPIP().toString());
+  
+  String SsidLabel = "SSID: ";
+  int SsidLabelWidth = oled.getStringWidth(SsidLabel);
+  oled.drawString(0, 20, SsidLabel);
+  oled.drawStringMaxWidth(SsidLabelWidth, 20, oled.getWidth() - SsidLabelWidth, myWiFiManager->getConfigPortalSSID());
+  
+  String passwordLabel = "password: ";
+  oled.drawString(0, 44, "password: ");
+  oled.drawString(oled.getStringWidth(passwordLabel), 44, APPassword);
+  oled.display();
 }
