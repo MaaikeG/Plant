@@ -7,8 +7,7 @@ WateringController::WateringController(uint8_t _servoPin, SSD1306* _oled) {
 
 void WateringController::startWatering() {
 	servo.write(90);
-	lastWatering = millis();
-	Serial.println("started watering");
+	wateringStart = millis();
 	oled->clear();
 	oled->setFont(ArialMT_Plain_24);
 	oled->setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
@@ -20,16 +19,44 @@ void WateringController::stopWatering() {
 	servo.write(0);
 	oled->setFont(ArialMT_Plain_10);
 	oled->setTextAlignment(TEXT_ALIGN_LEFT);
-	Serial.println("started watering");
+	lastWatering = millis();
 	isWatering = false;
 }
 
-void WateringController::update(){
-	if(millis() - lastWatering > waterFrequency /* replace by real condition later*/){
-		startWatering();
-	}else if(millis() - lastWatering > wateringDuration && isWatering){
-		stopWatering();
-	}else if(isWatering){
-		oled->drawProgressBar(12, 40, 100, 8, 100.0 * (float) (millis() - lastWatering) / (float) wateringDuration);
+void WateringController::update(uint8_t soilMoisture){
+	if(isWatering) {
+		if(millis() - wateringStart > wateringDuration) {
+			stopWatering();
+			reservoirEmptyCheckDone = false;
+			Serial.println("stopped watering");
+		}
+		else {
+			oled->drawProgressBar(12, 40, 100, 8, 100.0 * (float) (millis() - wateringStart) / (float) wateringDuration);
+		}
+	}
+	else {
+		checkReservoirEmpty(soilMoisture);
+
+		if(shouldWater(soilMoisture)) {
+			startWatering();
+			Serial.println("started watering");
+		}
+	}
+}
+
+bool WateringController::shouldWater(uint8_t soilMoisture) {
+	return !reservoirEmpty
+		&& millis() - lastWatering > waterFrequency 
+		&& soilMoisture < soilMoistureThreshold;
+}
+
+void WateringController::checkReservoirEmpty(uint8_t soilMoisture) {
+	// do this check only once after giving the water time to spread to the sensor.
+	if (!reservoirEmptyCheckDone && millis() - lastWatering > reservoirEmptyTimeCheck) {
+		if(soilMoisture < soilMoistureThreshold) {
+			reservoirEmpty = true;
+			Serial.println("Reservoir empty!");
+		}
+		reservoirEmptyCheckDone = true;
 	}
 }

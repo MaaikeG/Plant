@@ -9,9 +9,11 @@
 #else
 	#include "WProgram.h"
 #endif
-
-#define waterFrequency 5000 //temp
-#define wateringDuration 1000
+// Variables are lower for testing. Should be increased for real-life use to commented values.
+#define waterFrequency 10000 //600000 // take some time for the water to reach the sensor. System should never need to water every 10 minutes.
+#define wateringDuration 3000 //5000
+#define soilMoistureThreshold 20 // if soil is this dry we need to water.
+#define reservoirEmptyTimeCheck 3000 //60000 // is one minute is not enough for soil moisture to increase, reservoir must be empty.
 
 class WateringController
 {
@@ -19,14 +21,19 @@ private:
 	Servo servo;
 	uint8_t servoPin;
 	SSD1306* oled;
+	bool reservoirEmptyCheckDone = true;
+	unsigned long wateringStart;
+	unsigned long lastWatering;
 
 public:
 	WateringController(uint8_t _servoPin, SSD1306* _oled);
 	void startWatering();
 	void stopWatering();
+	bool shouldWater(uint8_t soilMoisture);
+	void update(uint8_t soilMoisture);
+	void checkReservoirEmpty(uint8_t soilMoisture);
 	bool isWatering;
-	void update();
-	unsigned long lastWatering;
+	bool reservoirEmpty; // use this to blink a red led?
 };
 
 #endif

@@ -8,58 +8,61 @@
 #define I2C_SDA D5
 #define I2C_SCL D6
 
-#define waterFrequency 5000 //temp
-#define wateringDuration 1000
-
 SensorsController sensorsController(A0,D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
 WateringController wateringController(D1, &oled); 
-Ticker printSensorValuesTicker;
-bool printSensorValuesNextIteration = true;
+Ticker updateSensorValuesTicker;
+bool updateSensorValuesNextIteration = true;
 
-bool isInManualMode;
-DebouncedButton manualModeToggleButton(D3);
-bool manualModeToggled;
+enum mode {
+  Manual,
+  Automatic
+};
+
+bool currentMode;
+
+DebouncedButton modeToggleButton(D3);
+bool modeToggled;
 
 void setup()   {
   Serial.begin(9600);
   Wire.begin(D5, D6);
   oled.init();
   oled.flipScreenVertically();
-  printSensorValuesTicker.attach_ms(2000, [](){
+  updateSensorValuesTicker.attach_ms(2000, [](){
     // set a flag because actually running it takes too long, because at the moment we water and the same time, because we don't have a better way to activate that yet
-    printSensorValuesNextIteration = true;
+    updateSensorValuesNextIteration = true;
   });
   pinMode(LED_BUILTIN, OUTPUT);
-  setManualMode(false);
-  manualModeToggleButton.begin();
+  setMode(false);
+  modeToggleButton.begin();
 }
 
 void loop() {
-  if(!isInManualMode){
-    wateringController.update();
+  if(currentMode == Automatic){
+    wateringController.update(sensorsController.getSoilMoisture());
   }
 
-  if(printSensorValuesNextIteration && !wateringController.isWatering){
-    printSensorValuesNextIteration = false;
+  if(updateSensorValuesNextIteration && !wateringController.isWatering){
+    updateSensorValuesNextIteration = false;
     sensorsController.updateSensorValues();
     printSensorValues();
   }
 
-  if(manualModeToggleButton.read() == LOW){
-    if(!manualModeToggled){
-      setManualMode(!isInManualMode);
-      manualModeToggled = true;
+  if(modeToggleButton.read() == LOW){
+    if(!modeToggled){
+      setMode(!currentMode);
+      modeToggled = true;
     }
   }else{
-    manualModeToggled = false;
+    modeToggled = false;
   }
   oled.display();
 }
 
-void setManualMode(bool value){
-  isInManualMode = value;
-  digitalWrite(LED_BUILTIN, value);
+void setMode(bool mode){
+  currentMode = mode;
+  digitalWrite(LED_BUILTIN, mode);
 }
 
 void printSensorValues() {
