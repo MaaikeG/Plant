@@ -16,17 +16,16 @@
 class ScreenCarousel
 {
  private:
-	 SensorsController sensorsController;
+	 SensorsController* sensorsController;
      SSD1306* oled;
      OLEDDisplayUi ui;
  
  public:
-	 ScreenCarousel(SSD1306* _oled, SensorsController _sensorsController);
-	 void display();
-     void init();
+    ScreenCarousel(SSD1306* _oled, SensorsController* _sensorsController);
+    int update();
+    void begin(FrameCallback frames[], uint8_t frameCount);
     void drawFrame1(OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y);
-     void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y);
-    void test(int i);
+    void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y);
 };
 
 #endif

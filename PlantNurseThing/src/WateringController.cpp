@@ -32,4 +32,5 @@ void WateringController::update(){
 	}else if(isWatering){
 		oled->drawProgressBar(12, 40, 100, 8, 100.0 * (float) (millis() - lastWatering) / (float) wateringDuration);
 	}
+  	oled->display();
 }
