@@ -4,10 +4,12 @@
 #include "DebouncedButton.h"
 #include "SensorsController.h"
 #include "WateringController.h"
-#include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include "WiFiManager.h"
+#include <ESP8266WiFi.h>
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
 
 #define I2C_SDA D5
 #define I2C_SCL D6
@@ -28,15 +30,22 @@ bool isInManualMode;
 DebouncedButton manualModeToggleButton(D3);
 bool manualModeToggled;
 
+WiFiClientSecure client;
+Adafruit_MQTT_Client mqtt;
+Adafruit_MQTT_Subscribe testfeed = Adafruit_MQTT_Subscribe(&mqtt, "test");
+
 void setup()   {
   Serial.begin(9600);
   Wire.begin(D5, D6);
+
   oled.init();
   oled.flipScreenVertically();
+
   printSensorValuesTicker.attach_ms(2000, [](){
     // set a flag because actually running it takes too long, because at the moment we water and the same time, because we don't have a better way to activate that yet
     printSensorValuesNextIteration = true;
   });
+
   pinMode(LED_BUILTIN, OUTPUT);
   setManualMode(false);
   manualModeToggleButton.begin();
@@ -48,9 +57,16 @@ void setup()   {
     //reset and try again, or maybe put it to deep sleep
     ESP.reset();
     delay(1000);
-  } 
+  }
 
-  Serial.println("connected!");
+  Serial.println("WiFi connected");
+
+  testfeed.setCallback(testCallback);
+
+  mqtt = Adafruit_MQTT_Client(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_USERNAME, AIO_KEY);
+  
+  // Setup MQTT subscription for time feed.
+  mqtt.subscribe(&testfeed);
 }
 
 void loop() {
@@ -71,6 +87,12 @@ void loop() {
     printSensorValuesNextIteration = false;
     sensorsController.updateSensorValues();
     printSensorValues();
+  }
+
+  MQTT_connect();
+  mqtt.processPackets(10000);
+  if(! mqtt.ping()) {
+    mqtt.disconnect();
   }
 
   oled.display();
@@ -124,4 +146,34 @@ void configModeCallback (WiFiManager *myWiFiManager) {
   oled.drawString(0, 44, "password: ");
   oled.drawString(oled.getStringWidth(passwordLabel), 44, APPassword);
   oled.display();
+}
+
+void testCallback(char *data, uint16_t len) {
+  Serial.print("test: ");
+  Serial.println(data);
+}
+
+void MQTT_connect() {
+  int8_t ret;
+
+  // Stop if already connected.
+  if (mqtt.connected()) {
+    return;
+  }
+
+  Serial.print("Connecting to MQTT... ");
+
+  uint8_t retries = 3;
+  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
+       Serial.println(mqtt.connectErrorString(ret));
+       Serial.println("Retrying MQTT connection in 10 seconds...");
+       mqtt.disconnect();
+       delay(10000);  // wait 10 seconds
+       retries--;
+       if (retries == 0) {
+         // basically die and wait for WDT to reset me
+         while (1);
+       }
+  }
+  Serial.println("MQTT Connected!");
 }
