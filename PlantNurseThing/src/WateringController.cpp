@@ -3,6 +3,7 @@
 WateringController::WateringController(uint8_t _servoPin, SSD1306* _oled) {
 	servo.attach(_servoPin);
 	oled = _oled;
+	pinMode(RESERVOIR_EMPTY_LED, OUTPUT);
 }
 
 void WateringController::startWatering() {
@@ -55,7 +56,7 @@ void WateringController::checkReservoirEmpty(uint8_t soilMoisture) {
 	if (!reservoirEmptyCheckDone && millis() - lastWatering > reservoirEmptyTimeCheck) {
 		if(soilMoisture < soilMoistureThreshold) {
 			reservoirEmpty = true;
-			Serial.println("Reservoir empty!");
+			digitalWrite(RESERVOIR_EMPTY_LED, HIGH);
 		}
 		reservoirEmptyCheckDone = true;
 	}

@@ -14,6 +14,7 @@
 #define wateringDuration 3000 //5000
 #define soilMoistureThreshold 20 // if soil is this dry we need to water.
 #define reservoirEmptyTimeCheck 3000 //60000 // is one minute is not enough for soil moisture to increase, reservoir must be empty.
+#define RESERVOIR_EMPTY_LED D7
 
 class WateringController
 {
