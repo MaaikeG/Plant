@@ -10,7 +10,6 @@
 	#include "WProgram.h"
 #endif
 // Variables are lower for testing. Should be increased for real-life use to commented values.
-#define waterFrequency 10000 //600000 // take some time for the water to reach the sensor. System should never need to water every 10 minutes.
 #define wateringDuration 3000 //5000
 #define soilMoistureThreshold 20 // if soil is this dry we need to water.
 #define reservoirEmptyTimeCheck 3000 //60000 // is one minute is not enough for soil moisture to increase, reservoir must be empty.

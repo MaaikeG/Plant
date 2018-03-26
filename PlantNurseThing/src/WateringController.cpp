@@ -48,7 +48,7 @@ void WateringController::update(uint8_t soilMoisture){
 
 bool WateringController::shouldWater(uint8_t soilMoisture) {
 	return !reservoirEmpty
-		&& millis() - lastWatering > waterFrequency 
+		&& reservoirEmptyCheckDone
 		&& soilMoisture < soilMoistureThreshold;
 }
 
