@@ -34,6 +34,7 @@ void WateringController::update(uint8_t soilMoisture){
 		else {
 			oled->drawProgressBar(12, 40, 100, 8, 100.0 * (float) (millis() - wateringStart) / (float) wateringDuration);
 		}
+  		oled->display();
 	}
 	else {
 		checkReservoirEmpty(soilMoisture);
