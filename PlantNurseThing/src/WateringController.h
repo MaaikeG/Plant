@@ -24,7 +24,6 @@ private:
 	SSD1306* oled;
 	bool reservoirEmptyCheckDone = true;
 	unsigned long wateringStart;
-	unsigned long lastWatering;
 
 public:
 	WateringController(uint8_t _servoPin, SSD1306* _oled);
@@ -35,6 +34,7 @@ public:
 	void checkReservoirEmpty(uint8_t soilMoisture);
 	bool isWatering;
 	bool reservoirEmpty; // use this to blink a red led?
+	unsigned long lastWatering;
 };
 
 #endif

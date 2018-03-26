@@ -10,8 +10,8 @@
 
 SensorsController sensorsController(A0,D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-ScreenCarousel screenCarousel(&oled, &sensorsController);
 WateringController wateringController(D1, &oled); 
+ScreenCarousel screenCarousel(&oled, &sensorsController, &wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
 
@@ -25,6 +25,8 @@ FrameCallback frames[] = {
     screenCarousel.drawFrame1(display, state, x, y);
   }, [](OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y){
     screenCarousel.drawFrame2(display, state, x, y);
+  }, [](OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y){
+    screenCarousel.drawFrame3(display, state, x, y); 
   }
 };
 
@@ -44,7 +46,7 @@ void setup()   {
   pinMode(LED_BUILTIN, OUTPUT);
   setMode(Manual);
   modeToggleButton.begin();
-  screenCarousel.begin(frames, 2);
+  screenCarousel.begin(frames, 3);
   oled.flipScreenVertically();
 }
 
