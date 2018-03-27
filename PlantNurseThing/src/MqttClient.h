@@ -14,11 +14,14 @@
 #include "Adafruit_MQTT_Client.h"
 #include "Credentials.h"
 
+#define PING_FREQUENCY 25000
+
 class MqttClient {
  private:
   void MqttConnect();
   Adafruit_MQTT_Client adafruitClient;
   Adafruit_MQTT_Subscribe testfeed;
+  unsigned long lastPingMillis;
 
  public:
   MqttClient(Client *client);

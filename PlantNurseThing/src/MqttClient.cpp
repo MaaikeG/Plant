@@ -46,8 +46,11 @@ void MqttClient::begin(){
 
 void MqttClient::update() {
   MqttConnect();
-  adafruitClient.processPackets(10000);
-  if (!adafruitClient.ping()) {
-    adafruitClient.disconnect();
+  adafruitClient.processPackets(500);
+  if (millis() - lastPingMillis > PING_FREQUENCY) {
+    lastPingMillis = millis();
+    if (!adafruitClient.ping()) {
+      adafruitClient.disconnect();
+    }
   }
 }
