@@ -18,7 +18,7 @@
 #define waterFrequency 5000 //temp
 #define wateringDuration 1000
 
-#define APSsid "PlanetNurseSuperMegaMax Access Point"
+#define APSsid "Planet Nurse Access Point"
 #define APPassword "plantNurse"
 
 SensorsController sensorsController(A0,D2);
