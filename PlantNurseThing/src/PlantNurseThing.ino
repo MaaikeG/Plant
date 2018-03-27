@@ -1,8 +1,11 @@
-#include <Wire.h>
 #include <SSD1306.h>
 #include <Ticker.h>
+#include <Wire.h>
 #include "DebouncedButton.h"
+#include "ManagedWifiClient.h"
+#include "SensorsController.h"
 #include "WateringController.h"
+#include "MqttClient.h"
 #include "ScreenCarousel.h"
 
 #define I2C_SDA D5
@@ -35,19 +38,29 @@ Mode currentMode;
 DebouncedButton modeToggleButton(D3); 
 bool modeToggled = true; 
 
-void setup()   {
+void configModeCallback(WiFiManager* myWiFiManager); // forward declaration
+ManagedWifiClient managedWifiClient(configModeCallback);
+MqttClient mqttClient(&managedWifiClient.client);
+
+void setup() {
   Serial.begin(9600);
   Wire.begin(D5, D6);
+
   oled.init();
   updateSensorValuesTicker.attach_ms(2000, [](){
     // set a flag because actually running it takes too long, because at the moment we water and the same time, because we don't have a better way to activate that yet
     updateSensorValuesNextIteration = true;
   });
+
   pinMode(LED_BUILTIN, OUTPUT);
   setMode(Manual);
   modeToggleButton.begin();
   screenCarousel.begin(frames, 3);
   oled.flipScreenVertically();
+
+  managedWifiClient.begin();
+
+  mqttClient.begin();
 }
 
 void loop() {
@@ -57,9 +70,12 @@ void loop() {
 
   if(!wateringController.isWatering){
     int remainingTimeBudget = screenCarousel.update();
-    if(remainingTimeBudget > 0 && updateSensorValuesNextIteration){
-      updateSensorValuesNextIteration = false;
-      sensorsController.updateSensorValues();
+    if(remainingTimeBudget > 0){
+      if(updateSensorValuesNextIteration){
+        updateSensorValuesNextIteration = false;
+        sensorsController.updateSensorValues();
+      }
+      mqttClient.update(remainingTimeBudget);
     }
   }
 
@@ -76,4 +92,24 @@ void loop() {
 void setMode(Mode mode){
   currentMode = mode;
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
+}
+
+void configModeCallback(WiFiManager* myWiFiManager) {
+  oled.clear();
+  oled.drawString(0, 0, "Entered config mode");
+
+  String ipLabel = "ip: ";
+  oled.drawString(0, 10, ipLabel);
+  oled.drawString(oled.getStringWidth(ipLabel), 10, WiFi.softAPIP().toString());
+
+  String SsidLabel = "SSID: ";
+  int SsidLabelWidth = oled.getStringWidth(SsidLabel);
+  oled.drawString(0, 20, SsidLabel);
+  oled.drawStringMaxWidth(SsidLabelWidth, 20, oled.getWidth() - SsidLabelWidth,
+                          myWiFiManager->getConfigPortalSSID());
+
+  String passwordLabel = "password: ";
+  oled.drawString(0, 44, "password: ");
+  oled.drawString(oled.getStringWidth(passwordLabel), 44, APPassword);
+  oled.display();
 }
