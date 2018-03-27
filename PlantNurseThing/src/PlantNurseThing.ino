@@ -8,6 +8,7 @@
 #include <ESP8266WebServer.h>
 #include "WiFiManager.h"
 #include <ESP8266WiFi.h>
+#include "Credentials.h"
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
@@ -31,7 +32,7 @@ DebouncedButton manualModeToggleButton(D3);
 bool manualModeToggled;
 
 WiFiClientSecure client;
-Adafruit_MQTT_Client mqtt;
+Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
 Adafruit_MQTT_Subscribe testfeed = Adafruit_MQTT_Subscribe(&mqtt, "test");
 
 void setup()   {
@@ -62,8 +63,6 @@ void setup()   {
   Serial.println("WiFi connected");
 
   testfeed.setCallback(testCallback);
-
-  mqtt = Adafruit_MQTT_Client(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_USERNAME, AIO_KEY);
   
   // Setup MQTT subscription for time feed.
   mqtt.subscribe(&testfeed);

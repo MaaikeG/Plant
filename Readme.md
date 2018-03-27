@@ -4,9 +4,18 @@ Utrecht university interaction technology project
 
 ## Installation
 
-1. Download the zip and extract it
-2. Run `npm install` in /NodeRedPlantNurse
-3. To Run the NodeRed server, run `npm run dev`
+First download the zip or clone the project to your machine.
+
+### 1. Setting up the NodeRed server
+
+1. Run `npm install` in /NodeRedPlantNurse
+2. To Run the NodeRed server, run `npm run dev`
+
+### 2. Adding credentials for your MQTT server
+
+1. Copy src/CredentialsExample.h and rename the copy to Credentials.h
+2. Fill in your server details in Credentials.h
+3. You can now upload the project to your device.​
 
 ## Pin mapping
 
