@@ -44,9 +44,9 @@ void MqttClient::begin(){
   adafruitClient.subscribe(&testfeed); 
 }
 
-void MqttClient::update() {
+void MqttClient::update(uint16_t timeLeft) {
   MqttConnect();
-  adafruitClient.processPackets(500);
+  adafruitClient.processPackets(timeLeft);
   if (millis() - lastPingMillis > PING_FREQUENCY) {
     lastPingMillis = millis();
     if (!adafruitClient.ping()) {

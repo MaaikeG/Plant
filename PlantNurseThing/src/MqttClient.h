@@ -26,7 +26,7 @@ class MqttClient {
  public:
   MqttClient(Client *client);
   void begin();
-  void update();
+  void update(uint16_t timeLeft);
 };
 
 #endif

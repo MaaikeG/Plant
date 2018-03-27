@@ -70,7 +70,12 @@ void loop() {
     printSensorValues();
   }
 
-  mqttClient.update();
+  unsigned long StartTime = millis();
+  mqttClient.update(33); // loop rate of 30 lps
+  unsigned long elapsedTime= millis() - StartTime;
+  Serial.print("update() took: ");
+  Serial.print(elapsedTime);
+  Serial.println(" ms");
 
   oled.display();
 }
