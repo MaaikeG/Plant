@@ -1,5 +1,5 @@
-#ifndef _ScreenCarousel_H
-#define _ScreenCarousel_H
+#ifndef _SCREEN_CAROUSEL_H
+#define _SCREEN_CAROUSEL_H
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100

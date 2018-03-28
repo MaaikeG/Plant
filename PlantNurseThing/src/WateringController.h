@@ -1,5 +1,5 @@
-#ifndef _WATERINGCONTROLLER_h
-#define _WATERINGCONTROLLER_h
+#ifndef _WATERING_CONTROLLER_h
+#define _WATERING_CONTROLLER_h
 
 #include <SSD1306.h>
 #include <Servo.h>

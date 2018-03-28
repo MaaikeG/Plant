@@ -1,5 +1,5 @@
-#ifndef _SensorsController_h
-#define _SensorsController_h
+#ifndef _SENSORS_CONTROLLER_H
+#define _SENSORS_CONTROLLER_H
 
 #include <Adafruit_BME280.h>
 #include <Wire.h>

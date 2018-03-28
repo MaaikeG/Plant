@@ -1,5 +1,5 @@
-#ifndef _MQTT_CLIENT_h
-#define _MQTT_CLIENT_h
+#ifndef _MQTT_CLIENT_H
+#define _MQTT_CLIENT_H
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100

@@ -6,7 +6,7 @@ ManagedWiFiClient::ManagedWiFiClient(ConfigModeCallback _configModeCallback) {
 
 void ManagedWiFiClient::begin(WiFiManager* wiFiManager) {
   wiFiManager->setAPCallback(configModeCallback);
-  if (!wiFiManager->autoConnect(APSsid, APPassword)) {
+  if (!wiFiManager->autoConnect(AP_SSID, AP_PASSWORD)) {
     Serial.println("failed to connect and hit timeout");
     // reset and try again, or maybe put it to deep sleep
     ESP.reset();
@@ -34,6 +34,6 @@ void configModeCallback(WiFiManager* myWiFiManager, SSD1306* oled) {
 
   String passwordLabel = "password: ";
   oled->drawString(0, 44, "password: ");
-  oled->drawString(oled->getStringWidth(passwordLabel), 44, APPassword);
+  oled->drawString(oled->getStringWidth(passwordLabel), 44, AP_PASSWORD);
   oled->display();
 }

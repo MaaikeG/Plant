@@ -1,7 +1,5 @@
-#define debounceDelay 50
-
-#ifndef _Toggle_h
-#define _Toggle_h
+#ifndef _DEBOUNCED_BUTTON_H
+#define _DEBOUNCED_BUTTON_H
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -10,6 +8,8 @@
   #include "WProgram.h"
 #endif
 // clang-format on
+
+#define DEBOUNCE_DELAY 50
 
 class DebouncedButton {
  private:

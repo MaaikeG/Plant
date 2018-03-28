@@ -1,5 +1,5 @@
-#ifndef _Amux_h
-#define _Amux_h
+#ifndef _AMUX_H
+#define _AMUX_H
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100

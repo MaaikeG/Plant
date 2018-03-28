@@ -1,5 +1,5 @@
-#ifndef _MANAGED_WIFI_CLIENT_h
-#define _MANAGED_WIFI_CLIENT_h
+#ifndef _MANAGED_WIFI_CLIENT_H
+#define _MANAGED_WIFI_CLIENT_H
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -18,8 +18,8 @@
 #include "WiFiManager.h"
 #include <SSD1306.h>
 
-#define APSsid "Planet Nurse Access Point"
-#define APPassword "plantNurse"
+#define AP_SSID "Planet Nurse Access Point"
+#define AP_PASSWORD "plantNurse"
 
 typedef void (*ConfigModeCallback)(WiFiManager*);
 
