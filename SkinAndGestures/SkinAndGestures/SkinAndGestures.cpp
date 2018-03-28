@@ -160,9 +160,6 @@ int main()
 			cv::bitwise_not(mask,inverseMask);
  			cv::calcHist(&image, 1, channels, mask, sum_hist_nonskin, 2, hist_size, ranges, true, false);
 
-			
-			// TODO fill the Histograms with the correct pixel counts with cv::calcHist
-
 			// OPTIONAL You may want to try different color spaces than RGB
 			// OPTIONAL You may want to try to make the histograms dynamic instead of static
 			//          That means putting this routing into the video loop and updating the skin
@@ -171,8 +168,18 @@ int main()
 		}
 	}
 
-	cv::Mat Pskin_rgb; // TODO use Bayesian statistics to calculate P(skin|rgb)
+	float totalSkinPixels = cv::sum(sum_hist_skin)[0];
+	float totalNonSkinPixels = cv::sum(sum_hist_nonskin)[0];
+	float totalPixels = totalSkinPixels + totalNonSkinPixels;
 
+	float p_skin = totalSkinPixels / totalPixels;
+	float p_nonskin = totalNonSkinPixels / totalPixels;
+
+	cv::Mat p_rgb_skin = sum_hist_skin / totalSkinPixels;
+	cv::Mat p_rgb_nonskin = sum_hist_nonskin / totalNonSkinPixels;
+
+	cv::Mat Pskin_rgb = p_rgb_skin * p_skin / (p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
+		
 	// Factor to scale a color number to a histogram bin
 	const double factor = bin_size / 256.0;
 
