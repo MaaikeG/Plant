@@ -108,11 +108,11 @@ void mouseCallBack(int event, int x, int y, int flags, void* userdata)
 
 int main()
 {
-	const std::string path_images = "C:/Users/Coert/Pictures/Pratheepan/Images/Face";
+	const std::string path_images = "C:/Face_Dataset/Photos";
 	std::vector<std::string> files_images;
 	Utilities::getDirectory(path_images, "jpg", files_images);
 
-	const std::string path_masks = "C:/Users/Coert/Pictures/Pratheepan/GT/Face";
+	const std::string path_masks = "C:/Face_Dataset/masks";
 	std::vector<std::string> files_masks;
 	Utilities::getDirectory(path_masks, "png", files_masks);
 
@@ -152,8 +152,15 @@ int main()
 		{
 			cv::Mat image = cv::imread(image_file);                                 // load training image
 			cv::Mat mask = cv::imread(*ma_it, CV_LOAD_IMAGE_GRAYSCALE);             // load training mask
-			CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in size
+			CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in 
 
+			cv::calcHist(&image, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, false);
+			
+			cv::Mat inverseMask;
+			cv::bitwise_not(mask,inverseMask);
+ 			cv::calcHist(&image, 1, channels, mask, sum_hist_nonskin, 2, hist_size, ranges, true, false);
+
+			
 			// TODO fill the Histograms with the correct pixel counts with cv::calcHist
 
 			// OPTIONAL You may want to try different color spaces than RGB
