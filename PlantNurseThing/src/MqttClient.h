@@ -25,25 +25,25 @@
 
 class MqttClient {
  private:
-  WiFiClient* wifiClient;
-  WiFiManager* wifiManager;
+  WiFiClient* wiFiClient;
+  WiFiManager* wiFiManager;
   void MqttConnect();
   Adafruit_MQTT_Client* adafruitClient;
   Adafruit_MQTT_Subscribe testfeed;
   unsigned long lastPingMillis;
-  char mqtt_server[MQTT_SERVER_LENGTH];
+  char mqttServer[MQTT_SERVER_LENGTH];
   int mqttPort = 8080;
-  char mqtt_username[MQTT_USERNAME_LENGTH];
-  char mqtt_client_id[MQTT_CLIENT_ID_LENGTH];
-  char mqtt_password[MQTT_PASSWORD_LENGTH];
-  WiFiManagerParameter mqtt_server_parameter;
+  char mqttUsername[MQTT_USERNAME_LENGTH];
+  char mqttClientId[MQTT_CLIENT_ID_LENGTH];
+  char mqttPassword[MQTT_PASSWORD_LENGTH];
+  WiFiManagerParameter mqttServer_parameter;
   WiFiManagerParameter mqtt_port_parameter;
-  WiFiManagerParameter mqtt_client_id_parameter;
-  WiFiManagerParameter mqtt_username_parameter;
-  WiFiManagerParameter mqtt_password_parameter;
+  WiFiManagerParameter mqttClientId_parameter;
+  WiFiManagerParameter mqttUsername_parameter;
+  WiFiManagerParameter mqttPassword_parameter;
 
  public:
-  MqttClient(WiFiClient* _wifiClient, WiFiManager* _wifiManager);
+  MqttClient(WiFiClient* _wiFiClient, WiFiManager* _wiFiManager);
   void addParameters();
   void saveParameters();
   void begin();

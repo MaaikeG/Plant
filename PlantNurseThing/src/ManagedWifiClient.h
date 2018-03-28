@@ -20,14 +20,14 @@
 
 typedef void (*ConfigModeCallback)(WiFiManager*);
 
-class ManagedWifiClient {
+class ManagedWiFiClient {
  private:
   ConfigModeCallback configModeCallback;
 
  public:
   WiFiClientSecure client;
-  ManagedWifiClient(ConfigModeCallback _configModeCallback);
-  void begin(WiFiManager* wifiManager);
+  ManagedWiFiClient(ConfigModeCallback _configModeCallback);
+  void begin(WiFiManager* wiFiManager);
 };
 
 #endif

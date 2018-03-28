@@ -4,7 +4,7 @@
 #include <Ticker.h>
 #include <Wire.h>
 #include "DebouncedButton.h"
-#include "ManagedWifiClient.h"
+#include "ManagedWiFiClient.h"
 #include "SensorsController.h"
 #include "WateringController.h"
 #include "MqttClient.h"
@@ -41,7 +41,7 @@ DebouncedButton modeToggleButton(D3);
 bool modeToggled = true; 
 
 void configModeCallback(WiFiManager* myWiFiManager); // forward declaration
-ManagedWifiClient managedWifiClient(configModeCallback);
+ManagedWiFiClient managedWiFiClient(configModeCallback);
 MqttClient* mqttClient;
 
 void setup() {
@@ -60,12 +60,12 @@ void setup() {
   screenCarousel.begin(frames, 3);
   oled.flipScreenVertically();
 
-  WiFiManager wifiManager;
+  WiFiManager wiFiManager;
   //reset settings - for testing
-  //wifiManager.resetSettings();
-  mqttClient = new MqttClient(&managedWifiClient.client, &wifiManager);
+  //wiFiManager.resetSettings();
+  mqttClient = new MqttClient(&managedWiFiClient.client, &wiFiManager);
   mqttClient->addParameters();
-  managedWifiClient.begin(&wifiManager);
+  managedWiFiClient.begin(&wiFiManager);
   mqttClient->saveParameters();
 
   mqttClient->begin();
