@@ -11,18 +11,17 @@
 #endif
 // clang-format on
 
-class DebouncedButton
-{
+class DebouncedButton {
  private:
-	 uint8_t buttonPin;
-	 bool lastButtonState;
-	 bool buttonState;
-	 unsigned long lastDebounceTime;
+  uint8_t buttonPin;
+  bool lastButtonState;
+  bool buttonState;
+  unsigned long lastDebounceTime;
 
  public:
-	 DebouncedButton(uint8_t _buttonPin);
-	 bool read();
-	 void begin();
+  DebouncedButton(uint8_t _buttonPin);
+  bool read();
+  void begin();
 };
 
 #endif

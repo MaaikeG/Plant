@@ -6,8 +6,7 @@ MqttClient::MqttClient(WiFiClient* _wiFiClient, WiFiManager* _wiFiManager)
     : testfeed(adafruitClient, "test", MQTT_QOS_1),
       mqttServer_parameter("server", "server address", mqttServer, 40),
       mqtt_port_parameter("port", "port", String(mqttPort).c_str(), 5),
-      mqttClientId_parameter("mqttClientId", "client id", mqttClientId,
-                               20),
+      mqttClientId_parameter("mqttClientId", "client id", mqttClientId, 20),
       mqttUsername_parameter("username", "username", mqttUsername, 20),
       mqttPassword_parameter("password", "password", mqttPassword, 20) {
   wiFiClient = _wiFiClient;
@@ -166,7 +165,7 @@ void MqttClient::MqttConnect() {
     retries--;
     if (retries == 0) {
       wiFiManager->resetSettings();
-      delay(50); // make sure the settings are really reset or something
+      delay(50);  // make sure the settings are really reset or something
       // basically die and wait for WDT to reset me
       while (1)
         ;

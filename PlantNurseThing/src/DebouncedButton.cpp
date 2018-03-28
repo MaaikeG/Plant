@@ -1,12 +1,8 @@
 #include "DebouncedButton.h"
 
-DebouncedButton::DebouncedButton(uint8_t _buttonPin){
-    buttonPin = _buttonPin;
-}
+DebouncedButton::DebouncedButton(uint8_t _buttonPin) { buttonPin = _buttonPin; }
 
-void DebouncedButton::begin(){
-    pinMode(buttonPin, INPUT);
-}
+void DebouncedButton::begin() { pinMode(buttonPin, INPUT); }
 
 bool DebouncedButton::read() {
   // read the state of the switch into a local variable:
