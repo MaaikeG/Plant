@@ -132,7 +132,7 @@ int main()
 	sum_hist_skin = cv::Mat::zeros(3, hist_size, CV_32F);     // Construct the skin histogram
 	sum_hist_nonskin = cv::Mat::zeros(3, hist_size, CV_32F);  // Construct the non-skin histogram
 
-	const float color_range[2] = { 0, 256 };                            // Color range
+	const float color_range[2] = { 0,  256};                            // Color range
 	const float *ranges[3] = { color_range, color_range, color_range }; // Pointer to 3D array, range for every color channel
 	const int channels[3] = { 0, 1, 2 };                                // Channels to work with
 
@@ -150,21 +150,18 @@ int main()
 		// If we find the right mask
 		if (ma_it != files_masks.end())
 		{
-			cv::Mat image = cv::imread(image_file);                                 // load training image
+			cv::Mat image = cv::imread(image_file);       // load training image
+			cv::Mat image_YCrCb;
+			cv::cvtColor(image, image_YCrCb,cv::ColorConversionCodes::COLOR_RGB2YCrCb);
+
 			cv::Mat mask = cv::imread(*ma_it, CV_LOAD_IMAGE_GRAYSCALE);             // load training mask
 			CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in 
 
-			cv::calcHist(&image, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, false);
+			cv::calcHist(&image_YCrCb, 1, channels, mask, sum_hist_skin, 3, hist_size, ranges, true, true);
 			
 			cv::Mat inverseMask;
 			cv::bitwise_not(mask,inverseMask);
- 			cv::calcHist(&image, 1, channels, mask, sum_hist_nonskin, 2, hist_size, ranges, true, false);
-
-			// OPTIONAL You may want to try different color spaces than RGB
-			// OPTIONAL You may want to try to make the histograms dynamic instead of static
-			//          That means putting this routing into the video loop and updating the skin
-			//          color somehow, based on the current lighting conditions and your webcam's
-			//          color balance
+ 			cv::calcHist(&image_YCrCb, 1, channels, inverseMask, sum_hist_nonskin, 3, hist_size, ranges, true, true);
 		}
 	}
 
@@ -178,7 +175,8 @@ int main()
 	cv::Mat p_rgb_skin = sum_hist_skin / totalSkinPixels;
 	cv::Mat p_rgb_nonskin = sum_hist_nonskin / totalNonSkinPixels;
 
-	cv::Mat Pskin_rgb = p_rgb_skin * p_skin / (p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
+	cv::Mat Pskin_rgb = (p_rgb_skin * p_skin) /
+						(p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
 		
 	// Factor to scale a color number to a histogram bin
 	const double factor = bin_size / 256.0;
