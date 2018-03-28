@@ -4,11 +4,14 @@
 #include <Servo.h>
 #include <SSD1306.h>
 
+// clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+  #include "arduino.h"
 #else
-	#include "WProgram.h"
+  #include "WProgram.h"
 #endif
+// clang-format on
+
 // Variables are lower for testing. Should be increased for real-life use to commented values.
 #define wateringDuration 3000 //5000
 #define soilMoistureThreshold 20 // if soil is this dry we need to water.

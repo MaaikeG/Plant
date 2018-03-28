@@ -3,11 +3,13 @@
 #ifndef _Toggle_h
 #define _Toggle_h
 
+// clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+  #include "arduino.h"
 #else
-	#include "WProgram.h"
+  #include "WProgram.h"
 #endif
+// clang-format on
 
 class DebouncedButton
 {
