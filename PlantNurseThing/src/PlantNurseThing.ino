@@ -1,3 +1,5 @@
+#include <FS.h>                   //this needs to be first, or it all crashes and burns...
+
 #include <SSD1306.h>
 #include <Ticker.h>
 #include <Wire.h>
@@ -25,7 +27,7 @@ bool manualModeToggled;
 
 void configModeCallback(WiFiManager* myWiFiManager); // forward declaration
 ManagedWifiClient managedWifiClient(configModeCallback);
-MqttClient mqttClient(&managedWifiClient.client);
+MqttClient* mqttClient;
 
 void setup() {
   Serial.begin(9600);
@@ -45,9 +47,15 @@ void setup() {
   setManualMode(false);
   manualModeToggleButton.begin();
 
-  managedWifiClient.begin();
+  WiFiManager wifiManager;
+  //reset settings - for testing
+  //wifiManager.resetSettings();
+  mqttClient = new MqttClient(&managedWifiClient.client, &wifiManager);
+  mqttClient->addParameters();
+  managedWifiClient.begin(&wifiManager);
+  mqttClient->saveParameters();
 
-  mqttClient.begin();
+  mqttClient->begin();
 }
 
 void loop() {
@@ -70,7 +78,7 @@ void loop() {
     printSensorValues();
   }
 
-  mqttClient.update(33); // loop rate of 30 lps
+  mqttClient->update(33); // loop rate of 30 lps
 
   oled.display();
 }
