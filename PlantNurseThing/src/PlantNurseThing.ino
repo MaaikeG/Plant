@@ -1,47 +1,46 @@
-#include <FS.h>                   //this needs to be first, or it all crashes and burns...
+#include <FS.h>  //this needs to be first, or it all crashes and burns...
 
 #include <SSD1306.h>
 #include <Ticker.h>
 #include <Wire.h>
 #include "DebouncedButton.h"
 #include "ManagedWiFiClient.h"
-#include "SensorsController.h"
-#include "WateringController.h"
 #include "MqttClient.h"
 #include "ScreenCarousel.h"
+#include "SensorsController.h"
+#include "WateringController.h"
 
 #define I2C_SDA D5
 #define I2C_SCL D6
 
-SensorsController sensorsController(A0,D2);
+SensorsController sensorsController(A0, D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-WateringController wateringController(D1, &oled); 
+WateringController wateringController(D1, &oled);
 ScreenCarousel screenCarousel(&oled, &sensorsController, &wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
 
-enum Mode {
-  Manual,
-  Automatic
-};
+enum Mode { Manual, Automatic };
 
 FrameCallback frames[] = {
-  [](OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y){
-    screenCarousel.drawFrame1(display, state, x, y);
-  }, [](OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y){
-    screenCarousel.drawFrame2(display, state, x, y);
-  }, [](OLEDDisplay *display, OLEDDisplayUiState* state, short x, short y){
-    screenCarousel.drawFrame3(display, state, x, y); 
-  }
-};
+    [](OLEDDisplay* display, OLEDDisplayUiState* state, short x, short y) {
+      screenCarousel.drawFrame1(display, state, x, y);
+    },
+    [](OLEDDisplay* display, OLEDDisplayUiState* state, short x, short y) {
+      screenCarousel.drawFrame2(display, state, x, y);
+    },
+    [](OLEDDisplay* display, OLEDDisplayUiState* state, short x, short y) {
+      screenCarousel.drawFrame3(display, state, x, y);
+    }};
 
-Mode currentMode; 
- 
-DebouncedButton modeToggleButton(D3); 
-bool modeToggled = true; 
+Mode currentMode;
 
-void configModeCallback(WiFiManager* myWiFiManager); // forward declaration
-ManagedWiFiClient managedWiFiClient(configModeCallback);
+DebouncedButton modeToggleButton(D3);
+bool modeToggled = true;
+
+ManagedWiFiClient managedWiFiClient([](WiFiManager* wiFiManager) {
+  configModeCallback(wiFiManager, &oled);
+});
 MqttClient* mqttClient;
 
 void setup() {
@@ -49,8 +48,10 @@ void setup() {
   Wire.begin(D5, D6);
 
   oled.init();
-  updateSensorValuesTicker.attach_ms(2000, [](){
-    // set a flag because actually running it takes too long, because at the moment we water and the same time, because we don't have a better way to activate that yet
+  updateSensorValuesTicker.attach_ms(2000, []() {
+    // set a flag because actually running it takes too long, because at the
+    // moment we water and the same time, because we don't have a better way to
+    // activate that yet
     updateSensorValuesNextIteration = true;
   });
 
@@ -61,8 +62,8 @@ void setup() {
   oled.flipScreenVertically();
 
   WiFiManager wiFiManager;
-  //reset settings - for testing
-  //wiFiManager.resetSettings();
+  // reset settings - for testing
+  // wiFiManager.resetSettings();
   mqttClient = new MqttClient(&managedWiFiClient.client, &wiFiManager);
   mqttClient->addParameters();
   managedWiFiClient.begin(&wiFiManager);
@@ -72,14 +73,14 @@ void setup() {
 }
 
 void loop() {
-  if(currentMode == Automatic){
+  if (currentMode == Automatic) {
     wateringController.update(sensorsController.getSoilMoisture());
   }
 
-  if(!wateringController.isWatering){
+  if (!wateringController.isWatering) {
     int remainingTimeBudget = screenCarousel.update();
-    if(remainingTimeBudget > 0){
-      if(updateSensorValuesNextIteration){
+    if (remainingTimeBudget > 0) {
+      if (updateSensorValuesNextIteration) {
         updateSensorValuesNextIteration = false;
         sensorsController.updateSensorValues();
       }
@@ -87,37 +88,17 @@ void loop() {
     }
   }
 
-  if(modeToggleButton.read() == LOW){
-    if(!modeToggled){
+  if (modeToggleButton.read() == LOW) {
+    if (!modeToggled) {
       setMode(currentMode == Automatic ? Manual : Automatic);
       modeToggled = true;
     }
-  }else{
+  } else {
     modeToggled = false;
   }
 }
 
-void setMode(Mode mode){
+void setMode(Mode mode) {
   currentMode = mode;
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
-}
-
-void configModeCallback(WiFiManager* myWiFiManager) {
-  oled.clear();
-  oled.drawString(0, 0, "Entered config mode");
-
-  String ipLabel = "ip: ";
-  oled.drawString(0, 10, ipLabel);
-  oled.drawString(oled.getStringWidth(ipLabel), 10, WiFi.softAPIP().toString());
-
-  String SsidLabel = "SSID: ";
-  int SsidLabelWidth = oled.getStringWidth(SsidLabel);
-  oled.drawString(0, 20, SsidLabel);
-  oled.drawStringMaxWidth(SsidLabelWidth, 20, oled.getWidth() - SsidLabelWidth,
-                          myWiFiManager->getConfigPortalSSID());
-
-  String passwordLabel = "password: ";
-  oled.drawString(0, 44, "password: ");
-  oled.drawString(oled.getStringWidth(passwordLabel), 44, APPassword);
-  oled.display();
 }
