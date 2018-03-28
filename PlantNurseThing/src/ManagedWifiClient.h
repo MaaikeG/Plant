@@ -13,7 +13,6 @@
 #include <SSD1306.h>
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
-#include "Credentials.h"
 #include "WiFiManager.h"
 
 #define APSsid "Planet Nurse Access Point"
@@ -28,7 +27,7 @@ class ManagedWifiClient {
  public:
   WiFiClientSecure client;
   ManagedWifiClient(ConfigModeCallback _configModeCallback);
-  void begin();
+  void begin(WiFiManager* wifiManager);
 };
 
 #endif
