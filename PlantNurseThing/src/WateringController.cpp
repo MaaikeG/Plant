@@ -1,35 +1,65 @@
 #include "WateringController.h"
 
 WateringController::WateringController(uint8_t _servoPin, SSD1306* _oled) {
-	servo.attach(_servoPin);
-	oled = _oled;
+  servo.attach(_servoPin);
+  oled = _oled;
+  pinMode(RESERVOIR_EMPTY_LED, OUTPUT);
 }
 
 void WateringController::startWatering() {
-	servo.write(90);
-	lastWatering = millis();
-	Serial.println("started watering");
-	oled->clear();
-	oled->setFont(ArialMT_Plain_24);
-	oled->setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
-	oled->drawString(oled->width() / 2, oled->height() / 2 - 12, "Watering!");
-	isWatering = true;
+  servo.write(90);
+  wateringStart = millis();
+  oled->clear();
+  oled->setFont(ArialMT_Plain_24);
+  oled->setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
+  oled->drawString(oled->width() / 2, oled->height() / 2 - 12, "Watering!");
+  isWatering = true;
 }
 
 void WateringController::stopWatering() {
-	servo.write(0);
-	oled->setFont(ArialMT_Plain_10);
-	oled->setTextAlignment(TEXT_ALIGN_LEFT);
-	Serial.println("started watering");
-	isWatering = false;
+  servo.write(0);
+  oled->setFont(ArialMT_Plain_10);
+  oled->setTextAlignment(TEXT_ALIGN_LEFT);
+  lastWatering = millis();
+  isWatering = false;
 }
 
-void WateringController::update(){
-	if(millis() - lastWatering > waterFrequency /* replace by real condition later*/){
-		startWatering();
-	}else if(millis() - lastWatering > wateringDuration && isWatering){
-		stopWatering();
-	}else if(isWatering){
-		oled->drawProgressBar(12, 40, 100, 8, 100.0 * (float) (millis() - lastWatering) / (float) wateringDuration);
-	}
+void WateringController::update(uint8_t soilMoisture) {
+  if (isWatering) {
+    if (millis() - wateringStart > wateringDuration) {
+      stopWatering();
+      reservoirEmptyCheckDone = false;
+      Serial.println("stopped watering");
+    } else {
+      oled->drawProgressBar(
+          12, 40, 100, 8,
+          100.0 * (float)(millis() - wateringStart) / (float)wateringDuration);
+    }
+    oled->display();
+  } else {
+    checkReservoirEmpty(soilMoisture);
+
+    if (shouldWater(soilMoisture)) {
+      startWatering();
+      Serial.println("started watering");
+    }
+  }
+}
+
+bool WateringController::shouldWater(uint8_t soilMoisture) {
+  return !reservoirEmpty && reservoirEmptyCheckDone &&
+         soilMoisture < soilMoistureThreshold;
+}
+
+void WateringController::checkReservoirEmpty(uint8_t soilMoisture) {
+  // do this check only once after giving the water time to spread to the
+  // sensor.
+  if (!reservoirEmptyCheckDone &&
+      millis() - lastWatering > reservoirEmptyTimeCheck) {
+    if (soilMoisture < soilMoistureThreshold) {
+      reservoirEmpty = true;
+      digitalWrite(RESERVOIR_EMPTY_LED, HIGH);
+    }
+    reservoirEmptyCheckDone = true;
+  }
 }

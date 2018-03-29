@@ -1,12 +1,8 @@
 #include "DebouncedButton.h"
 
-DebouncedButton::DebouncedButton(uint8_t _buttonPin){
-    buttonPin = _buttonPin;
-}
+DebouncedButton::DebouncedButton(uint8_t _buttonPin) { buttonPin = _buttonPin; }
 
-void DebouncedButton::begin(){
-    pinMode(buttonPin, INPUT);
-}
+void DebouncedButton::begin() { pinMode(buttonPin, INPUT); }
 
 bool DebouncedButton::read() {
   // read the state of the switch into a local variable:
@@ -22,7 +18,7 @@ bool DebouncedButton::read() {
     lastDebounceTime = millis();
   }
 
-  if ((millis() - lastDebounceTime) > debounceDelay) {
+  if ((millis() - lastDebounceTime) > DEBOUNCE_DELAY) {
     // whatever the reading is at, it's been there for longer than the debounce
     // delay, so take it as the actual current state:
 
