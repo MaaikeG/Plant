@@ -54,11 +54,11 @@ void MqttClient::addParameters() {
   }
   // end read
 
-  mqttServerParameter = new WiFiManagerParameter("server", "server address", mqttServer, 40);
-  mqtPortParameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), 5);
-  mqttClientIdParameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, 20);
-  mqttUsernameParameter = new WiFiManagerParameter("username", "username", mqttUsername, 20);
-  mqttPasswordParameter = new WiFiManagerParameter("password", "password", mqttPassword, 20);
+  mqttServerParameter = new WiFiManagerParameter("server", "server address", mqttServer, MQTT_SERVER_LENGTH);
+  mqtPortParameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), MQTT_PORT_LENGTH);
+  mqttClientIdParameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, MQTT_CLIENT_ID_LENGTH);
+  mqttUsernameParameter = new WiFiManagerParameter("username", "username", mqttUsername, MQTT_USERNAME_LENGTH);
+  mqttPasswordParameter = new WiFiManagerParameter("password", "password", mqttPassword, MQTT_PASSWORD_LENGTH);
 
   wiFiManager->setSaveConfigCallback(saveConfigCallback);
 
