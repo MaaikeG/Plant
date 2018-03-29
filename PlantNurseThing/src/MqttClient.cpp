@@ -53,7 +53,7 @@ void MqttClient::addParameters() {
     Serial.println("failed to mount FS");
   }
   // end read
-  
+
   mqttServerParameter = new WiFiManagerParameter("server", "server address", mqttServer, 40);
   mqtPortParameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), 5);
   mqttClientIdParameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, 20);
@@ -105,29 +105,9 @@ void testCallback(char* data, uint16_t len) {
 }
 
 void MqttClient::begin() {
-  Serial.println(mqttServerParameter->getValue());
-  Serial.println(mqttPort);
-  Serial.println(mqttClientIdParameter->getValue());
-  Serial.println(mqttUsernameParameter->getValue());
-  Serial.println(mqttPasswordParameter->getValue());
-  // char buf[24];
-  // String(mqttServerParameter->getValue()).toCharArray(&buf[0], 24);
-  // strcpy(buf, mqttServerParameter->getValue());
-  adafruitClient =
-      new Adafruit_MQTT_Client(wiFiClient, &mqttServer[0],
-                               //"m23.cloudmqtt.com"
-                               // mqttServerParameter->getValue(),
-                               // 28205,
-                               mqttPort, &mqttClientId[0],
-                               //"NodeMcu Colin",
-                               // mqttClientIdParameter->getValue(),
-                               &mqttUsername[0],
-                               //"ovzlnxsu",
-                               // mqttUsernameParameter->getValue(),
-                               &mqttPassword[0]
-                               //"PmPxdzp_9BHq"
-                               // mqttPasswordParameter->getValue()
-      );
+  adafruitClient = new Adafruit_MQTT_Client(wiFiClient, &mqttServer[0],
+                                            mqttPort, &mqttClientId[0],
+                                            &mqttUsername[0], &mqttPassword[0]);
 
   testfeed.setCallback(testCallback);
 
