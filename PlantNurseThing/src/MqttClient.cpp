@@ -3,12 +3,7 @@
 bool shouldSaveConfig;
 
 MqttClient::MqttClient(WiFiClient* _wiFiClient, WiFiManager* _wiFiManager)
-    : testfeed(adafruitClient, "test", MQTT_QOS_1),
-      mqttServer_parameter("server", "server address", mqttServer, 40),
-      mqtt_port_parameter("port", "port", String(mqttPort).c_str(), 5),
-      mqttClientId_parameter("mqttClientId", "client id", mqttClientId, 20),
-      mqttUsername_parameter("username", "username", mqttUsername, 20),
-      mqttPassword_parameter("password", "password", mqttPassword, 20) {
+    : testfeed(adafruitClient, "test", MQTT_QOS_1) {
   wiFiClient = _wiFiClient;
   wiFiManager = _wiFiManager;
 }
@@ -58,22 +53,28 @@ void MqttClient::addParameters() {
     Serial.println("failed to mount FS");
   }
   // end read
+  
+  mqttServer_parameter = new WiFiManagerParameter("server", "server address", mqttServer, 40);
+  mqtt_port_parameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), 5);
+  mqttClientId_parameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, 20);
+  mqttUsername_parameter = new WiFiManagerParameter("username", "username", mqttUsername, 20);
+  mqttPassword_parameter = new WiFiManagerParameter("password", "password", mqttPassword, 20);
 
   wiFiManager->setSaveConfigCallback(saveConfigCallback);
 
-  wiFiManager->addParameter(&mqttServer_parameter);
-  wiFiManager->addParameter(&mqtt_port_parameter);
-  wiFiManager->addParameter(&mqttClientId_parameter);
-  wiFiManager->addParameter(&mqttUsername_parameter);
-  wiFiManager->addParameter(&mqttPassword_parameter);
+  wiFiManager->addParameter(mqttServer_parameter);
+  wiFiManager->addParameter(mqtt_port_parameter);
+  wiFiManager->addParameter(mqttClientId_parameter);
+  wiFiManager->addParameter(mqttUsername_parameter);
+  wiFiManager->addParameter(mqttPassword_parameter);
 }
 
 void MqttClient::saveParameters() {
-  strcpy(mqttServer, mqttServer_parameter.getValue());
-  mqttPort = String(mqtt_port_parameter.getValue()).toInt();
-  strcpy(mqttClientId, mqttClientId_parameter.getValue());
-  strcpy(mqttUsername, mqttUsername_parameter.getValue());
-  strcpy(mqttPassword, mqttPassword_parameter.getValue());
+  strcpy(mqttServer, mqttServer_parameter->getValue());
+  mqttPort = String(mqtt_port_parameter->getValue()).toInt();
+  strcpy(mqttClientId, mqttClientId_parameter->getValue());
+  strcpy(mqttUsername, mqttUsername_parameter->getValue());
+  strcpy(mqttPassword, mqttPassword_parameter->getValue());
 
   if (shouldSaveConfig) {
     Serial.println("saving config");
@@ -104,28 +105,28 @@ void testCallback(char* data, uint16_t len) {
 }
 
 void MqttClient::begin() {
-  Serial.println(mqttServer_parameter.getValue());
+  Serial.println(mqttServer_parameter->getValue());
   Serial.println(mqttPort);
-  Serial.println(mqttClientId_parameter.getValue());
-  Serial.println(mqttUsername_parameter.getValue());
-  Serial.println(mqttPassword_parameter.getValue());
+  Serial.println(mqttClientId_parameter->getValue());
+  Serial.println(mqttUsername_parameter->getValue());
+  Serial.println(mqttPassword_parameter->getValue());
   // char buf[24];
-  // String(mqttServer_parameter.getValue()).toCharArray(&buf[0], 24);
-  // strcpy(buf, mqttServer_parameter.getValue());
+  // String(mqttServer_parameter->getValue()).toCharArray(&buf[0], 24);
+  // strcpy(buf, mqttServer_parameter->getValue());
   adafruitClient =
       new Adafruit_MQTT_Client(wiFiClient, &mqttServer[0],
                                //"m23.cloudmqtt.com"
-                               // mqttServer_parameter.getValue(),
+                               // mqttServer_parameter->getValue(),
                                // 28205,
                                mqttPort, &mqttClientId[0],
                                //"NodeMcu Colin",
-                               // mqttClientId_parameter.getValue(),
+                               // mqttClientId_parameter->getValue(),
                                &mqttUsername[0],
                                //"ovzlnxsu",
-                               // mqttUsername_parameter.getValue(),
+                               // mqttUsername_parameter->getValue(),
                                &mqttPassword[0]
                                //"PmPxdzp_9BHq"
-                               // mqttPassword_parameter.getValue()
+                               // mqttPassword_parameter->getValue()
       );
 
   testfeed.setCallback(testCallback);
