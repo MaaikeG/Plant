@@ -54,27 +54,27 @@ void MqttClient::addParameters() {
   }
   // end read
   
-  mqttServer_parameter = new WiFiManagerParameter("server", "server address", mqttServer, 40);
-  mqtt_port_parameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), 5);
-  mqttClientId_parameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, 20);
-  mqttUsername_parameter = new WiFiManagerParameter("username", "username", mqttUsername, 20);
-  mqttPassword_parameter = new WiFiManagerParameter("password", "password", mqttPassword, 20);
+  mqttServerParameter = new WiFiManagerParameter("server", "server address", mqttServer, 40);
+  mqtPortParameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), 5);
+  mqttClientIdParameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, 20);
+  mqttUsernameParameter = new WiFiManagerParameter("username", "username", mqttUsername, 20);
+  mqttPasswordParameter = new WiFiManagerParameter("password", "password", mqttPassword, 20);
 
   wiFiManager->setSaveConfigCallback(saveConfigCallback);
 
-  wiFiManager->addParameter(mqttServer_parameter);
-  wiFiManager->addParameter(mqtt_port_parameter);
-  wiFiManager->addParameter(mqttClientId_parameter);
-  wiFiManager->addParameter(mqttUsername_parameter);
-  wiFiManager->addParameter(mqttPassword_parameter);
+  wiFiManager->addParameter(mqttServerParameter);
+  wiFiManager->addParameter(mqtPortParameter);
+  wiFiManager->addParameter(mqttClientIdParameter);
+  wiFiManager->addParameter(mqttUsernameParameter);
+  wiFiManager->addParameter(mqttPasswordParameter);
 }
 
 void MqttClient::saveParameters() {
-  strcpy(mqttServer, mqttServer_parameter->getValue());
-  mqttPort = String(mqtt_port_parameter->getValue()).toInt();
-  strcpy(mqttClientId, mqttClientId_parameter->getValue());
-  strcpy(mqttUsername, mqttUsername_parameter->getValue());
-  strcpy(mqttPassword, mqttPassword_parameter->getValue());
+  strcpy(mqttServer, mqttServerParameter->getValue());
+  mqttPort = String(mqtPortParameter->getValue()).toInt();
+  strcpy(mqttClientId, mqttClientIdParameter->getValue());
+  strcpy(mqttUsername, mqttUsernameParameter->getValue());
+  strcpy(mqttPassword, mqttPasswordParameter->getValue());
 
   if (shouldSaveConfig) {
     Serial.println("saving config");
@@ -105,28 +105,28 @@ void testCallback(char* data, uint16_t len) {
 }
 
 void MqttClient::begin() {
-  Serial.println(mqttServer_parameter->getValue());
+  Serial.println(mqttServerParameter->getValue());
   Serial.println(mqttPort);
-  Serial.println(mqttClientId_parameter->getValue());
-  Serial.println(mqttUsername_parameter->getValue());
-  Serial.println(mqttPassword_parameter->getValue());
+  Serial.println(mqttClientIdParameter->getValue());
+  Serial.println(mqttUsernameParameter->getValue());
+  Serial.println(mqttPasswordParameter->getValue());
   // char buf[24];
-  // String(mqttServer_parameter->getValue()).toCharArray(&buf[0], 24);
-  // strcpy(buf, mqttServer_parameter->getValue());
+  // String(mqttServerParameter->getValue()).toCharArray(&buf[0], 24);
+  // strcpy(buf, mqttServerParameter->getValue());
   adafruitClient =
       new Adafruit_MQTT_Client(wiFiClient, &mqttServer[0],
                                //"m23.cloudmqtt.com"
-                               // mqttServer_parameter->getValue(),
+                               // mqttServerParameter->getValue(),
                                // 28205,
                                mqttPort, &mqttClientId[0],
                                //"NodeMcu Colin",
-                               // mqttClientId_parameter->getValue(),
+                               // mqttClientIdParameter->getValue(),
                                &mqttUsername[0],
                                //"ovzlnxsu",
-                               // mqttUsername_parameter->getValue(),
+                               // mqttUsernameParameter->getValue(),
                                &mqttPassword[0]
                                //"PmPxdzp_9BHq"
-                               // mqttPassword_parameter->getValue()
+                               // mqttPasswordParameter->getValue()
       );
 
   testfeed.setCallback(testCallback);
