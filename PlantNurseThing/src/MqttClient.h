@@ -13,8 +13,7 @@
 #include <FS.h>
 #include <ArduinoJson.h>
 #include "WiFiManager.h"
-#include "Adafruit_MQTT.h"
-#include "Adafruit_MQTT_Client.h"
+#include <PubSubClient.h>
 
 #define MQTT_SERVER_LENGTH 40
 #define MQTT_PORT_LENGTH 5
@@ -26,16 +25,13 @@
 
 class MqttClient {
  private:
-  WiFiClient* wiFiClient;
+  WiFiClient &wiFiClient;
   WiFiManager* wiFiManager;
-  void MqttConnect();
-  Adafruit_MQTT_Client* adafruitClient;
-  Adafruit_MQTT_Subscribe testfeed;
   unsigned long lastPingMillis;
   char mqttServer[MQTT_SERVER_LENGTH];
   int mqttPort = 8080;
-  char mqttUsername[MQTT_USERNAME_LENGTH];
   char mqttClientId[MQTT_CLIENT_ID_LENGTH];
+  char mqttUsername[MQTT_USERNAME_LENGTH];
   char mqttPassword[MQTT_PASSWORD_LENGTH];
   WiFiManagerParameter* mqttServerParameter;
   WiFiManagerParameter* mqtPortParameter;
@@ -44,11 +40,12 @@ class MqttClient {
   WiFiManagerParameter* mqttPasswordParameter;
 
  public:
-  MqttClient(WiFiClient* _wiFiClient, WiFiManager* _wiFiManager);
+  MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager);
+  PubSubClient pubSubClient;
   void addParameters();
   void saveParameters();
   void begin();
-  void update(uint16_t timeLeft);
+  void update();
 };
 
 #endif

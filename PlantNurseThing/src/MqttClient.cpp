@@ -2,9 +2,8 @@
 
 bool shouldSaveConfig;
 
-MqttClient::MqttClient(WiFiClient* _wiFiClient, WiFiManager* _wiFiManager)
-    : testfeed(adafruitClient, "test", MQTT_QOS_1) {
-  wiFiClient = _wiFiClient;
+MqttClient::MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager)
+    : wiFiClient(_wiFiClient), pubSubClient(_wiFiClient) {
   wiFiManager = _wiFiManager;
 }
 
@@ -54,11 +53,16 @@ void MqttClient::addParameters() {
   }
   // end read
 
-  mqttServerParameter = new WiFiManagerParameter("server", "server address", mqttServer, MQTT_SERVER_LENGTH);
-  mqtPortParameter = new WiFiManagerParameter("port", "port", String(mqttPort).c_str(), MQTT_PORT_LENGTH);
-  mqttClientIdParameter = new WiFiManagerParameter("mqttClientId", "client id", mqttClientId, MQTT_CLIENT_ID_LENGTH);
-  mqttUsernameParameter = new WiFiManagerParameter("username", "username", mqttUsername, MQTT_USERNAME_LENGTH);
-  mqttPasswordParameter = new WiFiManagerParameter("password", "password", mqttPassword, MQTT_PASSWORD_LENGTH);
+  mqttServerParameter = new WiFiManagerParameter(
+      "server", "server address", mqttServer, MQTT_SERVER_LENGTH);
+  mqtPortParameter = new WiFiManagerParameter(
+      "port", "port", String(mqttPort).c_str(), MQTT_PORT_LENGTH);
+  mqttClientIdParameter = new WiFiManagerParameter(
+      "mqttClientId", "client id", mqttClientId, MQTT_CLIENT_ID_LENGTH);
+  mqttUsernameParameter = new WiFiManagerParameter(
+      "username", "username", mqttUsername, MQTT_USERNAME_LENGTH);
+  mqttPasswordParameter = new WiFiManagerParameter(
+      "password", "password", mqttPassword, MQTT_PASSWORD_LENGTH);
 
   wiFiManager->setSaveConfigCallback(saveConfigCallback);
 
@@ -99,58 +103,25 @@ void MqttClient::saveParameters() {
   // end save
 }
 
-void testCallback(char* data, uint16_t len) {
-  Serial.print("test: ");
-  Serial.println(data);
-}
-
 void MqttClient::begin() {
-  adafruitClient = new Adafruit_MQTT_Client(wiFiClient, &mqttServer[0],
-                                            mqttPort, &mqttClientId[0],
-                                            &mqttUsername[0], &mqttPassword[0]);
-
-  testfeed.setCallback(testCallback);
-
-  // Setup MQTT subscription for time feed.
-  adafruitClient->subscribe(&testfeed);
+  pubSubClient.setServer(mqttServer, mqttPort);
 }
 
-void MqttClient::update(uint16_t timeLeft) {
-  MqttConnect();
-  adafruitClient->processPackets(timeLeft);
-  if (millis() - lastPingMillis > PING_FREQUENCY) {
-    lastPingMillis = millis();
-    if (!adafruitClient->ping()) {
-      adafruitClient->disconnect();
+void MqttClient::update() {
+  // Loop until we're reconnected
+  while (!pubSubClient.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (pubSubClient.connect(mqttClientId, mqttUsername, mqttPassword)) {
+      Serial.println("connected");
+      pubSubClient.subscribe("test", 1);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(pubSubClient.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
     }
   }
-}
-
-void MqttClient::MqttConnect() {
-  int8_t ret;
-
-  // Stop if already connected.
-  if (adafruitClient->connected()) {
-    return;
-  }
-
-  Serial.print("Connecting to MQTT... ");
-
-  uint8_t retries = 3;
-  while ((ret = adafruitClient->connect()) !=
-         0) {  // connect will return 0 for connected
-    Serial.println(adafruitClient->connectErrorString(ret));
-    Serial.println("Retrying MQTT connection in 10 seconds...");
-    adafruitClient->disconnect();
-    delay(10000);  // wait 10 seconds
-    retries--;
-    if (retries == 0) {
-      wiFiManager->resetSettings();
-      delay(50);  // make sure the settings are really reset or something
-      // basically die and wait for WDT to reset me
-      while (1)
-        ;
-    }
-  }
-  Serial.println("MQTT Connected!");
+  pubSubClient.loop();
 }

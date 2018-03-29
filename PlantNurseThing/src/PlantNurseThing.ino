@@ -64,12 +64,13 @@ void setup() {
   WiFiManager wiFiManager;
   // reset settings - for testing
   // wiFiManager.resetSettings();
-  mqttClient = new MqttClient(&managedWiFiClient.client, &wiFiManager);
+  mqttClient = new MqttClient(managedWiFiClient.client, &wiFiManager);
   mqttClient->addParameters();
   managedWiFiClient.begin(&wiFiManager);
   mqttClient->saveParameters();
 
   mqttClient->begin();
+  mqttClient->pubSubClient.setCallback(messageCallback);
 }
 
 void loop() {
@@ -84,7 +85,7 @@ void loop() {
         updateSensorValuesNextIteration = false;
         sensorsController.updateSensorValues();
       }
-      mqttClient->update(remainingTimeBudget);
+      mqttClient->update();
     }
   }
 
@@ -101,4 +102,13 @@ void loop() {
 void setMode(Mode mode) {
   currentMode = mode;
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
+}
+
+void messageCallback(char* topic, byte* payload, unsigned int length){
+  if(strcmp("test", topic) == 0){
+    Serial.print("test: ");
+    for (int i = 0; i < length; i++) {
+      Serial.print((char)payload[i]);
+    }
+  }
 }
