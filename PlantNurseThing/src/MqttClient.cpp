@@ -105,18 +105,47 @@ void MqttClient::saveParameters() {
 
 void MqttClient::begin() { pubSubClient.setServer(mqttServer, mqttPort); }
 
+void MqttClient::badParametersReset() {
+  Serial.println("Restarting the Access Point");
+  wiFiManager->resetSettings();
+  delay(50);  // make sure the settings are really reset or something
+  // basically die and wait for WDT to reset me
+  while (1)
+    ;
+}
+
 void connect(MqttClient* mqttClient) {
   Serial.print("Attempting MQTT connection...");
   // Attempt to connect
-  if (mqttClient->pubSubClient.connect(mqttClient->mqttClientId, mqttClient->mqttUsername, /* mqttClient->mqttPassword */ "")) {
+  if (mqttClient->pubSubClient.connect(mqttClient->mqttClientId,
+                                       mqttClient->mqttUsername,
+                                       mqttClient->mqttPassword)) {
     Serial.println("connected");
     mqttClient->pubSubClient.subscribe("test", 1);
     mqttClient->reconnectTicker.detach();
     mqttClient->tickerAttached = false;
   } else {
-    Serial.print("failed, rc=");
-    Serial.print(mqttClient->pubSubClient.state());
-    Serial.println(" try again in 5 seconds");
+    int state = mqttClient->pubSubClient.state();
+    Serial.print("Failed: ");
+    switch (state) {
+      case 2:
+        Serial.println("The server rejected the client id.");
+        mqttClient->badParametersReset();
+        break;
+      case 4:
+        Serial.println("The server rejected the username/password.");
+        mqttClient->badParametersReset();
+        break;
+      case 5:
+        Serial.println("The client was not authorized to connect.");
+        Serial.println("This was probably cause by bad credentials.");
+        mqttClient->badParametersReset();
+      default:
+        Serial.print("Client state = ");
+        Serial.println(state);
+        Serial.println(" try again in 5 seconds");
+        break;
+    }
   }
 }
 

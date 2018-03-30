@@ -48,6 +48,7 @@ class MqttClient {
   void addParameters();
   void saveParameters();
   void begin();
+  void badParametersReset();
   void update();
 };
 
