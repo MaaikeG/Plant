@@ -103,25 +103,30 @@ void MqttClient::saveParameters() {
   // end save
 }
 
-void MqttClient::begin() {
-  pubSubClient.setServer(mqttServer, mqttPort);
+void MqttClient::begin() { pubSubClient.setServer(mqttServer, mqttPort); }
+
+void connect(MqttClient* mqttClient) {
+  Serial.print("Attempting MQTT connection...");
+  // Attempt to connect
+  if (mqttClient->pubSubClient.connect(mqttClient->mqttClientId, mqttClient->mqttUsername, /* mqttClient->mqttPassword */ "")) {
+    Serial.println("connected");
+    mqttClient->pubSubClient.subscribe("test", 1);
+    mqttClient->reconnectTicker.detach();
+    mqttClient->tickerAttached = false;
+  } else {
+    Serial.print("failed, rc=");
+    Serial.print(mqttClient->pubSubClient.state());
+    Serial.println(" try again in 5 seconds");
+  }
 }
 
 void MqttClient::update() {
   // Loop until we're reconnected
-  while (!pubSubClient.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
-    if (pubSubClient.connect(mqttClientId, mqttUsername, mqttPassword)) {
-      Serial.println("connected");
-      pubSubClient.subscribe("test", 1);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(pubSubClient.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
-    }
+  if (!pubSubClient.connected() && !tickerAttached) {
+    reconnectTicker.attach(5, connect, this);
+    tickerAttached = true;
+    connect(this);
   }
+
   pubSubClient.loop();
 }

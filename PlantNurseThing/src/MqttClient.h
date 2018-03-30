@@ -14,6 +14,7 @@
 #include <ArduinoJson.h>
 #include "WiFiManager.h"
 #include <PubSubClient.h>
+#include <Ticker.h>
 
 #define MQTT_SERVER_LENGTH 40
 #define MQTT_PORT_LENGTH 5
@@ -28,11 +29,6 @@ class MqttClient {
   WiFiClient &wiFiClient;
   WiFiManager* wiFiManager;
   unsigned long lastPingMillis;
-  char mqttServer[MQTT_SERVER_LENGTH];
-  int mqttPort = 8080;
-  char mqttClientId[MQTT_CLIENT_ID_LENGTH];
-  char mqttUsername[MQTT_USERNAME_LENGTH];
-  char mqttPassword[MQTT_PASSWORD_LENGTH];
   WiFiManagerParameter* mqttServerParameter;
   WiFiManagerParameter* mqtPortParameter;
   WiFiManagerParameter* mqttClientIdParameter;
@@ -42,10 +38,19 @@ class MqttClient {
  public:
   MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager);
   PubSubClient pubSubClient;
+  Ticker reconnectTicker;
+  bool tickerAttached;
+  char mqttServer[MQTT_SERVER_LENGTH];
+  int mqttPort = 8080;
+  char mqttClientId[MQTT_CLIENT_ID_LENGTH];
+  char mqttUsername[MQTT_USERNAME_LENGTH];
+  char mqttPassword[MQTT_PASSWORD_LENGTH];
   void addParameters();
   void saveParameters();
   void begin();
   void update();
 };
+
+void connect(MqttClient* mqttClient);
 
 #endif
