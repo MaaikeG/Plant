@@ -13,10 +13,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include <SSD1306.h>
-#include "Adafruit_MQTT.h"
-#include "Adafruit_MQTT_Client.h"
 #include "WiFiManager.h"
-#include <SSD1306.h>
 
 #define AP_SSID "Plant Nurse Access Point"
 #define AP_PASSWORD "plantNurse"
