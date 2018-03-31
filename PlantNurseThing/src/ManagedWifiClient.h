@@ -21,17 +21,11 @@
 #define AP_SSID "Plant Nurse Access Point"
 #define AP_PASSWORD "plantNurse"
 
-typedef void (*ConfigModeCallback)(WiFiManager*);
-
 void configModeCallback(WiFiManager* wiFiManager, SSD1306* oled);
 
 class ManagedWiFiClient : public WiFiClientSecure {
- private:
-  ConfigModeCallback configModeCallback;
-
  public:
-  ManagedWiFiClient(ConfigModeCallback _configModeCallback);
-  void begin(WiFiManager* wiFiManager);
+  void begin(WiFiManager* wiFiManager, void (*_configModeCallback)(WiFiManager*));
 };
 
 #endif

@@ -38,9 +38,7 @@ Mode currentMode;
 DebouncedButton modeToggleButton(D3);
 bool modeToggled = true;
 
-ManagedWiFiClient managedWiFiClient([](WiFiManager* wiFiManager) {
-  configModeCallback(wiFiManager, &oled);
-});
+ManagedWiFiClient managedWiFiClient;
 MqttClient* mqttClient;
 
 void setup() {
@@ -66,7 +64,9 @@ void setup() {
   // wiFiManager.resetSettings();
   mqttClient = new MqttClient(managedWiFiClient, &wiFiManager);
   mqttClient->addParameters();
-  managedWiFiClient.begin(&wiFiManager);
+  managedWiFiClient.begin(&wiFiManager, [](WiFiManager* wiFiManager) {
+    configModeCallback(wiFiManager, &oled);
+  });
   mqttClient->saveParameters();
 
   mqttClient->begin();
