@@ -13,6 +13,8 @@
 #define I2C_SDA D5
 #define I2C_SCL D6
 
+#define SENSOR_UPDATE_PERIOD 2000
+
 SensorsController sensorsController(A0, D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
 WateringController wateringController(D1, oled);
@@ -46,7 +48,7 @@ void setup() {
   Wire.begin(D5, D6);
 
   oled.init();
-  updateSensorValuesTicker.attach_ms(2000, []() {
+  updateSensorValuesTicker.attach_ms(SENSOR_UPDATE_PERIOD, []() {
     // set a flag because actually running it takes too long, because at the
     // moment we water and the same time, because we don't have a better way to
     // activate that yet
@@ -104,8 +106,8 @@ void setMode(Mode mode) {
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
 }
 
-void messageCallback(char* topic, byte* payload, unsigned int length){
-  if(strcmp("test", topic) == 0){
+void messageCallback(char* topic, byte* payload, unsigned int length) {
+  if (strcmp("test", topic) == 0) {
     Serial.print("test: ");
     for (int i = 0; i < length; i++) {
       Serial.print((char)payload[i]);
