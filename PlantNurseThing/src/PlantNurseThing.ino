@@ -64,13 +64,13 @@ void setup() {
   WiFiManager wiFiManager;
   // reset settings - for testing
   // wiFiManager.resetSettings();
-  mqttClient = new MqttClient(managedWiFiClient.client, &wiFiManager);
+  mqttClient = new MqttClient(managedWiFiClient, &wiFiManager);
   mqttClient->addParameters();
   managedWiFiClient.begin(&wiFiManager);
   mqttClient->saveParameters();
 
   mqttClient->begin();
-  mqttClient->pubSubClient.setCallback(messageCallback);
+  mqttClient->setCallback(messageCallback);
 }
 
 void loop() {

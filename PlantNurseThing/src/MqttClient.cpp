@@ -3,7 +3,7 @@
 bool shouldSaveConfig;
 
 MqttClient::MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager)
-    : wiFiClient(_wiFiClient), pubSubClient(_wiFiClient) {
+    : wiFiClient(_wiFiClient), PubSubClient(_wiFiClient) {
   wiFiManager = _wiFiManager;
 }
 
@@ -103,7 +103,7 @@ void MqttClient::saveParameters() {
   // end save
 }
 
-void MqttClient::begin() { pubSubClient.setServer(mqttServer, mqttPort); }
+void MqttClient::begin() { setServer(mqttServer, mqttPort); }
 
 void MqttClient::badParametersReset() {
   Serial.println("Restarting the Access Point");
@@ -114,48 +114,49 @@ void MqttClient::badParametersReset() {
     ;
 }
 
-void connect(MqttClient* mqttClient) {
+void MqttClient::connect() {
   Serial.print("Attempting MQTT connection...");
   // Attempt to connect
-  if (mqttClient->pubSubClient.connect(mqttClient->mqttClientId,
-                                       mqttClient->mqttUsername,
-                                       mqttClient->mqttPassword)) {
+  if (PubSubClient::connect(mqttClientId, mqttUsername, mqttPassword)) {
     Serial.println("connected");
-    mqttClient->pubSubClient.subscribe("test", 1);
-    mqttClient->reconnectTicker.detach();
-    mqttClient->tickerAttached = false;
+    subscribe("test", 1);
+    reconnectTicker.detach();
+    tickerAttached = false;
   } else {
-    int state = mqttClient->pubSubClient.state();
     Serial.print("Failed: ");
-    switch (state) {
+    switch (state()) {
       case 2:
         Serial.println("The server rejected the client id.");
-        mqttClient->badParametersReset();
+        badParametersReset();
         break;
       case 4:
         Serial.println("The server rejected the username/password.");
-        mqttClient->badParametersReset();
+        badParametersReset();
         break;
       case 5:
         Serial.println("The client was not authorized to connect.");
         Serial.println("This was probably cause by bad credentials.");
-        mqttClient->badParametersReset();
+        badParametersReset();
       default:
         Serial.print("Client state = ");
-        Serial.println(state);
+        Serial.println(state());
         Serial.println(" try again in 5 seconds");
         break;
     }
   }
 }
 
+void connectCallbackWrapper(MqttClient* mqttClient){
+  mqttClient->connect();
+}
+
 void MqttClient::update() {
   // Loop until we're reconnected
-  if (!pubSubClient.connected() && !tickerAttached) {
-    reconnectTicker.attach(5, connect, this);
+  if (!connected() && !tickerAttached) {
+    reconnectTicker.attach(5, connectCallbackWrapper, this);
     tickerAttached = true;
-    connect(this);
+    connect();
   }
 
-  pubSubClient.loop();
+  loop();
 }

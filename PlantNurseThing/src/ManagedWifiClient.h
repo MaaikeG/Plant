@@ -25,12 +25,11 @@ typedef void (*ConfigModeCallback)(WiFiManager*);
 
 void configModeCallback(WiFiManager* wiFiManager, SSD1306* oled);
 
-class ManagedWiFiClient {
+class ManagedWiFiClient : public WiFiClientSecure {
  private:
   ConfigModeCallback configModeCallback;
 
  public:
-  WiFiClientSecure client;
   ManagedWiFiClient(ConfigModeCallback _configModeCallback);
   void begin(WiFiManager* wiFiManager);
 };

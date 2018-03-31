@@ -24,7 +24,7 @@
 
 #define PING_FREQUENCY 25000
 
-class MqttClient {
+class MqttClient : public PubSubClient {
  private:
   WiFiClient &wiFiClient;
   WiFiManager* wiFiManager;
@@ -34,10 +34,6 @@ class MqttClient {
   WiFiManagerParameter* mqttClientIdParameter;
   WiFiManagerParameter* mqttUsernameParameter;
   WiFiManagerParameter* mqttPasswordParameter;
-
- public:
-  MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager);
-  PubSubClient pubSubClient;
   Ticker reconnectTicker;
   bool tickerAttached;
   char mqttServer[MQTT_SERVER_LENGTH];
@@ -45,13 +41,15 @@ class MqttClient {
   char mqttClientId[MQTT_CLIENT_ID_LENGTH];
   char mqttUsername[MQTT_USERNAME_LENGTH];
   char mqttPassword[MQTT_PASSWORD_LENGTH];
+
+ public:
+  MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager);
   void addParameters();
   void saveParameters();
   void begin();
   void badParametersReset();
   void update();
+  void connect();
 };
-
-void connect(MqttClient* mqttClient);
 
 #endif
