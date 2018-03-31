@@ -15,8 +15,8 @@
 
 SensorsController sensorsController(A0, D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-WateringController wateringController(D1, &oled);
-ScreenCarousel screenCarousel(&oled, &sensorsController, &wateringController);
+WateringController wateringController(D1, oled);
+ScreenCarousel screenCarousel(oled, sensorsController, wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
 
@@ -62,9 +62,9 @@ void setup() {
   WiFiManager wiFiManager;
   // reset settings - for testing
   // wiFiManager.resetSettings();
-  mqttClient = new MqttClient(managedWiFiClient, &wiFiManager);
+  mqttClient = new MqttClient(managedWiFiClient, wiFiManager);
   mqttClient->addParameters();
-  managedWiFiClient.begin(&wiFiManager, [](WiFiManager* wiFiManager) {
+  managedWiFiClient.begin(wiFiManager, [](WiFiManager* wiFiManager) {
     configModeCallback(wiFiManager, &oled);
   });
   mqttClient->saveParameters();

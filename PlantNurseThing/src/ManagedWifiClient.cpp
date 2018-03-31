@@ -1,8 +1,8 @@
 #include "ManagedWiFiClient.h"
 
-void ManagedWiFiClient::begin(WiFiManager* wiFiManager, void (*_configModeCallback)(WiFiManager*)) {
-  wiFiManager->setAPCallback(_configModeCallback);
-  if (!wiFiManager->autoConnect(AP_SSID, AP_PASSWORD)) {
+void ManagedWiFiClient::begin(WiFiManager& wiFiManager, void (*_configModeCallback)(WiFiManager*)) {
+  wiFiManager.setAPCallback(_configModeCallback);
+  if (!wiFiManager.autoConnect(AP_SSID, AP_PASSWORD)) {
     Serial.println("failed to connect and hit timeout");
     // reset and try again, or maybe put it to deep sleep
     ESP.reset();

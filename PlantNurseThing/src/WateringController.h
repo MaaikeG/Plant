@@ -25,12 +25,12 @@ class WateringController {
  private:
   Servo servo;
   uint8_t servoPin;
-  SSD1306* oled;
+  SSD1306& oled;
   bool reservoirEmptyCheckDone = true;
   unsigned long wateringStart;
 
  public:
-  WateringController(uint8_t _servoPin, SSD1306* _oled);
+  WateringController(uint8_t _servoPin, SSD1306& _oled);
   void startWatering();
   void stopWatering();
   bool shouldWater(uint8_t soilMoisture);

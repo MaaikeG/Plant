@@ -26,8 +26,8 @@
 
 class MqttClient : public PubSubClient {
  private:
-  WiFiClient &wiFiClient;
-  WiFiManager* wiFiManager;
+  WiFiClient& wiFiClient;
+  WiFiManager& wiFiManager;
   unsigned long lastPingMillis;
   WiFiManagerParameter* mqttServerParameter;
   WiFiManagerParameter* mqtPortParameter;
@@ -43,7 +43,7 @@ class MqttClient : public PubSubClient {
   char mqttPassword[MQTT_PASSWORD_LENGTH];
 
  public:
-  MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager);
+  MqttClient(WiFiClient& _wiFiClient, WiFiManager& _wiFiManager);
   void addParameters();
   void saveParameters();
   void begin();

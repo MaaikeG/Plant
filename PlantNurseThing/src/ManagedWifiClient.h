@@ -25,7 +25,7 @@ void configModeCallback(WiFiManager* wiFiManager, SSD1306* oled);
 
 class ManagedWiFiClient : public WiFiClientSecure {
  public:
-  void begin(WiFiManager* wiFiManager, void (*_configModeCallback)(WiFiManager*));
+  void begin(WiFiManager& wiFiManager, void (*_configModeCallback)(WiFiManager*));
 };
 
 #endif

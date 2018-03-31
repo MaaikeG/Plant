@@ -18,14 +18,13 @@
 
 class ScreenCarousel {
  private:
-  SensorsController* sensorsController;
-  WateringController* wateringController;
-  SSD1306* oled;
+  SensorsController& sensorsController;
+  WateringController& wateringController;
   OLEDDisplayUi ui;
 
  public:
-  ScreenCarousel(SSD1306* _oled, SensorsController* _sensorsController,
-                 WateringController* _wateringController);
+  ScreenCarousel(SSD1306& _oled, SensorsController& _sensorsController,
+                 WateringController& _wateringController);
   int update();
   void begin(FrameCallback frames[], uint8_t frameCount);
   void drawFrame1(OLEDDisplay* display, OLEDDisplayUiState* state, int16_t x,

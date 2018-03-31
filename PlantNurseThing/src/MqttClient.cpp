@@ -2,9 +2,10 @@
 
 bool shouldSaveConfig;
 
-MqttClient::MqttClient(WiFiClient& _wiFiClient, WiFiManager* _wiFiManager)
-    : wiFiClient(_wiFiClient), PubSubClient(_wiFiClient) {
-  wiFiManager = _wiFiManager;
+MqttClient::MqttClient(WiFiClient& _wiFiClient, WiFiManager& _wiFiManager)
+    : wiFiClient(_wiFiClient),
+      PubSubClient(_wiFiClient),
+      wiFiManager(_wiFiManager) {
 }
 
 void saveConfigCallback() {
@@ -64,13 +65,13 @@ void MqttClient::addParameters() {
   mqttPasswordParameter = new WiFiManagerParameter(
       "password", "password", mqttPassword, MQTT_PASSWORD_LENGTH);
 
-  wiFiManager->setSaveConfigCallback(saveConfigCallback);
+  wiFiManager.setSaveConfigCallback(saveConfigCallback);
 
-  wiFiManager->addParameter(mqttServerParameter);
-  wiFiManager->addParameter(mqtPortParameter);
-  wiFiManager->addParameter(mqttClientIdParameter);
-  wiFiManager->addParameter(mqttUsernameParameter);
-  wiFiManager->addParameter(mqttPasswordParameter);
+  wiFiManager.addParameter(mqttServerParameter);
+  wiFiManager.addParameter(mqtPortParameter);
+  wiFiManager.addParameter(mqttClientIdParameter);
+  wiFiManager.addParameter(mqttUsernameParameter);
+  wiFiManager.addParameter(mqttPasswordParameter);
 }
 
 void MqttClient::saveParameters() {
@@ -107,7 +108,7 @@ void MqttClient::begin() { setServer(mqttServer, mqttPort); }
 
 void MqttClient::badParametersReset() {
   Serial.println("Restarting the Access Point");
-  wiFiManager->resetSettings();
+  wiFiManager.resetSettings();
   delay(50);  // make sure the settings are really reset or something
   // basically die and wait for WDT to reset me
   while (1)
@@ -146,9 +147,7 @@ void MqttClient::connect() {
   }
 }
 
-void connectCallbackWrapper(MqttClient* mqttClient){
-  mqttClient->connect();
-}
+void connectCallbackWrapper(MqttClient* mqttClient) { mqttClient->connect(); }
 
 void MqttClient::update() {
   // Loop until we're reconnected
