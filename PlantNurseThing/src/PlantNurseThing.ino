@@ -38,9 +38,7 @@ Mode currentMode;
 DebouncedButton modeToggleButton(D3);
 bool modeToggled = true;
 
-ManagedWiFiClient managedWiFiClient([](WiFiManager* wiFiManager) {
-  configModeCallback(wiFiManager, &oled);
-});
+ManagedWiFiClient managedWiFiClient;
 MqttClient* mqttClient;
 
 void setup() {
@@ -64,12 +62,15 @@ void setup() {
   WiFiManager wiFiManager;
   // reset settings - for testing
   // wiFiManager.resetSettings();
-  mqttClient = new MqttClient(&managedWiFiClient.client, &wiFiManager);
+  mqttClient = new MqttClient(managedWiFiClient, &wiFiManager);
   mqttClient->addParameters();
-  managedWiFiClient.begin(&wiFiManager);
+  managedWiFiClient.begin(&wiFiManager, [](WiFiManager* wiFiManager) {
+    configModeCallback(wiFiManager, &oled);
+  });
   mqttClient->saveParameters();
 
   mqttClient->begin();
+  mqttClient->setCallback(messageCallback);
 }
 
 void loop() {
@@ -84,7 +85,7 @@ void loop() {
         updateSensorValuesNextIteration = false;
         sensorsController.updateSensorValues();
       }
-      mqttClient->update(remainingTimeBudget);
+      mqttClient->update();
     }
   }
 
@@ -101,4 +102,13 @@ void loop() {
 void setMode(Mode mode) {
   currentMode = mode;
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
+}
+
+void messageCallback(char* topic, byte* payload, unsigned int length){
+  if(strcmp("test", topic) == 0){
+    Serial.print("test: ");
+    for (int i = 0; i < length; i++) {
+      Serial.print((char)payload[i]);
+    }
+  }
 }
