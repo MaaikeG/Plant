@@ -22,8 +22,6 @@
 #define MQTT_USERNAME_LENGTH 20
 #define MQTT_PASSWORD_LENGTH 20
 
-#define PING_FREQUENCY 25000
-
 class MqttClient : public PubSubClient {
  private:
   WiFiClient& wiFiClient;
