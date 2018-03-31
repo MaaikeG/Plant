@@ -123,7 +123,7 @@ int main()
 	cv::Mat sum_hist_skin, sum_hist_nonskin;
 
 	double theta;  // probability threshold
-	theta = 0.3;   // TODO find suitable threshold
+	theta = 0.4;   // TODO find suitable threshold
 
 	int bin_size;    // histogram bin size
 	bin_size = 16;    // TODO find suitable size
@@ -244,6 +244,9 @@ int main()
 		// Convert the 1-channel mask into a 3-channel color image
 		cv::Mat tm_color;
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
+
+		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(2, 2));
+		cv::morphologyEx(tm_color, tm_color, cv::MORPH_OPEN, close_element);
 
 		// Height of the canvas
 		const int canvas_height = gesture_recorder.canvas.rows;
