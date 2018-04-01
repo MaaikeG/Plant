@@ -93,7 +93,6 @@ void loop() {
   if (!wateringController.isWatering) {
     int remainingTimeBudget = screenCarousel.update();
     void (*todos[]) () = {
-      []() { mqttClient->update(); },
       []() {
         if (updateSensorValuesNextIteration) {
           updateSensorValuesNextIteration = false;
@@ -121,6 +120,8 @@ void loop() {
   } else {
     modeToggled = false;
   }
+  
+  mqttClient->update();
 }
 
 void setMode(Mode mode) {
