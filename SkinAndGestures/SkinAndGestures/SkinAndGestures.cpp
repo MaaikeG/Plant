@@ -236,7 +236,6 @@ int main()
 					// scale probability to a value between 0 - 255 
 					// TODO use theta as threshold!
 					t_scanline[x] = prob > theta ? 255 : 0;
-					//t_scanline[x] = cvFloor(prob * 255);
 				}
 			}
 		}
@@ -246,7 +245,9 @@ int main()
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
 
 		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(2, 2));
+		cv::bitwise_not(tm_color, tm_color);
 		cv::morphologyEx(tm_color, tm_color, cv::MORPH_OPEN, close_element);
+		cv::bitwise_not(tm_color, tm_color);
 
 		// Height of the canvas
 		const int canvas_height = gesture_recorder.canvas.rows;
@@ -259,6 +260,59 @@ int main()
 
 			// We subtract the canvas height because the recorded [x,y]-positions are relative to the window, not the canvas
 			cv::line(tm_color, cv::Point2d(p1.x, p1.y - canvas_height), cv::Point2d(p2.x, p2.y - canvas_height), Color_RED, 2, CV_AA);
+		}
+
+		cv::Mat canny_output;
+		vector<vector<cv::Point> > contours;
+		vector<cv::Vec4i> hierarchy;
+		int thresh = 100;
+
+		// Detect edges using canny
+		Canny(tm_color, canny_output, thresh, thresh * 2, 3);
+		// Find contours
+		findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+
+		//finding the contour of largest area and storing its index
+		int largestIdx = 0;
+		int largestArea = 0;
+		for (int i = 0; i < contours.size(); i++)
+		{
+			double size = cv::contourArea(contours[i]);
+			if (size > largestArea)
+			{
+				largestArea = size;
+				largestIdx = i;
+			}
+		}
+
+		//// Find the convex hull object for each contour
+		vector<vector<cv::Point> >hull(contours.size());
+		vector<vector<int> > hullsI(contours.size());
+		vector<vector<cv::Vec4i>> defects(contours.size());
+		for (int i = 0; i < contours.size(); i++)
+		{
+			cv::convexHull(contours[i], hull[i], false);
+			cv::convexHull(contours[i], hullsI[i], false);
+			convexityDefects(contours[i], hullsI[i], defects[i]);
+		}
+
+		// Draw contours and convex hulls, but only for the largest shape detected.
+		drawContours(tm_color, contours, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
+		drawContours(tm_color, hull, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
+		
+		for (int j = 0; j < defects[largestIdx].size(); ++j)
+		{
+			cv::Vec4i defect = defects[largestIdx][j];
+			int startidx = defect[0]; 
+			cv::Point start(contours[largestIdx][startidx]);
+			int endidx = defect[1]; 
+			cv::Point end(contours[largestIdx][endidx]);
+			int faridx = defect[2]; 
+			cv::Point ptFar(contours[largestIdx][faridx]);
+
+			line(tm_color, start, ptFar, cv::Scalar(255, 255, 0), 1);
+			line(tm_color, end, ptFar, cv::Scalar(255, 255, 0), 1);
+			circle(tm_color, ptFar, 4, cv::Scalar(255, 0, 0), 2);
 		}
 
 		cv::putText(tm_color, "draw here", cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
