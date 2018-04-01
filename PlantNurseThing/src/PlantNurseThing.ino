@@ -46,10 +46,6 @@ bool modeToggled = true;
 ManagedWiFiClient managedWiFiClient;
 MqttClient* mqttClient;
 
-template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
-    return SIZE;
-}
-
 void setup() {
   Serial.begin(9600);
   Wire.begin(D5, D6);
@@ -107,8 +103,11 @@ void loop() {
       }
     };
     unsigned long start = millis();
-    for (uint8_t i = 0; i < array_size(todos) && millis() - remainingTimeBudget > start; i++) {
-      todos[i]();
+    for (auto const& todo : todos) {
+      if(millis() - remainingTimeBudget > start){
+        todo();
+      }else
+        break;
     }
   }
 
