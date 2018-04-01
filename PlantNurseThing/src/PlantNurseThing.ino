@@ -14,6 +14,7 @@
 #define I2C_SCL D6
 
 #define SENSOR_UPDATE_PERIOD 2000
+#define SENSOR_PUBLISH_PERIOD 10000
 
 SensorsController sensorsController(A0, D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
@@ -21,6 +22,8 @@ WateringController wateringController(D1, oled);
 ScreenCarousel screenCarousel(oled, sensorsController, wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
+Ticker publishSensorValuesTicker;
+bool publishSensorValuesNextIteration = true;
 
 enum Mode { Manual, Automatic };
 
@@ -43,17 +46,24 @@ bool modeToggled = true;
 ManagedWiFiClient managedWiFiClient;
 MqttClient* mqttClient;
 
+template<size_t SIZE, class T> inline size_t array_size(T (&arr)[SIZE]) {
+    return SIZE;
+}
+
 void setup() {
   Serial.begin(9600);
   Wire.begin(D5, D6);
 
   oled.init();
+
   updateSensorValuesTicker.attach_ms(SENSOR_UPDATE_PERIOD, []() {
     // set a flag because actually running it takes too long, because at the
     // moment we water and the same time, because we don't have a better way to
     // activate that yet
     updateSensorValuesNextIteration = true;
   });
+  publishSensorValuesTicker.attach_ms(
+      SENSOR_PUBLISH_PERIOD, []() { publishSensorValuesNextIteration = true; });
 
   pinMode(LED_BUILTIN, OUTPUT);
   setMode(Manual);
@@ -82,12 +92,24 @@ void loop() {
 
   if (!wateringController.isWatering) {
     int remainingTimeBudget = screenCarousel.update();
-    if (remainingTimeBudget > 0) {
-      if (updateSensorValuesNextIteration) {
-        updateSensorValuesNextIteration = false;
-        sensorsController.updateSensorValues();
+    void (*todos[]) () = {
+      []() { mqttClient->update(); },
+      []() {
+        if (updateSensorValuesNextIteration) {
+          updateSensorValuesNextIteration = false;
+          sensorsController.updateSensorValues();
+        }
+      },
+      []() {
+        if(publishSensorValuesNextIteration){
+          publishSensorValuesNextIteration = false;
+          mqttClient->publishSensorValues(sensorsController);
+        }
       }
-      mqttClient->update();
+    };
+    unsigned long start = millis();
+    for (uint8_t i = 0; i < array_size(todos) && millis() - remainingTimeBudget > start; i++) {
+      todos[i]();
     }
   }
 

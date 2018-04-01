@@ -15,12 +15,20 @@
 #include "WiFiManager.h"
 #include <PubSubClient.h>
 #include <Ticker.h>
+#include "SensorsController.h"
 
 #define MQTT_SERVER_LENGTH 40
 #define MQTT_PORT_LENGTH 5
 #define MQTT_CLIENT_ID_LENGTH 20
 #define MQTT_USERNAME_LENGTH 20
 #define MQTT_PASSWORD_LENGTH 20
+
+#define TOPIC_PREFIX "plantNurse/"
+#define TEMPERATURE_TOPIC TOPIC_PREFIX "temperature"
+#define HUMIDITY_TOPIC TOPIC_PREFIX "humidity"
+#define PRESSURE_TOPIC TOPIC_PREFIX "pressure"
+#define SOIL_MOISTURE_TOPIC TOPIC_PREFIX "soilMoisture"
+#define LIGHT_TOPIC TOPIC_PREFIX "light"
 
 class MqttClient : public PubSubClient {
  private:
@@ -48,6 +56,7 @@ class MqttClient : public PubSubClient {
   void badParametersReset();
   void update();
   void connect();
+  void publishSensorValues(SensorsController& sensorsController);
 };
 
 #endif

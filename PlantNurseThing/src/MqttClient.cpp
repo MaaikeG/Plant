@@ -5,8 +5,7 @@ bool shouldSaveConfig;
 MqttClient::MqttClient(WiFiClient& _wiFiClient, WiFiManager& _wiFiManager)
     : wiFiClient(_wiFiClient),
       PubSubClient(_wiFiClient),
-      wiFiManager(_wiFiManager) {
-}
+      wiFiManager(_wiFiManager) {}
 
 void saveConfigCallback() {
   Serial.println("Should save config");
@@ -158,4 +157,18 @@ void MqttClient::update() {
   }
 
   loop();
+}
+
+void MqttClient::publishSensorValues(SensorsController& sensorsController) {
+  char buff[6];
+  dtostrf(sensorsController.getTemperature(), 2, 1, buff);
+  publish(TEMPERATURE_TOPIC, buff, (boolean) 1);
+  dtostrf(sensorsController.getHumidity(), 2, 1, buff);
+  publish(HUMIDITY_TOPIC, buff, (boolean) 1);
+  dtostrf(sensorsController.getPressure(), 2, 1, buff);
+  publish(PRESSURE_TOPIC, buff, (boolean) 1);
+  dtostrf(sensorsController.getSoilMoisture(), 2, 1, buff);
+  publish(SOIL_MOISTURE_TOPIC, buff, (boolean) 1);
+  dtostrf(sensorsController.getLightIntensity(), 2, 1, buff);
+  publish(LIGHT_TOPIC, buff, (boolean) 1);
 }
