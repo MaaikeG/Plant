@@ -26,11 +26,13 @@
 #define MQTT_PASSWORD_LENGTH 20
 
 #define TOPIC_PREFIX "plantNurse/"
+#define TEST_TOPIC TOPIC_PREFIX "test"
 #define TEMPERATURE_TOPIC TOPIC_PREFIX "temperature"
 #define HUMIDITY_TOPIC TOPIC_PREFIX "humidity"
 #define PRESSURE_TOPIC TOPIC_PREFIX "pressure"
 #define SOIL_MOISTURE_TOPIC TOPIC_PREFIX "soilMoisture"
 #define LIGHT_TOPIC TOPIC_PREFIX "light"
+#define WATERING_TOPIC TOPIC_PREFIX "waterNow"
 
 class MqttClient : public PubSubClient {
  private:

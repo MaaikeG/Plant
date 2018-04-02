@@ -78,11 +78,13 @@ void setup() {
   mqttClient->saveParameters();
 
   mqttClient->begin();
+  mqttClient->subscribe(TEST_TOPIC, 1);
+  mqttClient->subscribe(WATERING_TOPIC, 1);
   mqttClient->setCallback(messageCallback);
 }
 
 void loop() {
-  if (currentMode == Automatic) {
+  if (currentMode == Automatic || wateringController.isWatering) {
     wateringController.update(sensorsController.getSoilMoisture());
   }
 
@@ -129,10 +131,12 @@ void setMode(Mode mode) {
 }
 
 void messageCallback(char* topic, byte* payload, unsigned int length) {
-  if (strcmp("test", topic) == 0) {
+  if (strcmp(TEST_TOPIC, topic) == 0) {
     Serial.print("test: ");
     for (int i = 0; i < length; i++) {
       Serial.print((char)payload[i]);
     }
+  }else if(strcmp(WATERING_TOPIC, topic) == 0){
+    wateringController.startWatering();
   }
 }
