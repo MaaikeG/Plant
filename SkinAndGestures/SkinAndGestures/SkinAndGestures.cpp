@@ -55,6 +55,16 @@ struct ActiveCanvas
 	Path2D positions;
 };
 
+float getDistance(cv::Point a, cv::Point b) {
+	return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+
+float getAngle(cv::Point s, cv::Point f, cv::Point e) {
+	float l1 = getDistance(f, s);
+	float l2 = getDistance(f, e);
+	return acos((s - f).dot(e - f) / (l1*l2));
+}
+
 /*
 The mouse call back routine handles the mouse actions.
 On left mouse press it records [x,y] locations into the positions list (a vector).
@@ -106,8 +116,7 @@ void mouseCallBack(int event, int x, int y, int flags, void* userdata)
 	}
 }
 
-int main()
-{
+cv::Mat getp_skin_rgb(int bin_size) {
 	const std::string path_images = "C:/Face_Dataset/Photos";
 	std::vector<std::string> files_images;
 	Utilities::getDirectory(path_images, "jpg", files_images);
@@ -122,21 +131,15 @@ int main()
 	// 2 histograms: one for counting skin pixel colors, the other for counting non-skin pixel colors
 	cv::Mat sum_hist_skin, sum_hist_nonskin;
 
-	double theta;  // probability threshold
-	theta = 0.4;   // TODO find suitable threshold
-
-	int bin_size;    // histogram bin size
-	bin_size = 16;    // TODO find suitable size
-
 	int hist_size[3] = { bin_size, bin_size, bin_size };      // Construct a 3D array of bin_size bin sizes
 	sum_hist_skin = cv::Mat::zeros(2, hist_size, CV_32F);     // Construct the skin histogram
 	sum_hist_nonskin = cv::Mat::zeros(2, hist_size, CV_32F);  // Construct the non-skin histogram
 
-	const float color_range[2] = { 0,  256};                            // Color range
+	const float color_range[2] = { 0,  256 };                            // Color range
 	const float *ranges[3] = { color_range, color_range, color_range }; // Pointer to 3D array, range for every color channel
 	const int channels[3] = { 1, 2 };                                // Channels to work with
 
-	// Iterate over all training image filenames
+																	 // Iterate over all training image filenames
 	for (size_t i = 0; i < files_images.size(); ++i)
 	{
 		const auto image_file = files_images[i];
@@ -152,16 +155,16 @@ int main()
 		{
 			cv::Mat image = cv::imread(image_file);       // load training image
 			cv::Mat image_YCrCb;
-			cv::cvtColor(image, image_YCrCb,cv::ColorConversionCodes::COLOR_RGB2YCrCb);
+			cv::cvtColor(image, image_YCrCb, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
 
 			cv::Mat mask = cv::imread(*ma_it, CV_LOAD_IMAGE_GRAYSCALE);             // load training mask
 			CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in 
 
 			cv::calcHist(&image_YCrCb, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
-			
+
 			cv::Mat inverseMask;
-			cv::bitwise_not(mask,inverseMask);
- 			cv::calcHist(&image_YCrCb, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
+			cv::bitwise_not(mask, inverseMask);
+			cv::calcHist(&image_YCrCb, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
 		}
 	}
 
@@ -175,9 +178,17 @@ int main()
 	cv::Mat p_rgb_skin = sum_hist_skin / totalSkinPixels;
 	cv::Mat p_rgb_nonskin = sum_hist_nonskin / totalNonSkinPixels;
 
-	cv::Mat Pskin_rgb = (p_rgb_skin * p_skin) /
-						(p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
-		
+	return (p_rgb_skin * p_skin) /
+		(p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
+
+}
+
+int main()
+{
+	int bin_size = 8;    // TODO find suitable size
+	int threshold = 20;
+
+	cv::Mat Pskin_rgb = getp_skin_rgb(bin_size);
 	// Factor to scale a color number to a histogram bin
 	const double factor = bin_size / 256.0;
 
@@ -200,7 +211,13 @@ int main()
 	// It is not necessary to do this in a call back routine! If you find it difficult to comprehend this 
 	// type of event handling, you can implement the position recording as a function inside the video 
 	// loop below. 
+
+	int blue = 100, red = 100;
+
 	cv::setMouseCallback("detection result", mouseCallBack, (void*)&gesture_recorder);
+	cv::createTrackbar("threshold", "detection result", &threshold, 100);
+	cv::createTrackbar("Blue weight", "detection result", &blue, 200);
+	cv::createTrackbar("Red weight", "detection result", &red, 200);
 
 	int key = -1;
 	while (key != 27)
@@ -228,13 +245,12 @@ int main()
 					const uchar* value = c_scanline + x * 3;
 
 					// encode the each color channel as a position in the probabilistic look-up histogram
-					const int loc[2] = { cvFloor(value[1] * factor), cvFloor(value[2] * factor) };
+					const int loc[2] = { cvFloor(value[1] * factor * (red/100.0f)), cvFloor(value[2] * factor * (blue/100.0f)) };
 					
 					// read the probability a given color is a skin color
 					const float prob = Pskin_rgb.at<float>(loc);
 
-					// scale probability to a value between 0 - 255 
-					// TODO use theta as threshold!
+					float theta = threshold / 100.0f;   // TODO find suitable 
 					t_scanline[x] = prob > theta ? 255 : 0;
 				}
 			}
@@ -244,10 +260,8 @@ int main()
 		cv::Mat tm_color;
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
 
-		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(2, 2));
-		cv::bitwise_not(tm_color, tm_color);
-		cv::morphologyEx(tm_color, tm_color, cv::MORPH_OPEN, close_element);
-		cv::bitwise_not(tm_color, tm_color);
+		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8), cv::Point(2, 2));
+		cv::morphologyEx(tm_color, tm_color, cv::MORPH_CLOSE, close_element);
 
 		// Height of the canvas
 		const int canvas_height = gesture_recorder.canvas.rows;
@@ -272,50 +286,77 @@ int main()
 		// Find contours
 		findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
-		//finding the contour of largest area and storing its index
-		int largestIdx = 0;
-		int largestArea = 0;
+		//find the largest contour and store its index
+		int largestIdx = -1;
+		int largestSize = 0;
 		for (int i = 0; i < contours.size(); i++)
 		{
-			double size = cv::contourArea(contours[i]);
-			if (size > largestArea)
+			double size = contours[i].size();
+			if (size > largestSize)
 			{
-				largestArea = size;
+				largestSize = size;
 				largestIdx = i;
 			}
 		}
 
-		//// Find the convex hull object for each contour
-		vector<vector<cv::Point> >hull(contours.size());
-		vector<vector<int> > hullsI(contours.size());
-		vector<vector<cv::Vec4i>> defects(contours.size());
-		for (int i = 0; i < contours.size(); i++)
-		{
-			cv::convexHull(contours[i], hull[i], false);
-			cv::convexHull(contours[i], hullsI[i], false);
-			convexityDefects(contours[i], hullsI[i], defects[i]);
+		if (largestIdx != -1) {
+			//// Find the convex hull object for each contour
+			vector<vector<cv::Point> >hull(contours.size());
+			vector<vector<int> > hullsI(contours.size());
+			vector<vector<cv::Vec4i>> defects(contours.size());
+			for (int i = 0; i < contours.size(); i++)
+			{
+				cv::convexHull(contours[i], hull[i], true);
+				cv::convexHull(contours[i], hullsI[i], true);
+				convexityDefects(contours[i], hullsI[i], defects[i]);
+			}
+
+			// Draw contours and convex hulls, but only for the largest shape detected.
+			drawContours(tm_color, contours, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
+			drawContours(tm_color, hull, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
+
+			//// Remove defects that are not really defects (really close to starting point)
+			//vector<cv::Vec4i> newDefects;
+
+			//vector<cv::Vec4i>::iterator d = defects[largestIdx].begin();
+			//while (d != defects[largestIdx].end()) {
+			//	cv::Vec4i& defect = (*d);
+			//	int startidx = defect[0];
+			//	cv::Point start(contours[largestIdx][startidx]);
+			//	int endidx = defect[1];
+			//	cv::Point end(contours[largestIdx][endidx]);
+			//	int faridx = defect[2];
+			//	cv::Point ptFar(contours[largestIdx][faridx]);
+
+			//	float angle = getAngle(start, ptFar, end);
+
+			//	if (getDistance(start, ptFar) > 50 && getDistance(end, ptFar) > 50 && angle < 45) {
+			//		newDefects.push_back(defect);
+			//	}
+			//	d++;
+			//}
+			//swap(defects[largestIdx], newDefects);
+
+			for (int j = 0; j < defects[largestIdx].size(); ++j)
+			{
+				cv::Vec4i defect = defects[largestIdx][j];
+				int startidx = defect[0];
+				cv::Point start(contours[largestIdx][startidx]);
+				int endidx = defect[1];
+				cv::Point end(contours[largestIdx][endidx]);
+				int faridx = defect[2];
+				cv::Point ptFar(contours[largestIdx][faridx]);
+
+				line(tm_color, start, ptFar, cv::Scalar(255, 255, 0), 1);
+				line(tm_color, end, ptFar, cv::Scalar(255, 255, 0), 1);
+				circle(tm_color, ptFar, 4, cv::Scalar(255, 0, 0), 2);
+			}
 		}
 
-		// Draw contours and convex hulls, but only for the largest shape detected.
-		drawContours(tm_color, contours, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
-		drawContours(tm_color, hull, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
-		
-		for (int j = 0; j < defects[largestIdx].size(); ++j)
-		{
-			cv::Vec4i defect = defects[largestIdx][j];
-			int startidx = defect[0]; 
-			cv::Point start(contours[largestIdx][startidx]);
-			int endidx = defect[1]; 
-			cv::Point end(contours[largestIdx][endidx]);
-			int faridx = defect[2]; 
-			cv::Point ptFar(contours[largestIdx][faridx]);
-
-			line(tm_color, start, ptFar, cv::Scalar(255, 255, 0), 1);
-			line(tm_color, end, ptFar, cv::Scalar(255, 255, 0), 1);
-			circle(tm_color, ptFar, 4, cv::Scalar(255, 0, 0), 2);
-		}
-
-		cv::putText(tm_color, "draw here", cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
+		int nFingers = 0;
+		char buff[20];
+		sprintf(buff, "N Fingers: %s", nFingers);
+		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
 
 		// Place the mask color image under the original webcam image
 		cv::Mat canvas;
@@ -343,4 +384,3 @@ int main()
 
 	return (EXIT_SUCCESS);
 }
-
