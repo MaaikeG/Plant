@@ -16,6 +16,8 @@
 #include <PubSubClient.h>
 #include <Ticker.h>
 #include "SensorsController.h"
+#include <list>
+#include <utility>
 
 #define MQTT_SERVER_LENGTH 40
 #define MQTT_PORT_LENGTH 5
@@ -47,6 +49,8 @@ class MqttClient : public PubSubClient {
   char mqttClientId[MQTT_CLIENT_ID_LENGTH];
   char mqttUsername[MQTT_USERNAME_LENGTH];
   char mqttPassword[MQTT_PASSWORD_LENGTH];
+  std::list<std::pair<const char*, uint8_t>> subscriptions;
+
 
  public:
   MqttClient(WiFiClient& _wiFiClient, WiFiManager& _wiFiManager);
@@ -57,6 +61,8 @@ class MqttClient : public PubSubClient {
   void update();
   void connect();
   void publishSensorValues(SensorsController& sensorsController);
+  boolean subscribe(const char* topic);
+  boolean subscribe(const char* topic, uint8_t qos);
 };
 
 #endif

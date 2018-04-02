@@ -119,7 +119,9 @@ void MqttClient::connect() {
   // Attempt to connect
   if (PubSubClient::connect(mqttClientId, mqttUsername, mqttPassword)) {
     Serial.println("connected");
-    subscribe("test", 1);
+    for (auto const& subscription : subscriptions) {
+        PubSubClient::subscribe(subscription.first, subscription.second);
+    }
     reconnectTicker.detach();
     tickerAttached = false;
   } else {
@@ -171,4 +173,15 @@ void MqttClient::publishSensorValues(SensorsController& sensorsController) {
   publish(SOIL_MOISTURE_TOPIC, buff, (boolean) 1);
   dtostrf(sensorsController.getLightIntensity(), 2, 1, buff);
   publish(LIGHT_TOPIC, buff, (boolean) 1);
+}
+
+boolean MqttClient::subscribe(const char* topic){
+  MqttClient::subscribe(topic, 0);
+}
+
+boolean MqttClient::subscribe(const char* topic, uint8_t qos){
+  subscriptions.push_back(std::pair<const char*, uint8_t> (topic, qos));
+  if(connected()){
+    PubSubClient::subscribe(topic, qos);
+  }
 }
