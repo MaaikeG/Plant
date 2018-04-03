@@ -49,8 +49,7 @@ MqttClient* mqttClient;
 void setup() {
   Serial.begin(9600);
   Wire.begin(D5, D6);
-
-  oled.init();
+  wateringController.begin();
 
   updateSensorValuesTicker.attach_ms(SENSOR_UPDATE_PERIOD, []() {
     // set a flag because actually running it takes too long, because at the
@@ -64,6 +63,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   setMode(Manual);
   modeToggleButton.begin();
+  oled.init();
   screenCarousel.begin(frames, 3);
   oled.flipScreenVertically();
 

@@ -2,8 +2,7 @@
 
 WateringController::WateringController(uint8_t _servoPin, SSD1306& _oled)
     : oled(_oled) {
-  servo.attach(_servoPin);
-  pinMode(RESERVOIR_EMPTY_LED, OUTPUT);
+  servoPin = _servoPin;
 }
 
 void WateringController::startWatering() {
@@ -22,6 +21,12 @@ void WateringController::stopWatering() {
   oled.setTextAlignment(TEXT_ALIGN_LEFT);
   lastWatering = millis();
   isWatering = false;
+}
+
+void WateringController::begin() {
+  servo.attach(servoPin);
+  servo.write(0);
+  pinMode(RESERVOIR_EMPTY_LED, OUTPUT);
 }
 
 void WateringController::update(uint8_t soilMoisture) {

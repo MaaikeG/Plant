@@ -34,6 +34,7 @@ class WateringController {
   void startWatering();
   void stopWatering();
   bool shouldWater(uint8_t soilMoisture);
+  void begin();
   void update(uint8_t soilMoisture);
   void checkReservoirEmpty(uint8_t soilMoisture);
   bool isWatering;
