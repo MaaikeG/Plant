@@ -262,9 +262,9 @@ int main()
 
 		// Convert the 1-channel mask into a 3-channel color image
 		cv::Mat tm_color;
+		cv::Mat binary;
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
 
-		cv::Mat background, binary, diff;
 		vector<vector<cv::Point> > contours;
 		vector < vector<int> > hullI = vector<vector<int> >(1);
 		vector < vector<cv::Point> > hullPoints = vector<vector<cv::Point> >(1);
@@ -293,9 +293,15 @@ int main()
 		if (largestIdx != -1) {
 			drawContours(tm_color, contours, largestIdx, cv::Scalar(255, 255, 0));
 
+			// get bounding rectangle
+			cv::Rect boundingBox = cv::boundingRect(cv::Mat(contours[largestIdx]));
+			float maxFingerLength = boundingBox.height / 2;
+			float minFingerLength = boundingBox.height / 4;
+
 			convexHull(contours[largestIdx], hullI[0]);
 			convexHull(contours[largestIdx], hullPoints[0]);
 			drawContours(tm_color, hullPoints, 0, cv::Scalar(0, 255, 255));
+			cv::rectangle(tm_color, boundingBox, cv::Scalar(100, 100, 0), 1);
 
 			if (hullI[0].size() > 2) {
 				convexityDefects(contours[largestIdx], hullI[0], defects);
@@ -305,8 +311,12 @@ int main()
 					cv::line(tm_color, contours[largestIdx][defect[1]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
 
 					float angle = getAngle(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], contours[largestIdx][defect[1]]);
+					float distance1 = getDistance(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]]);
+					float distance2 = getDistance(contours[largestIdx][defect[1]], contours[largestIdx][defect[2]]);
 
-					if (angle > 10 && angle < 90) {
+					if (angle > 10 && angle < 90 && distance1 < 100 
+							&& distance1 < maxFingerLength && distance2 < maxFingerLength
+							&& distance1 > minFingerLength && distance2 > minFingerLength) {
 						cv::circle(tm_color, contours[largestIdx][defect[2]], 4, cv::Scalar(0, 255, 0), 2);
 						nFingers++;
 					}
