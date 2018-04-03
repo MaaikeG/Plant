@@ -62,7 +62,8 @@ float getDistance(cv::Point a, cv::Point b) {
 float getAngle(cv::Point s, cv::Point f, cv::Point e) {
 	float l1 = getDistance(f, s);
 	float l2 = getDistance(f, e);
-	return acos((s - f).dot(e - f) / (l1*l2));
+	float rad = acos((s - f).dot(e - f) / (l1*l2));
+	return rad * 180 / CV_PI;
 }
 
 /*
@@ -266,7 +267,7 @@ int main()
 		cv::Mat background, binary, diff;
 		vector<vector<cv::Point> > contours;
 		vector < vector<int> > hullI = vector<vector<int> >(1);
-		vector < vector<cv::Point> > hullP = vector<vector<cv::Point> >(1);
+		vector < vector<cv::Point> > hullPoints = vector<vector<cv::Point> >(1);
 		vector<cv::Vec4i> defects;
 
 		blur(test_mask, test_mask, cv::Size(3, 3));
@@ -286,12 +287,15 @@ int main()
 			}
 		}
 
+
+		int nFingers = 1;
+
 		if (largestIdx != -1) {
 			drawContours(tm_color, contours, largestIdx, cv::Scalar(255, 255, 0));
 
 			convexHull(contours[largestIdx], hullI[0]);
-			convexHull(contours[largestIdx], hullP[0]);
-			drawContours(tm_color, hullP, 0, cv::Scalar(0, 255, 255));
+			convexHull(contours[largestIdx], hullPoints[0]);
+			drawContours(tm_color, hullPoints, 0, cv::Scalar(0, 255, 255));
 
 			if (hullI[0].size() > 2) {
 				convexityDefects(contours[largestIdx], hullI[0], defects);
@@ -299,13 +303,19 @@ int main()
 				for (cv::Vec4i defect : defects) {
 					cv::line(tm_color, contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
 					cv::line(tm_color, contours[largestIdx][defect[1]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
+
+					float angle = getAngle(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], contours[largestIdx][defect[1]]);
+
+					if (angle > 10 && angle < 90) {
+						cv::circle(tm_color, contours[largestIdx][defect[2]], 4, cv::Scalar(0, 255, 0), 2);
+						nFingers++;
+					}
 				}
 			}
 		}
 
-		int nFingers = 0;
 		char buff[20];
-		sprintf(buff, "N Fingers: %s", nFingers);
+		sprintf(buff, "N Fingers: %d", nFingers);
 		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
 
 		// Place the mask color image under the original webcam image
