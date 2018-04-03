@@ -185,7 +185,7 @@ cv::Mat getp_skin_rgb(int bin_size) {
 
 int main()
 {
-	int bin_size = 8;    // TODO find suitable size
+	int bin_size = 32;    // TODO find suitable size
 	int threshold = 20;
 
 	cv::Mat Pskin_rgb = getp_skin_rgb(bin_size);
@@ -256,35 +256,22 @@ int main()
 			}
 		}
 
+		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(1, 1));
+		cv::morphologyEx(test_mask, test_mask, cv::MORPH_CLOSE, close_element);
+
 		// Convert the 1-channel mask into a 3-channel color image
 		cv::Mat tm_color;
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
 
-		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8), cv::Point(2, 2));
-		cv::morphologyEx(tm_color, tm_color, cv::MORPH_CLOSE, close_element);
-
-		// Height of the canvas
-		const int canvas_height = gesture_recorder.canvas.rows;
-
-		// Draw the recorded gesture onto the mask color image
-		for (size_t p = 1; p < gesture_recorder.positions.size(); ++p)
-		{
-			const auto p1 = gesture_recorder.positions[p - 1];
-			const auto p2 = gesture_recorder.positions[p];
-
-			// We subtract the canvas height because the recorded [x,y]-positions are relative to the window, not the canvas
-			cv::line(tm_color, cv::Point2d(p1.x, p1.y - canvas_height), cv::Point2d(p2.x, p2.y - canvas_height), Color_RED, 2, CV_AA);
-		}
-
-		cv::Mat canny_output;
+		cv::Mat background, binary, diff;
 		vector<vector<cv::Point> > contours;
-		vector<cv::Vec4i> hierarchy;
-		int thresh = 100;
+		vector < vector<int> > hullI = vector<vector<int> >(1);
+		vector < vector<cv::Point> > hullP = vector<vector<cv::Point> >(1);
+		vector<cv::Vec4i> defects;
 
-		// Detect edges using canny
-		Canny(tm_color, canny_output, thresh, thresh * 2, 3);
-		// Find contours
-		findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+		blur(test_mask, test_mask, cv::Size(3, 3));
+		cv::threshold(test_mask, binary, 150, 255, CV_THRESH_BINARY);
+		findContours(binary, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 
 		//find the largest contour and store its index
 		int largestIdx = -1;
@@ -300,56 +287,19 @@ int main()
 		}
 
 		if (largestIdx != -1) {
-			//// Find the convex hull object for each contour
-			vector<vector<cv::Point> >hull(contours.size());
-			vector<vector<int> > hullsI(contours.size());
-			vector<vector<cv::Vec4i>> defects(contours.size());
-			for (int i = 0; i < contours.size(); i++)
-			{
-				cv::convexHull(contours[i], hull[i], true);
-				cv::convexHull(contours[i], hullsI[i], true);
-				convexityDefects(contours[i], hullsI[i], defects[i]);
-			}
+			drawContours(tm_color, contours, largestIdx, cv::Scalar(255, 255, 0));
 
-			// Draw contours and convex hulls, but only for the largest shape detected.
-			drawContours(tm_color, contours, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
-			drawContours(tm_color, hull, largestIdx, cv::Scalar(0, 0, 255), 1, 8, vector<cv::Vec4i>(), 0, cv::Point());
+			convexHull(contours[largestIdx], hullI[0]);
+			convexHull(contours[largestIdx], hullP[0]);
+			drawContours(tm_color, hullP, 0, cv::Scalar(0, 255, 255));
 
-			//// Remove defects that are not really defects (really close to starting point)
-			//vector<cv::Vec4i> newDefects;
+			if (hullI[0].size() > 2) {
+				convexityDefects(contours[largestIdx], hullI[0], defects);
 
-			//vector<cv::Vec4i>::iterator d = defects[largestIdx].begin();
-			//while (d != defects[largestIdx].end()) {
-			//	cv::Vec4i& defect = (*d);
-			//	int startidx = defect[0];
-			//	cv::Point start(contours[largestIdx][startidx]);
-			//	int endidx = defect[1];
-			//	cv::Point end(contours[largestIdx][endidx]);
-			//	int faridx = defect[2];
-			//	cv::Point ptFar(contours[largestIdx][faridx]);
-
-			//	float angle = getAngle(start, ptFar, end);
-
-			//	if (getDistance(start, ptFar) > 50 && getDistance(end, ptFar) > 50 && angle < 45) {
-			//		newDefects.push_back(defect);
-			//	}
-			//	d++;
-			//}
-			//swap(defects[largestIdx], newDefects);
-
-			for (int j = 0; j < defects[largestIdx].size(); ++j)
-			{
-				cv::Vec4i defect = defects[largestIdx][j];
-				int startidx = defect[0];
-				cv::Point start(contours[largestIdx][startidx]);
-				int endidx = defect[1];
-				cv::Point end(contours[largestIdx][endidx]);
-				int faridx = defect[2];
-				cv::Point ptFar(contours[largestIdx][faridx]);
-
-				line(tm_color, start, ptFar, cv::Scalar(255, 255, 0), 1);
-				line(tm_color, end, ptFar, cv::Scalar(255, 255, 0), 1);
-				circle(tm_color, ptFar, 4, cv::Scalar(255, 0, 0), 2);
+				for (cv::Vec4i defect : defects) {
+					cv::line(tm_color, contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
+					cv::line(tm_color, contours[largestIdx][defect[1]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
+				}
 			}
 		}
 
