@@ -119,11 +119,12 @@ void MqttClient::connect() {
   // Attempt to connect
   if (PubSubClient::connect(mqttClientId, mqttUsername, mqttPassword)) {
     Serial.println("connected");
+    reconnectTicker.detach();
+    tickerAttached = false;
     for (auto const& subscription : subscriptions) {
         PubSubClient::subscribe(subscription.first, subscription.second);
     }
-    reconnectTicker.detach();
-    tickerAttached = false;
+    publish(STATUS_TOPIC, "online", (boolean) true);
   } else {
     Serial.print("Failed: ");
     switch (state()) {

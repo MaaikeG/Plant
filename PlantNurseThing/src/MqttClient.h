@@ -34,6 +34,7 @@
 #define LIGHT_TOPIC TOPIC_PREFIX "light"
 #define WATERING_TOPIC TOPIC_PREFIX "waterNow"
 #define MODE_TOGGLE_TOPIC TOPIC_PREFIX "setMode"
+#define STATUS_TOPIC TOPIC_PREFIX "status"
 
 class MqttClient : public PubSubClient {
  private:
