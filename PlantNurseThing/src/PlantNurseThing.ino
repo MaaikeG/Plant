@@ -69,7 +69,7 @@ void setup() {
 
   WiFiManager wiFiManager;
   // reset settings - for testing
-  // wiFiManager.resetSettings();
+  //wiFiManager.resetSettings();
   mqttClient = new MqttClient(managedWiFiClient, wiFiManager);
   mqttClient->addParameters();
   managedWiFiClient.begin(wiFiManager, [](WiFiManager* wiFiManager) {
@@ -80,6 +80,7 @@ void setup() {
   mqttClient->begin();
   mqttClient->subscribe(TEST_TOPIC, 1);
   mqttClient->subscribe(WATERING_TOPIC, 1);
+  mqttClient->subscribe(MODE_TOGGLE_TOPIC, 1);
   mqttClient->setCallback(messageCallback);
 }
 
@@ -116,7 +117,6 @@ void loop() {
   if (modeToggleButton.read() == LOW) {
     if (!modeToggled) {
       setMode(currentMode == Automatic ? Manual : Automatic);
-      modeToggled = true;
     }
   } else {
     modeToggled = false;
@@ -128,6 +128,7 @@ void loop() {
 void setMode(Mode mode) {
   currentMode = mode;
   digitalWrite(LED_BUILTIN, mode == Automatic ? LOW : HIGH);
+  modeToggled = true;
 }
 
 void messageCallback(char* topic, byte* payload, unsigned int length) {
@@ -138,5 +139,15 @@ void messageCallback(char* topic, byte* payload, unsigned int length) {
     }
   }else if(strcmp(WATERING_TOPIC, topic) == 0){
     wateringController.startWatering();
+  }else if(strcmp(MODE_TOGGLE_TOPIC, topic) == 0){
+    payload[length] = '\0';
+    String payloadString = String((char*)payload);
+    if(payloadString == "manual"){
+      setMode(Manual);
+    }else if(payloadString == "automatic"){
+      setMode(Automatic);
+    }else{
+      Serial.println("Invalid setMode payload!");
+    }
   }
 }

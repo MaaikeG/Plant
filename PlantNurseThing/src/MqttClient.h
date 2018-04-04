@@ -33,6 +33,7 @@
 #define SOIL_MOISTURE_TOPIC TOPIC_PREFIX "soilMoisture"
 #define LIGHT_TOPIC TOPIC_PREFIX "light"
 #define WATERING_TOPIC TOPIC_PREFIX "waterNow"
+#define MODE_TOGGLE_TOPIC TOPIC_PREFIX "setMode"
 
 class MqttClient : public PubSubClient {
  private:
