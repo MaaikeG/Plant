@@ -26,6 +26,7 @@ class SensorsController {
 
  public:
   SensorsController(uint8_t amuxInputPin, uint8_t amuxSelectorPin);
+  void begin();
   void updateSensorValues();
 
   float getTemperature();

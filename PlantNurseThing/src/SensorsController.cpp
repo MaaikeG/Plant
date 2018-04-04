@@ -3,6 +3,9 @@
 SensorsController::SensorsController(uint8_t amuxInputPin,
                                      uint8_t amuxSelectorPin)
     : amux(amuxInputPin, amuxSelectorPin) {
+}
+
+void SensorsController::begin() {
   // Wire.begin(D5, D6); assume it's already been called by setup()
   Bme280.begin();
   updateSensorValues();
