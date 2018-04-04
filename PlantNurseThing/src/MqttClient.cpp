@@ -117,7 +117,7 @@ void MqttClient::badParametersReset() {
 void MqttClient::connect() {
   Serial.print("Attempting MQTT connection...");
   // Attempt to connect
-  if (PubSubClient::connect(mqttClientId, mqttUsername, mqttPassword)) {
+  if (PubSubClient::connect(mqttClientId, mqttUsername, mqttPassword, STATUS_TOPIC, 1, (boolean) true, "offline")) {
     Serial.println("connected");
     reconnectTicker.detach();
     tickerAttached = false;
