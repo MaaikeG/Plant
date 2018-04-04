@@ -21,6 +21,8 @@ The ActiveCanvas is a struct that keeps track of the button status and gestures.
 
 INPUT: active_templates, a list of template names which are to be recognized
  */
+const int nFrames = 20;
+
 struct ActiveCanvas
 {
 	// Constructor
@@ -53,7 +55,41 @@ struct ActiveCanvas
 
 	// List of recorded [x,y] coordinates
 	Path2D positions;
+
+	// number of fingers recognized in last 10 frames
+	int nFingersPointer = 0;
+	int nFingersrecognized[nFrames] = { 0 };
 };
+
+// Set recognized finger number in the array containing n fingers recognized in last x frames.
+// Return number of fingers that was recognized most in last x frames.
+int calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
+	int* nFingersRecognized = gesture_recorder->nFingersrecognized;
+	int* pointer = &gesture_recorder->nFingersPointer;
+	*(nFingersRecognized + *pointer) = currentNFingers;
+	*pointer = (*pointer + 1) % nFrames;
+
+	// we have only 5 fingers so don't need more than 6 bins.
+	int nfingerBins[6] = { 0 };
+	for (int i = 0; i < nFrames; i++) {
+		if (*(nFingersRecognized + i) < 6 && *(nFingersRecognized + i) >= 0) {
+			// get n fingers recognized in frame 1, and increment that bin.
+			nfingerBins[*(nFingersRecognized + i)]++;
+		}
+	}
+
+	// Get bin index with highest value.
+	int max_value = 0;
+	int max_index = 0;
+	for (int i = 0; i < 6; i++) {
+		if (nfingerBins[i] > max_value) {
+			max_value = nfingerBins[i];
+			max_index = i;
+		}
+	}
+	return max_index;
+}
+
 
 float getDistance(cv::Point a, cv::Point b) {
 	return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
@@ -260,10 +296,24 @@ int main()
 		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(1, 1));
 		cv::morphologyEx(test_mask, test_mask, cv::MORPH_CLOSE, close_element);
 
+
 		// Convert the 1-channel mask into a 3-channel color image
 		cv::Mat tm_color;
 		cv::Mat binary;
 		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
+
+		// Height of the canvas	
+		const int canvas_height = gesture_recorder.canvas.rows;
+
+		// Draw the recorded gesture onto the mask color image	
+		for (size_t p = 1; p < gesture_recorder.positions.size(); ++p)
+		{
+			const auto p1 = gesture_recorder.positions[p - 1];
+			const auto p2 = gesture_recorder.positions[p];
+
+			// We subtract the canvas height because the recorded [x,y]-positions are relative to the window, not the canvas	
+			cv::line(tm_color, cv::Point2d(p1.x, p1.y - canvas_height), cv::Point2d(p2.x, p2.y - canvas_height), Color_RED, 2, CV_AA);
+		}
 
 		vector<vector<cv::Point> > contours;
 		vector < vector<int> > hullI = vector<vector<int> >(1);
@@ -296,7 +346,7 @@ int main()
 			// get bounding rectangle
 			cv::Rect boundingBox = cv::boundingRect(cv::Mat(contours[largestIdx]));
 			float maxFingerLength = boundingBox.height / 2;
-			float minFingerLength = boundingBox.height / 4;
+			float minFingerLength = boundingBox.height / 6;
 
 			convexHull(contours[largestIdx], hullI[0]);
 			convexHull(contours[largestIdx], hullPoints[0]);
@@ -314,16 +364,17 @@ int main()
 					float distance1 = getDistance(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]]);
 					float distance2 = getDistance(contours[largestIdx][defect[1]], contours[largestIdx][defect[2]]);
 
-					if (angle > 10 && angle < 90 && distance1 < 100 
+					if (angle < 90
 							&& distance1 < maxFingerLength && distance2 < maxFingerLength
 							&& distance1 > minFingerLength && distance2 > minFingerLength) {
-						cv::circle(tm_color, contours[largestIdx][defect[2]], 4, cv::Scalar(0, 255, 0), 2);
+						cv::circle(tm_color, contours[largestIdx][defect[2]], 4, cv::Scalar(180, 180, 0), 3);
 						nFingers++;
 					}
 				}
 			}
 		}
 
+		int nfingers = calcNFingers(&gesture_recorder, nFingers);
 		char buff[20];
 		sprintf(buff, "N Fingers: %d", nFingers);
 		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
@@ -339,6 +390,13 @@ int main()
 			if (gesture_recorder.last_result->score > 0.75)
 			{
 				CVLog(INFO) << gesture_recorder.last_result->name << "\t\t" << gesture_recorder.last_result->score;
+				ofstream myfile;
+				myfile.open("commands\\water.txt", ios::app);
+				if (myfile.is_open()) {
+					myfile << gesture_recorder.last_result->name << "\t\t" << gesture_recorder.last_result->score;
+				}
+				else { CVLog(INFO) << "Unable to open file"; }
+				myfile.close();
 			}
 
 			// Disarm is_result_shown so we show the result only once
