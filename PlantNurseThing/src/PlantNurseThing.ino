@@ -14,7 +14,7 @@
 #define I2C_SCL D6
 
 #define SENSOR_UPDATE_PERIOD 2000
-#define SENSOR_PUBLISH_PERIOD 10000
+#define SENSOR_PUBLISH_PERIOD 60000
 
 SensorsController sensorsController(A0, D2);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
