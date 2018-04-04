@@ -31,7 +31,7 @@ First download the zip or clone the project to your machine.
 | D1   | Servo                                                        |      |      |
 | D2   | Selector pin for Amux-board                                  |      |      |
 | D3   | Built in Flash button                                        |      |      |
-| D4   |                                                              |      |      |
+| D4   | Built in LED                                                 |      |      |
 | D5   | I2C SDA                                                      |      |      |
 | D6   | I2C SCL                                                      |      |      |
 | D7   |                                                              |      |      |
