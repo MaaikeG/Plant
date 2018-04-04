@@ -116,7 +116,9 @@ void loop() {
 
   if (modeToggleButton.read() == LOW) {
     if (!modeToggled) {
-      setMode(currentMode == Automatic ? Manual : Automatic);
+      Mode newMode = currentMode == Automatic ? Manual : Automatic;
+      mqttClient->publish(MODE_TOGGLE_TOPIC, newMode == Automatic ? "automatic" : "manual", (boolean) true);
+      setMode(newMode);
     }
   } else {
     modeToggled = false;
