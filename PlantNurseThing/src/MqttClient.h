@@ -36,6 +36,7 @@
 #define MODE_TOGGLE_TOPIC TOPIC_PREFIX "setMode"
 #define STATUS_TOPIC TOPIC_PREFIX "status"
 #define UPDATE_SENSOR_TOPIC TOPIC_PREFIX "updateSensorsNow"
+#define WATER_RESERVOIR_EMPTYNESS_TOPIC TOPIC_PREFIX "waterReservoirEmptyness"
 
 class MqttClient : public PubSubClient {
  private:

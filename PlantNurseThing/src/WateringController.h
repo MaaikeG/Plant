@@ -28,9 +28,13 @@ class WateringController {
   SSD1306& oled;
   bool reservoirEmptyCheckDone = true;
   unsigned long wateringStart;
+  void (*onReservoirEmpty)();
+  void (*onReservoirFilled)();
 
  public:
-  WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin, SSD1306& _oled);
+  WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin,
+                     SSD1306& _oled, void (*_onReservoirEmpty)(),
+                     void (*_onReservoirFilled)());
   void startWatering();
   void stopWatering();
   bool shouldWater(uint8_t soilMoisture);

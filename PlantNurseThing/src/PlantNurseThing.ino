@@ -23,7 +23,9 @@
 
 SensorsController sensorsController(AMUX_OUTPUT_PIN, AMUX_SELECTOR_PIN);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-WateringController wateringController(SERVO_PIN, RESERVOIR_EMPTY_LED, oled);
+void onReservoirEmpty(); // forward declarations
+void onReservoirFilled();
+WateringController wateringController(SERVO_PIN, RESERVOIR_EMPTY_LED, oled, onReservoirEmpty, onReservoirFilled);
 ScreenCarousel screenCarousel(oled, sensorsController, wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
@@ -162,4 +164,12 @@ void messageCallback(char* topic, byte* payload, unsigned int length) {
       Serial.println("Invalid setMode payload!");
     }
   }
+}
+
+void onReservoirEmpty(){
+  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "empty", 1);
+}
+
+void onReservoirFilled(){
+  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "not empty", 1);
 }
