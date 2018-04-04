@@ -1,8 +1,9 @@
 #include "WateringController.h"
 
-WateringController::WateringController(uint8_t _servoPin, SSD1306& _oled)
+WateringController::WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin, SSD1306& _oled)
     : oled(_oled) {
   servoPin = _servoPin;
+  reservoirEmptyLedPin = _reservoirEmptyLedPin;
 }
 
 void WateringController::startWatering() {
@@ -26,7 +27,7 @@ void WateringController::stopWatering() {
 void WateringController::begin() {
   servo.attach(servoPin);
   servo.write(0);
-  pinMode(RESERVOIR_EMPTY_LED, OUTPUT);
+  pinMode(reservoirEmptyLedPin, OUTPUT);
 }
 
 void WateringController::update(uint8_t soilMoisture) {
@@ -63,7 +64,7 @@ void WateringController::checkReservoirEmpty(uint8_t soilMoisture) {
       millis() - lastWatering > reservoirEmptyTimeCheck) {
     if (soilMoisture < soilMoistureThreshold) {
       reservoirEmpty = true;
-      digitalWrite(RESERVOIR_EMPTY_LED, HIGH);
+      digitalWrite(reservoirEmptyLedPin, HIGH);
     }
     reservoirEmptyCheckDone = true;
   }

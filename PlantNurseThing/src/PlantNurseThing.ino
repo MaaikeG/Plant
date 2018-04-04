@@ -10,15 +10,20 @@
 #include "SensorsController.h"
 #include "WateringController.h"
 
+#define SERVO_PIN D1
+#define AMUX_SELECTOR_PIN D2
+#define FLASH_BUTTON_PIN D3
 #define I2C_SDA D5
 #define I2C_SCL D6
+#define RESERVOIR_EMPTY_LED D7
+#define AMUX_OUTPUT_PIN A0
 
 #define SENSOR_UPDATE_PERIOD 2000
 #define SENSOR_PUBLISH_PERIOD 60000
 
-SensorsController sensorsController(A0, D2);
+SensorsController sensorsController(AMUX_OUTPUT_PIN, AMUX_SELECTOR_PIN);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-WateringController wateringController(D1, oled);
+WateringController wateringController(SERVO_PIN, RESERVOIR_EMPTY_LED, oled);
 ScreenCarousel screenCarousel(oled, sensorsController, wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
@@ -40,7 +45,7 @@ FrameCallback frames[] = {
 
 Mode currentMode;
 
-DebouncedButton modeToggleButton(D3);
+DebouncedButton modeToggleButton(FLASH_BUTTON_PIN);
 bool modeToggled = true;
 
 ManagedWiFiClient managedWiFiClient;
@@ -48,7 +53,7 @@ MqttClient* mqttClient;
 
 void setup() {
   Serial.begin(9600);
-  Wire.begin(D5, D6);
+  Wire.begin(I2C_SDA, I2C_SCL);
   wateringController.begin();
 
   updateSensorValuesTicker.attach_ms(SENSOR_UPDATE_PERIOD, []() {

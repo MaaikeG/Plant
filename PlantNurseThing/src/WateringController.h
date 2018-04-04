@@ -19,18 +19,18 @@
 #define reservoirEmptyTimeCheck \
   3000  // 60000 // is one minute is not enough for soil moisture to increase,
         // reservoir must be empty.
-#define RESERVOIR_EMPTY_LED D7
 
 class WateringController {
  private:
   Servo servo;
   uint8_t servoPin;
+  uint8_t reservoirEmptyLedPin;
   SSD1306& oled;
   bool reservoirEmptyCheckDone = true;
   unsigned long wateringStart;
 
  public:
-  WateringController(uint8_t _servoPin, SSD1306& _oled);
+  WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin, SSD1306& _oled);
   void startWatering();
   void stopWatering();
   bool shouldWater(uint8_t soilMoisture);
