@@ -34,6 +34,6 @@ First download the zip or clone the project to your machine.
 | D4   | Built in LED                                                 |      |      |
 | D5   | I2C SDA                                                      |      |      |
 | D6   | I2C SCL                                                      |      |      |
-| D7   |                                                              |      |      |
+| D7   | Reservoir empty led                                          |      |      |
 | D8   |                                                              |      |      |
 | A0   | Multiplexed output for soil moisture sensor and light sensor. |      |      |
