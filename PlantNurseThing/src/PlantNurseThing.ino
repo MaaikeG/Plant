@@ -87,6 +87,7 @@ void setup() {
   mqttClient->subscribe(TEST_TOPIC, 1);
   mqttClient->subscribe(WATERING_TOPIC, 1);
   mqttClient->subscribe(MODE_TOGGLE_TOPIC, 1);
+  mqttClient->subscribe(UPDATE_SENSOR_TOPIC, 1);
   mqttClient->setCallback(messageCallback);
 }
 
@@ -147,6 +148,9 @@ void messageCallback(char* topic, byte* payload, unsigned int length) {
     }
   }else if(strcmp(WATERING_TOPIC, topic) == 0){
     wateringController.startWatering();
+  }else if(strcmp(UPDATE_SENSOR_TOPIC, topic) == 0){
+    updateSensorValuesNextIteration = true;
+    publishSensorValuesNextIteration = true;
   }else if(strcmp(MODE_TOGGLE_TOPIC, topic) == 0){
     payload[length] = '\0';
     String payloadString = String((char*)payload);
