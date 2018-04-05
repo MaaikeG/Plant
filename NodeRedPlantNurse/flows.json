@@ -10,14 +10,14 @@
         "id": "4aff7920.82eac8",
         "type": "tls-config",
         "z": "",
-        "name": "GeoTrust",
+        "name": "AddTrust",
         "cert": "",
         "key": "",
         "ca": "",
         "certname": "",
         "keyname": "",
-        "caname": "GeoTrust_Primary_CA.pem",
-        "verifyservercert": false
+        "caname": "addtrustexternalcaroot.crt",
+        "verifyservercert": true
     },
     {
         "id": "ad1b817.507cd8",
