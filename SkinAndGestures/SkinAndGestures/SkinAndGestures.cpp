@@ -110,10 +110,6 @@ int main()
 	int threshold = 20;
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size);
-	cv::Mat Pskin_rgb = pSkinLoader.getp_skin_rgb();
-
-	// Factor to scale a color number to a histogram bin
-	const double factor = bin_size / 256.0;
 
 	// Open a window
 	cv::namedWindow("detection result", CV_WINDOW_FREERATIO);
@@ -144,7 +140,7 @@ int main()
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
 
 
-		if (!Pskin_rgb.empty())
+		if (!pSkinLoader.p_skin_YCrCb.empty())
 		{
 #pragma omp parallel for
 			for (int y = 0; y < gesture_recorder.canvas.rows; ++y)
@@ -156,13 +152,8 @@ int main()
 				{
 					// skip to column (3 colors per cell)
 					const uchar* value = c_scanline + x * 3;
-
-					// encode the each color channel as a position in the probabilistic look-up histogram
-					const int loc[2] = { cvFloor(value[1] * factor * (red / 100.0f)), cvFloor(value[2] * factor * (blue / 100.0f)) };
-
-					// read the probability a given color is a skin color
-					const float prob = Pskin_rgb.at<float>(loc);
-
+					
+					const float prob = pSkinLoader.getp_skin_YCrCb(value, red, blue);
 					float theta = threshold / 100.0f;   // TODO find suitable 
 					t_scanline[x] = prob > theta ? 255 : 0;
 				}

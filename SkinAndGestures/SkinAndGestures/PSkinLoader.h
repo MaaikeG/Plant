@@ -20,15 +20,25 @@ namespace DollarRecognizer
 
 		std::vector<std::string> files_images;
 		std::vector<std::string> files_masks;
+		
 		// 2 histograms: one for counting skin pixel colors, the other for counting non-skin pixel colors
 		cv::Mat sum_hist_skin, sum_hist_nonskin;
 		int bin_size;
 		int hist_size[3];
+		// Factor to scale a color number to a histogram bin
+		double factor;
 
-	public:
-		PSkinLoader(int bin_size);
-		cv::Mat getp_skin_rgb();
+		
+		void init();
+		cv::Mat set_P_skin(bool isYCrCb);
 		cv::Mat convertToPSkin(cv::Mat sum_hist_skin, cv::Mat sum_hist_nonskin);
 
+	public:
+		cv::Mat p_skin_YCrCb;
+		cv::Mat p_skin_HSV;
+
+		PSkinLoader(int bin_size);
+		const float getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier);
+		const float getp_skin_HSV(const uchar* value);
 	};
 }

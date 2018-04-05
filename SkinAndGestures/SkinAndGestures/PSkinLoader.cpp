@@ -12,19 +12,40 @@ namespace DollarRecognizer
 		CVLog(INFO) << files_masks;
 
 		bin_size = _bin_size;
+		factor = bin_size / 256.0;
 		for (int i = 0; i < 3; ++i) {
 			hist_size[i] = _bin_size;
 		}
-		sum_hist_skin = cv::Mat::zeros(2, hist_size, CV_32F);     // Construct the skin histogram
-		sum_hist_nonskin = cv::Mat::zeros(2, hist_size, CV_32F);  // Construct the non-skin histogram
+		sum_hist_skin = cv::Mat::zeros(3, hist_size, CV_32F);     // Construct the skin histogram
+		sum_hist_nonskin = cv::Mat::zeros(3, hist_size, CV_32F);  // Construct the non-skin histogram
+		init();
 	}
 
-	cv::Mat PSkinLoader::getp_skin_rgb() {
+	void PSkinLoader::init() {
+		p_skin_YCrCb = set_P_skin(true);
+		p_skin_HSV = set_P_skin(false);
+	}
+
+	const float PSkinLoader::getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier) {
+		// encode the each color channel as a position in the probabilistic look-up histogram
+		const int loc[2] = { cvFloor(value[1] * factor * (redModifier / 100.0f)), cvFloor(value[2] * factor * (blueModifier / 100.0f)) };
+
+		// read the probability a given color is a skin color
+		return p_skin_YCrCb.at<float>(loc);
+	}
+
+	const float PSkinLoader::getp_skin_HSV(const uchar* value) {
+		// encode the each color channel as a position in the probabilistic look-up histogram
+		const int loc[3] = { cvFloor(value[0] * factor), cvFloor(value[1] * factor), cvFloor(value[2] * factor) };
+
+		// read the probability a given color is a skin color
+		return p_skin_HSV.at<float>(loc);
+	}
+
+	cv::Mat PSkinLoader::set_P_skin(bool isYCrCb) {
 		const float color_range[2] = { 0,  256 };                            // Color range
 		const float *ranges[3] = { color_range, color_range, color_range }; // Pointer to 3D array, range for every color channel
-		const int channels[3] = { 1, 2 };                                // Channels to work with
-
-																		 // Iterate over all training image filenames
+																			// Iterate over all training image filenames
 		for (size_t i = 0; i < files_images.size(); ++i)
 		{
 			const auto image_file = files_images[i];
@@ -39,21 +60,32 @@ namespace DollarRecognizer
 			if (ma_it != files_masks.end())
 			{
 				cv::Mat image = cv::imread(image_file);       // load training image
-				cv::Mat image_YCrCb;
-				cv::cvtColor(image, image_YCrCb, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
+				cv::Mat image_converted;
 
 				cv::Mat mask = cv::imread(*ma_it, CV_LOAD_IMAGE_GRAYSCALE);             // load training mask
 				CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in 
 
-				cv::calcHist(&image_YCrCb, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
-
 				cv::Mat inverseMask;
 				cv::bitwise_not(mask, inverseMask);
-				cv::calcHist(&image_YCrCb, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
+
+				if (isYCrCb) {
+					// Use only 2 channels for YCrCb
+					int channels[3] = { 1, 2 };                                // Channels to work with
+					cv::cvtColor(image, image_converted, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
+					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
+					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
+				}
+				else {
+					// Use 3 channels for YCrCb
+					int channels[3] = { 0, 1, 2 };                                // Channels to work with
+					cv::cvtColor(image, image_converted, cv::ColorConversionCodes::COLOR_RGB2HSV);
+					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 3, hist_size, ranges, true, true);
+					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 3, hist_size, ranges, true, true);
+				}
+					
 			}
 		}
 		return convertToPSkin(sum_hist_skin, sum_hist_nonskin);
-
 	}
 
 	cv::Mat PSkinLoader::convertToPSkin(cv::Mat sum_hist_skin, cv::Mat sum_hist_nonskin)
