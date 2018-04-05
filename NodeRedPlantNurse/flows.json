@@ -252,5 +252,43 @@
                 "92735b7c.193668"
             ]
         ]
+    },
+    {
+        "id": "21e15878.de01f8",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "plantNurse/updateSensorsNow",
+        "topic": "plantNurse/updateSensorsNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 410,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b83e28db.867338",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Update sensors now!",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "21e15878.de01f8"
+            ]
+        ]
     }
 ]
