@@ -6,7 +6,8 @@
 #include <strsafe.h>
 #include "Utilities.h"
 #include "stdafx.h"
-using namespace System::Resources;
+
+
 using namespace std;
 
 namespace DollarRecognizer
