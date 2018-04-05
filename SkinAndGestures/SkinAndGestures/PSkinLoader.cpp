@@ -34,12 +34,18 @@ namespace DollarRecognizer
 		return p_skin_YCrCb.at<float>(loc);
 	}
 
-	const float PSkinLoader::getp_skin_HSV(const uchar* value) {
+	const float PSkinLoader::getp_skin_HSV(const uchar* value, int hueMin, int hueMax) {
 		// encode the each color channel as a position in the probabilistic look-up histogram
 		const int loc[3] = { cvFloor(value[0] * factor), cvFloor(value[1] * factor), cvFloor(value[2] * factor) };
 
 		// read the probability a given color is a skin color
-		return p_skin_HSV.at<float>(loc);
+		float prob = p_skin_HSV.at<float>(loc);
+		int hue = value[0];
+		if (hue < hueMin || hue > hueMax) {
+			prob *= 2;
+			if (prob > 1) prob = 1;
+		}
+		return prob;
 	}
 
 	cv::Mat PSkinLoader::set_P_skin(bool isYCrCb) {

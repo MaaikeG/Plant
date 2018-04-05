@@ -104,15 +104,35 @@ float getAngle(cv::Point s, cv::Point f, cv::Point e) {
 	return rad * 180 / CV_PI;
 }
 
+struct colorEncodingVariables {
+	int threshold = 20;
+	int blue = 100, red = 100, hueMin = 0, hueMax = 256;
+};
+
+void setWindow(colorEncodingVariables* encoding)
+{
+	cv::namedWindow("detection result", CV_WINDOW_FREERATIO);
+
+	cv::createTrackbar("threshold", "detection result", &(encoding->threshold), 100);
+	cv::createTrackbar("Blue weight", "detection result", &(encoding->blue), 200);
+	cv::createTrackbar("Red weight", "detection result", &(encoding->red), 200);
+	cv::createTrackbar("Hue Min", "detection result", &(encoding->hueMin), 256);
+	cv::createTrackbar("Hue Max", "detection result", &(encoding->hueMax), 256);
+}
+
+
+
 int main()
 {
 	int bin_size = 32;    // TODO find suitable size
 	int threshold = 20;
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size);
+	colorEncodingVariables colorEncodingVars;
 
-	// Open a window
-	cv::namedWindow("detection result", CV_WINDOW_FREERATIO);
+	int useYCrCb = 1;// is an Int because we can only use a trackbar to set this :(
+	setWindow(&colorEncodingVars);
+	cv::createTrackbar("HSV / YCrCb", "detection result", &useYCrCb, 1);
 
 	// Open the webcam
 	cv::VideoCapture video_capture(0);
@@ -122,11 +142,6 @@ int main()
 	std::vector<std::string> active_templates = { "Triangle", "X", "Rectangle", "Circle" };
 	ActiveCanvas gesture_recorder(active_templates);
 
-	int blue = 100, red = 100;
-
-	cv::createTrackbar("threshold", "detection result", &threshold, 100);
-	cv::createTrackbar("Blue weight", "detection result", &blue, 200);
-	cv::createTrackbar("Red weight", "detection result", &red, 200);
 
 	int key = -1;
 	while (key != 27)
@@ -138,7 +153,6 @@ int main()
 
 		// Initialize an empty mask
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
-
 
 		if (!pSkinLoader.p_skin_YCrCb.empty())
 		{
@@ -152,8 +166,14 @@ int main()
 				{
 					// skip to column (3 colors per cell)
 					const uchar* value = c_scanline + x * 3;
-					
-					const float prob = pSkinLoader.getp_skin_YCrCb(value, red, blue);
+					float prob;
+					if (useYCrCb) {
+						prob = pSkinLoader.getp_skin_YCrCb(value, colorEncodingVars.red, colorEncodingVars.blue);
+					}
+					else {
+						prob = pSkinLoader.getp_skin_HSV(value, colorEncodingVars.hueMin, colorEncodingVars.hueMax);
+
+					}
 					float theta = threshold / 100.0f;   // TODO find suitable 
 					t_scanline[x] = prob > theta ? 255 : 0;
 				}
@@ -162,7 +182,6 @@ int main()
 
 		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(1, 1));
 		cv::morphologyEx(test_mask, test_mask, cv::MORPH_CLOSE, close_element);
-
 
 		// Convert the 1-channel mask into a 3-channel color image
 		cv::Mat tm_color;
@@ -203,7 +222,6 @@ int main()
 				largestIdx = i;
 			}
 		}
-
 
 		int nFingers = 1;
 
@@ -271,7 +289,6 @@ int main()
 			// Disarm is_result_shown so we show the result only once
 			gesture_recorder.is_result_shown = true;
 		}
-
 
 		// Show the canvas
 		cv::imshow("detection result", canvas);
