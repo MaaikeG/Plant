@@ -33,7 +33,7 @@ struct ActiveCanvas
 	{
 		// Load the Dollar shape templates
 		recognizer.loadTemplates();
-		
+
 		// Active the given templates
 		recognizer.activateTemplates(active_templates);
 	}
@@ -43,7 +43,7 @@ struct ActiveCanvas
 
 	// The Dollar shape recognizer
 	GeometricRecognizer recognizer;
-	
+
 	// Unique pointer (not copyable) to the last recognition result
 	std::unique_ptr<RecognitionResult> last_result;
 
@@ -58,23 +58,24 @@ struct ActiveCanvas
 
 	// number of fingers recognized in last 10 frames
 	int nFingersPointer = 0;
-	int nFingersrecognized[nFrames] = { 0 };
+	int nFingersPerFrame[nFrames] = { 0 };
+	int nFingers;
 };
 
 // Set recognized finger number in the array containing n fingers recognized in last x frames.
 // Return number of fingers that was recognized most in last x frames.
-int calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
-	int* nFingersRecognized = gesture_recorder->nFingersrecognized;
+void calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
+	int* nFingersPerFrame = gesture_recorder->nFingersPerFrame;
 	int* pointer = &gesture_recorder->nFingersPointer;
-	*(nFingersRecognized + *pointer) = currentNFingers;
+	*(nFingersPerFrame + *pointer) = currentNFingers;
 	*pointer = (*pointer + 1) % nFrames;
 
 	// we have only 5 fingers so don't need more than 6 bins.
 	int nfingerBins[6] = { 0 };
 	for (int i = 0; i < nFrames; i++) {
-		if (*(nFingersRecognized + i) < 6 && *(nFingersRecognized + i) >= 0) {
+		if (*(nFingersPerFrame + i) < 6 && *(nFingersPerFrame + i) >= 0) {
 			// get n fingers recognized in frame 1, and increment that bin.
-			nfingerBins[*(nFingersRecognized + i)]++;
+			nfingerBins[*(nFingersPerFrame + i)]++;
 		}
 	}
 
@@ -87,7 +88,7 @@ int calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
 			max_index = i;
 		}
 	}
-	return max_index;
+	gesture_recorder->nFingers = max_index;
 }
 
 
@@ -100,57 +101,6 @@ float getAngle(cv::Point s, cv::Point f, cv::Point e) {
 	float l2 = getDistance(f, e);
 	float rad = acos((s - f).dot(e - f) / (l1*l2));
 	return rad * 180 / CV_PI;
-}
-
-/*
-The mouse call back routine handles the mouse actions.
-On left mouse press it records [x,y] locations into the positions list (a vector).
-On left mouse release the recorded [x,y] positions are fed the GeometricRecognizer,
-the GeometricRecognizer returns a result which is placed in last_result, finally
-positions (the vector) is cleared.
-
-INPUT
-  event   : a recorded mouse event type that activated the call back
-  x, y    : mouse position in the window
-  flags   : mouse callback flags (button status)
-  userdata: pointer to the ActiveCanvas
-*/
-void mouseCallBack(int event, int x, int y, int flags, void* userdata)
-{
-	ActiveCanvas* frame_canvas = (ActiveCanvas*)userdata;
-
-	// Find out if the x,y position is unique, we don't want to record double locations
-	Point2D np(x, y);
-	const auto po_it = std::find_if(frame_canvas->positions.begin(), frame_canvas->positions.end(), [np](const Point2D &op) {
-		return np.x == op.x && np.y == op.y;
-	});
-
-	// If the left button is pressed and the [x,y]-position is unique, record the location
-	if (frame_canvas->is_lbutton_down && po_it == frame_canvas->positions.end())
-	{
-		frame_canvas->positions.emplace_back(Point2D(x, y));
-	}
-
-	if (event == cv::EVENT_LBUTTONDOWN) // if the left mouse button is pressed
-	{
-		frame_canvas->is_lbutton_down = true;
-	}
-	else if (event == cv::EVENT_LBUTTONUP) // if the left mouse button is released
-	{
-		// unset is_lbutton_down and "arm" is_result_shown to show the recognition result once
-		frame_canvas->is_lbutton_down = false;
-		frame_canvas->is_result_shown = false;
-
-		// run the recognizer on the current list of [x,y]-positions (if there are any)
-		if (!frame_canvas->positions.empty())
-		{
-			RecognitionResult result = frame_canvas->recognizer.recognize(frame_canvas->positions);
-			frame_canvas->last_result = std::unique_ptr<RecognitionResult>(new RecognitionResult(result));
-
-			// clear the [x,y]-positions, ready to record a new gesture
-			frame_canvas->positions.clear();
-		}
-	}
 }
 
 cv::Mat getp_skin_rgb(int bin_size) {
@@ -240,18 +190,8 @@ int main()
 	std::vector<std::string> active_templates = { "Triangle", "X", "Rectangle", "Circle" };
 	ActiveCanvas gesture_recorder(active_templates);
 
-	// Create the mouse call back so we can enter gestures with the mouse
-	// TODO replace with a routine that records the gesture without the mouse!
-	// You should, 1: recognize a hand preparation
-	//             2: record [x,y]-positions of the stroke once the preparation was recognized
-	//             3: stop recording and process the stroke once the retraction is recognized
-	// It is not necessary to do this in a call back routine! If you find it difficult to comprehend this 
-	// type of event handling, you can implement the position recording as a function inside the video 
-	// loop below. 
-
 	int blue = 100, red = 100;
 
-	cv::setMouseCallback("detection result", mouseCallBack, (void*)&gesture_recorder);
 	cv::createTrackbar("threshold", "detection result", &threshold, 100);
 	cv::createTrackbar("Blue weight", "detection result", &blue, 200);
 	cv::createTrackbar("Red weight", "detection result", &red, 200);
@@ -266,7 +206,7 @@ int main()
 
 		// Initialize an empty mask
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
-		
+
 
 		if (!Pskin_rgb.empty())
 		{
@@ -282,8 +222,8 @@ int main()
 					const uchar* value = c_scanline + x * 3;
 
 					// encode the each color channel as a position in the probabilistic look-up histogram
-					const int loc[2] = { cvFloor(value[1] * factor * (red/100.0f)), cvFloor(value[2] * factor * (blue/100.0f)) };
-					
+					const int loc[2] = { cvFloor(value[1] * factor * (red / 100.0f)), cvFloor(value[2] * factor * (blue / 100.0f)) };
+
 					// read the probability a given color is a skin color
 					const float prob = Pskin_rgb.at<float>(loc);
 
@@ -365,8 +305,8 @@ int main()
 					float distance2 = getDistance(contours[largestIdx][defect[1]], contours[largestIdx][defect[2]]);
 
 					if (angle < 90
-							&& distance1 < maxFingerLength && distance2 < maxFingerLength
-							&& distance1 > minFingerLength && distance2 > minFingerLength) {
+						&& distance1 < maxFingerLength && distance2 < maxFingerLength
+						&& distance1 > minFingerLength && distance2 > minFingerLength) {
 						cv::circle(tm_color, contours[largestIdx][defect[2]], 4, cv::Scalar(180, 180, 0), 3);
 						nFingers++;
 					}
@@ -374,7 +314,9 @@ int main()
 			}
 		}
 
-		int nfingers = calcNFingers(&gesture_recorder, nFingers);
+
+		calcNFingers(&gesture_recorder, nFingers);
+		nFingers = gesture_recorder.nFingers;
 		char buff[20];
 		sprintf(buff, "N Fingers: %d", nFingers);
 		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
@@ -402,6 +344,7 @@ int main()
 			// Disarm is_result_shown so we show the result only once
 			gesture_recorder.is_result_shown = true;
 		}
+
 
 		// Show the canvas
 		cv::imshow("detection result", canvas);
