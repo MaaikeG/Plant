@@ -48,6 +48,9 @@
     <ClInclude Include="GeometricRecognizerTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PSkinLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeometricRecognizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PSkinLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

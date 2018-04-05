@@ -161,6 +161,7 @@
     <ClInclude Include="GeometricRecognizerTypes.h" />
     <ClInclude Include="GestureTemplate.h" />
     <ClInclude Include="MultipleStrokeGestureTemplate.h" />
+    <ClInclude Include="PSkinLoader.h" />
     <ClInclude Include="SampleGestures.h" />
     <ClInclude Include="SampleMultiStrokeGestures.h" />
     <ClInclude Include="stdafx.h" />
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeometricRecognizer.cpp" />
+    <ClCompile Include="PSkinLoader.cpp" />
     <ClCompile Include="SkinAndGestures.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

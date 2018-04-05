@@ -13,6 +13,7 @@
 #include <strsafe.h>
 #include <string>
 #include <iostream>
+#include "PSkinLoader.h"
 
 using namespace DollarRecognizer;
 
@@ -103,79 +104,14 @@ float getAngle(cv::Point s, cv::Point f, cv::Point e) {
 	return rad * 180 / CV_PI;
 }
 
-cv::Mat getp_skin_rgb(int bin_size) {
-	const std::string path_images = "C:/Face_Dataset/Photos";
-	std::vector<std::string> files_images;
-	Utilities::getDirectory(path_images, "jpg", files_images);
-
-	const std::string path_masks = "C:/Face_Dataset/masks";
-	std::vector<std::string> files_masks;
-	Utilities::getDirectory(path_masks, "png", files_masks);
-
-	CVLog(INFO) << files_images;
-	CVLog(INFO) << files_masks;
-
-	// 2 histograms: one for counting skin pixel colors, the other for counting non-skin pixel colors
-	cv::Mat sum_hist_skin, sum_hist_nonskin;
-
-	int hist_size[3] = { bin_size, bin_size, bin_size };      // Construct a 3D array of bin_size bin sizes
-	sum_hist_skin = cv::Mat::zeros(2, hist_size, CV_32F);     // Construct the skin histogram
-	sum_hist_nonskin = cv::Mat::zeros(2, hist_size, CV_32F);  // Construct the non-skin histogram
-
-	const float color_range[2] = { 0,  256 };                            // Color range
-	const float *ranges[3] = { color_range, color_range, color_range }; // Pointer to 3D array, range for every color channel
-	const int channels[3] = { 1, 2 };                                // Channels to work with
-
-																	 // Iterate over all training image filenames
-	for (size_t i = 0; i < files_images.size(); ++i)
-	{
-		const auto image_file = files_images[i];
-
-		// We need to find the correct mask for this image
-		const auto ma_it = std::find_if(files_masks.begin(), files_masks.end(), [image_file](const std::string &m)
-		{
-			return Utilities::getBasename(m) == Utilities::getBasename(image_file);
-		});
-
-		// If we find the right mask
-		if (ma_it != files_masks.end())
-		{
-			cv::Mat image = cv::imread(image_file);       // load training image
-			cv::Mat image_YCrCb;
-			cv::cvtColor(image, image_YCrCb, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
-
-			cv::Mat mask = cv::imread(*ma_it, CV_LOAD_IMAGE_GRAYSCALE);             // load training mask
-			CV_Assert(image.rows == mask.rows && image.cols == mask.cols);          // They should be equal in 
-
-			cv::calcHist(&image_YCrCb, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
-
-			cv::Mat inverseMask;
-			cv::bitwise_not(mask, inverseMask);
-			cv::calcHist(&image_YCrCb, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
-		}
-	}
-
-	float totalSkinPixels = cv::sum(sum_hist_skin)[0];
-	float totalNonSkinPixels = cv::sum(sum_hist_nonskin)[0];
-	float totalPixels = totalSkinPixels + totalNonSkinPixels;
-
-	float p_skin = totalSkinPixels / totalPixels;
-	float p_nonskin = totalNonSkinPixels / totalPixels;
-
-	cv::Mat p_rgb_skin = sum_hist_skin / totalSkinPixels;
-	cv::Mat p_rgb_nonskin = sum_hist_nonskin / totalNonSkinPixels;
-
-	return (p_rgb_skin * p_skin) /
-		(p_rgb_skin * p_skin + p_rgb_nonskin * p_nonskin);
-
-}
-
 int main()
 {
 	int bin_size = 32;    // TODO find suitable size
 	int threshold = 20;
 
-	cv::Mat Pskin_rgb = getp_skin_rgb(bin_size);
+	PSkinLoader pSkinLoader = PSkinLoader(bin_size);
+	cv::Mat Pskin_rgb = pSkinLoader.getp_skin_rgb();
+
 	// Factor to scale a color number to a histogram bin
 	const double factor = bin_size / 256.0;
 
