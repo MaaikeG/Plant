@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\masks">
+      <UniqueIdentifier>{eb1581a5-8ecb-45e1-8815-fdf05ca16120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\photos">
+      <UniqueIdentifier>{24f2d652-3e4e-4d04-93ed-2b82cb6f45f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -51,6 +57,9 @@
     <ClInclude Include="PSkinLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -68,5 +77,480 @@
     <ClCompile Include="PSkinLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Face_Dataset\masks\06Apr03Face.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\07-c140-12family-red-rr-398h.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\2007_family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\920480_f520.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\3115267-My-very-large-Indian-family-2.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\0520962400.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\124511719065943_2.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\abbasprize.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Afishingfamilygettogether.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Aishwarya-Rai_20091229_aatheory.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\amida-belly-dancer.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\beck-family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\buck_family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\CDVP-group.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\chenhao0017me9.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\chinese-wedding-.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\chinessfolks.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\crawford_family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\dulani_anuradha4.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\dulani_anuradha7.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\evangeline-lilly-face-wallpapers_1593_1024.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\f_family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Family_1.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family_bible_study.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Family_Bryce.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family_fun_summer.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Family_JennysWedding_10_04.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family_matters_03.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family_portraits_001.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family4.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Family-Cell-C.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\FamilyChildrenServiceMinneapolis4.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\FamilyPhoto07.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\family-photo-2005-10.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\familySri.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\friends.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\gvkM2-eJH8Pl.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\image6.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\indianfamilyrandom.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\infohiding.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\josh-hartnett-Poster-thumb.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Kishani_-__n_-_5.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\large_Chapman-family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\m(01-32)_gr.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\m_unsexy_gr.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\mandy-moore-face-wallpapers_1913_1600.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Matthew_narrowweb__300x381,0.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Megan-Fox-Pretty-Face-1-1024x768.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\MyIndianFamily-2007-1.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\NewFamily-08.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\normalc67bdab.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\obama.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\obama_family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\one-family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\our-familly.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\PatCassidyFamily.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\pg42RF.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\PIC_0111.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\pic447a1uu2.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\RoundsFamily.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\royal_family_fs_108e_2.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Salma-Hayek-face-wi-new-lg.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\sara_badr.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\sarah.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\sdwstage25kaward.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\sri-lankan-actress-Natasha-Perera-.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Srilankan-Actress-Yamuna-Erandathi-001.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\Srilankan-Actress-Yamuna-Erandathi-002.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\st-vincent-actor-album-art.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\tang-wei-1.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\toddler_mollie_aug07_400.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\uid56fid51_SitasFamily.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\unknown.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\vick-family.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\w_sexy.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\yamuna_erandathi.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\masks\YuFamilyPhoto.png">
+      <Filter>Resource Files\masks</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\1_BO_AllFamily_Lrg.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\06Apr03Face.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\07-c140-12family-red-rr-398h.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\2007_family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\920480_f520.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\3115267-My-very-large-Indian-family-2.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\0520962400.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\124511719065943_2.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\abbasprize.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Afishingfamilygettogether.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Aishwarya-Rai_20091229_aatheory.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\amida-belly-dancer.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\beck-family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\buck_family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\CDVP-group.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\chenhao0017me9.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\chinese-wedding-.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\chinessfolks.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\crawford_family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\dulani_anuradha4.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\dulani_anuradha7.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\evangeline-lilly-face-wallpapers_1593_1024.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\f_family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Family_1.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family_bible_study.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Family_Bryce.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family_fun_summer.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Family_JennysWedding_10_04.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family_matters_03.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family_portraits_001.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family4.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Family-Cell-C.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\FamilyChildrenServiceMinneapolis4.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\FamilyPhoto07.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\family-photo-2005-10.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\familySri.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\friends.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\gvkM2-eJH8Pl.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\image6.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\indianfamilyrandom.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\infohiding.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\josh-hartnett-Poster-thumb.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Kishani_-__n_-_5.jpeg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\large_Chapman-family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\m(01-32)_gr.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\m_unsexy_gr.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\mandy-moore-face-wallpapers_1913_1600.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Matthew_narrowweb__300x381,0.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Megan-Fox-Pretty-Face-1-1024x768.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\MyIndianFamily-2007-1.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\NewFamily-08.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\normalc67bdab.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\obama_family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\one-family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\our-familly.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\PatCassidyFamily.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\pg42RF.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\PIC_0111.JPG">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\pic447a1uu2.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\RoundsFamily.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\royal_family_fs_108e_2.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Salma-Hayek-face-wi-new-lg.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\sara_badr.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\sarah.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\sdwstage25kaward.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\sri-lankan-actress-Natasha-Perera-.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Srilankan-Actress-Yamuna-Erandathi-001.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\Srilankan-Actress-Yamuna-Erandathi-002.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\st-vincent-actor-album-art.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\tang-wei-1.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\toddler_mollie_aug07_400.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\uid56fid51_SitasFamily.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\unknown.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\vick-family.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\w_sexy.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\yamuna_erandathi.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+    <Image Include="..\Face_Dataset\Photos\YuFamilyPhoto.jpg">
+      <Filter>Resource Files\photos</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SkinAndGestures.rc">
+      <Filter>Resource Files\masks</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
