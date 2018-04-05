@@ -349,5 +349,37 @@
         "x": 580,
         "y": 440,
         "wires": []
+    },
+    {
+        "id": "8140ab33.286af8",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 330,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "ef212f25.9de24",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/status",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "8140ab33.286af8"
+            ]
+        ]
     }
 ]
