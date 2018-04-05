@@ -48,21 +48,25 @@ void ScreenCarousel::drawFrame2(OLEDDisplay* display, OLEDDisplayUiState* state,
 
 void ScreenCarousel::drawFrame3(OLEDDisplay* display, OLEDDisplayUiState* state,
                                 int16_t x, int16_t y) {
-  display->drawString(x, y, "Time since last watering:");
+  if (wateringController.lastWatering == 0) {
+    display->drawStringMaxWidth(0, 0, display->width(), "Not watered the plant yet");
+  } else {
+    display->drawString(x, y, "Time since last watering:");
 
-  char res[32];
-  unsigned long timeSinceLastWatering =
-      (millis() - wateringController.lastWatering) / 1000;
-  uint8_t days = elapsedDays(timeSinceLastWatering);
-  uint8_t hours = numberOfHours(timeSinceLastWatering);
-  uint8_t minutes = numberOfMinutes(timeSinceLastWatering);
+    char res[32];
+    unsigned long timeSinceLastWatering =
+        (millis() - wateringController.lastWatering) / 1000;
+    uint8_t days = elapsedDays(timeSinceLastWatering);
+    uint8_t hours = numberOfHours(timeSinceLastWatering);
+    uint8_t minutes = numberOfMinutes(timeSinceLastWatering);
 
-  sprintf(res, "%d days, %d hours and %d minutes", days, hours, minutes);
-  display->drawStringMaxWidth(x + 10, y + 8, 100, res);
+    sprintf(res, "%d days, %d hours and %d minutes", days, hours, minutes);
+    display->drawStringMaxWidth(x + 10, y + 8, 100, res);
 
-  if (wateringController.reservoirEmpty) {
-    display->drawStringMaxWidth(x, y + 32, 128,
-                                "Reservoir is empty! Please refill now!");
+    if (wateringController.reservoirEmpty) {
+      display->drawStringMaxWidth(x, y + 32, 128,
+                                  "Reservoir is empty! Please refill now!");
+    }
   }
 }
 
