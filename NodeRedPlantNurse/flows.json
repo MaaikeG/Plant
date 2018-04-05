@@ -149,30 +149,70 @@
         "id": "ca0a91ca.9c096",
         "type": "mqtt in",
         "z": "3d2431d.466d3ce",
-        "name": "Test",
-        "topic": "test",
-        "qos": "2",
+        "name": "plantNurse/test",
+        "topic": "plantNurse/test",
+        "qos": "1",
         "broker": "ad1b817.507cd8",
-        "x": 340,
-        "y": 180,
+        "x": 120,
+        "y": 140,
         "wires": [
             [
-                "1d52d7f4.05ffe8"
+                "834e9c41.d462b"
             ]
         ]
     },
     {
-        "id": "1d52d7f4.05ffe8",
-        "type": "debug",
+        "id": "760906ee.f0fd68",
+        "type": "mqtt out",
         "z": "3d2431d.466d3ce",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 660,
-        "y": 200,
+        "topic": "plantNurse/test",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 280,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2bd14e81.864cf2",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "Test",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Test",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 90,
+        "y": 80,
+        "wires": [
+            [
+                "760906ee.f0fd68"
+            ]
+        ]
+    },
+    {
+        "id": "834e9c41.d462b",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Test textfield",
+        "label": "Test output: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 330,
+        "y": 140,
         "wires": []
     }
 ]
