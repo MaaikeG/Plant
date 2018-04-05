@@ -214,5 +214,43 @@
         "x": 330,
         "y": 140,
         "wires": []
+    },
+    {
+        "id": "92735b7c.193668",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "plantNurse/waterNow",
+        "topic": "plantNurse/waterNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 300,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2a5a5815.8b5718",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Water now!",
+        "color": "",
+        "bgcolor": "blue",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "92735b7c.193668"
+            ]
+        ]
     }
 ]
