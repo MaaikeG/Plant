@@ -381,5 +381,295 @@
                 "8140ab33.286af8"
             ]
         ]
+    },
+    {
+        "id": "8f1cf046.1bf5c",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "temperature chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 370,
+        "y": 600,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e288ef83.566b3",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/temperature",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 600,
+        "wires": [
+            [
+                "8f1cf046.1bf5c"
+            ]
+        ]
+    },
+    {
+        "id": "3b77896.6744a76",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "humidity chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 360,
+        "y": 680,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "fecca4fe.ca2d08",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/humidity",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 680,
+        "wires": [
+            [
+                "3b77896.6744a76"
+            ]
+        ]
+    },
+    {
+        "id": "24f19f9d.72222",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "pressure chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 360,
+        "y": 760,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3594fb1b.7cbb04",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/pressure",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 760,
+        "wires": [
+            [
+                "24f19f9d.72222"
+            ]
+        ]
+    },
+    {
+        "id": "a018aedc.8cb5a",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "soilMoisture chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a3779c90.a213b",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/soilMoisture",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "a018aedc.8cb5a"
+            ]
+        ]
+    },
+    {
+        "id": "6a46792a.dbed28",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "light chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 340,
+        "y": 920,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3f4ad79.9917528",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/light",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 120,
+        "y": 920,
+        "wires": [
+            [
+                "6a46792a.dbed28"
+            ]
+        ]
     }
 ]
