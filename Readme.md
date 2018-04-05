@@ -22,3 +22,8 @@ Utrecht university interaction technology project
 | D7   |                                                              |      |      |
 | D8   |                                                              |      |      |
 | A0   | Multiplexed output for soil moisture sensor and light sensor. |      |      |
+
+## SkinAndGestures
+Download face dataset (pictures and corresponding masks) from https://surfdrive.surf.nl/files/index.php/s/7d2647093409cec90119a0bea4fcc779
+Place images and masks in separate folders and adjust paths in line 110 an 115
+of SkinAndGestures.cpp accordingly.
