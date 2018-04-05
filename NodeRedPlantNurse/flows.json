@@ -40,33 +40,636 @@
         "birthPayload": ""
     },
     {
+        "id": "df261780.c4d1d8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Home",
+        "icon": "dashboard"
+    },
+    {
+        "id": "1ae6ef37.d98281",
+        "type": "ui_group",
+        "z": "",
+        "name": "Default",
+        "tab": "df261780.c4d1d8",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "194f69a0.4d9006",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#000000",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
         "id": "ca0a91ca.9c096",
         "type": "mqtt in",
         "z": "3d2431d.466d3ce",
-        "name": "Test",
-        "topic": "test",
-        "qos": "2",
+        "name": "plantNurse/test",
+        "topic": "plantNurse/test",
+        "qos": "1",
         "broker": "ad1b817.507cd8",
-        "x": 340,
-        "y": 180,
+        "x": 120,
+        "y": 140,
         "wires": [
             [
-                "1d52d7f4.05ffe8"
+                "834e9c41.d462b"
             ]
         ]
     },
     {
-        "id": "1d52d7f4.05ffe8",
-        "type": "debug",
+        "id": "760906ee.f0fd68",
+        "type": "mqtt out",
         "z": "3d2431d.466d3ce",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 660,
-        "y": 200,
+        "topic": "plantNurse/test",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 280,
+        "y": 80,
         "wires": []
+    },
+    {
+        "id": "2bd14e81.864cf2",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "Test",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Test",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "",
+        "x": 90,
+        "y": 80,
+        "wires": [
+            [
+                "760906ee.f0fd68"
+            ]
+        ]
+    },
+    {
+        "id": "834e9c41.d462b",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Test textfield",
+        "label": "Test output: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 330,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "92735b7c.193668",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "plantNurse/waterNow",
+        "topic": "plantNurse/waterNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 300,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2a5a5815.8b5718",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Water now!",
+        "color": "",
+        "bgcolor": "blue",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "92735b7c.193668"
+            ]
+        ]
+    },
+    {
+        "id": "21e15878.de01f8",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "plantNurse/updateSensorsNow",
+        "topic": "plantNurse/updateSensorsNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 410,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b83e28db.867338",
+        "type": "ui_button",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Update sensors now!",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "21e15878.de01f8"
+            ]
+        ]
+    },
+    {
+        "id": "424186d.0a5ff78",
+        "type": "ui_switch",
+        "z": "3d2431d.466d3ce",
+        "name": "Mode switch",
+        "label": "Mode",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "",
+        "style": "",
+        "onvalue": "automatic",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "manual",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 350,
+        "y": 440,
+        "wires": [
+            [
+                "1720353b.db571b"
+            ]
+        ]
+    },
+    {
+        "id": "c471e5f.2b1c118",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/setMode",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "424186d.0a5ff78"
+            ]
+        ]
+    },
+    {
+        "id": "1720353b.db571b",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "plantNurse/setMode",
+        "topic": "plantNurse/setMode",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 580,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "8140ab33.286af8",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 330,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "ef212f25.9de24",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/status",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "8140ab33.286af8"
+            ]
+        ]
+    },
+    {
+        "id": "8f1cf046.1bf5c",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "temperature chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 370,
+        "y": 600,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e288ef83.566b3",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/temperature",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 600,
+        "wires": [
+            [
+                "8f1cf046.1bf5c"
+            ]
+        ]
+    },
+    {
+        "id": "3b77896.6744a76",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "humidity chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 360,
+        "y": 680,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "fecca4fe.ca2d08",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/humidity",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 680,
+        "wires": [
+            [
+                "3b77896.6744a76"
+            ]
+        ]
+    },
+    {
+        "id": "24f19f9d.72222",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "pressure chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 360,
+        "y": 760,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3594fb1b.7cbb04",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/pressure",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 760,
+        "wires": [
+            [
+                "24f19f9d.72222"
+            ]
+        ]
+    },
+    {
+        "id": "a018aedc.8cb5a",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "soilMoisture chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a3779c90.a213b",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/soilMoisture",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "a018aedc.8cb5a"
+            ]
+        ]
+    },
+    {
+        "id": "6a46792a.dbed28",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "1ae6ef37.d98281",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "light chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 340,
+        "y": 920,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3f4ad79.9917528",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/light",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 120,
+        "y": 920,
+        "wires": [
+            [
+                "6a46792a.dbed28"
+            ]
+        ]
     }
 ]
