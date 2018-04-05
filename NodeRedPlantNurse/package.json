@@ -17,6 +17,8 @@
     "name": "Colin de Roos",
     "github": "https://www.github.com/cdfa"
   },
+  "repository": "https://github.com/MaaikeG/Plant",
+  "license": "MIT",
   "main": "server.js",
   "config": {
     "http_port": "1880",
