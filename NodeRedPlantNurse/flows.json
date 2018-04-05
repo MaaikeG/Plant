@@ -326,10 +326,10 @@
         "type": "mqtt in",
         "z": "3d2431d.466d3ce",
         "name": "",
-        "topic": "plantNurse/setMode",
+        "topic": "plantNurse/mode",
         "qos": "1",
         "broker": "ad1b817.507cd8",
-        "x": 130,
+        "x": 120,
         "y": 440,
         "wires": [
             [
@@ -342,7 +342,7 @@
         "type": "mqtt out",
         "z": "3d2431d.466d3ce",
         "name": "plantNurse/setMode",
-        "topic": "plantNurse/setMode",
+        "topic": "plantNurse/mode",
         "qos": "1",
         "retain": "",
         "broker": "ad1b817.507cd8",
