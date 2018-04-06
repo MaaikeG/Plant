@@ -268,7 +268,7 @@ int main()
 			}
 		}
 
-		int nFingers = 1;
+		int nFingers = 0;
 
 		if (largestIdx != -1) {
 			drawContours(tm_color, contours, largestIdx, cv::Scalar(255, 255, 0));
@@ -303,7 +303,10 @@ int main()
 				}
 			}
 		}
-
+		// 1 angle between fingers means 2 fingers held up
+		if (nFingers > 0) {
+			nFingers++;
+		}
 
 		calcNFingers(&gesture_recorder, nFingers);
 		nFingers = gesture_recorder.nFingers;
