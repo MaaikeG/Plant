@@ -61,6 +61,10 @@ struct ActiveCanvas
 	int nFingersPointer = 0;
 	int nFingersPerFrame[nFrames] = { 0 };
 	int nFingers;
+
+	clock_t nRecognizedAt = clock();
+	string lastCommand;
+	clock_t lastResultAt = clock();
 };
 
 // Set recognized finger number in the array containing n fingers recognized in last x frames.
@@ -89,7 +93,48 @@ void calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
 			max_index = i;
 		}
 	}
+	if (gesture_recorder->nFingers != max_index) {
+		gesture_recorder->nRecognizedAt = clock();
+	}
+
 	gesture_recorder->nFingers = max_index;
+}
+
+void checkForCommand(ActiveCanvas* gesture_recorder) {
+
+	if ((clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC <= 3) {
+		return;
+	}
+
+	if ((clock() - gesture_recorder->nRecognizedAt) / CLOCKS_PER_SEC > 1
+		&& (clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC > 3)
+	{
+		string command ="";
+		string fileName = "";
+
+		if (gesture_recorder->nFingers == 3) {
+			command = "water";
+			fileName = "commands\\water.txt";
+		}
+		else if (gesture_recorder->nFingers >= 4) {
+			command = "read sensors";
+			fileName = "commands\\readSensors.txt";
+		}
+		
+		ofstream myfile;
+		if (fileName != "") {
+			myfile.open(fileName, ios::app);
+			if (myfile.is_open()) {
+				CVLog(INFO) << command;
+				myfile << command << ". Command executed at: " << clock();
+			}
+			else { CVLog(INFO) << "Unable to open file"; }
+			myfile.close();
+
+			gesture_recorder->lastResultAt = clock();
+		}
+		gesture_recorder->lastCommand = command;
+	}
 }
 
 
@@ -111,16 +156,14 @@ struct colorEncodingVariables {
 
 void setWindow(colorEncodingVariables* encoding)
 {
-	cv::namedWindow("detection result", CV_WINDOW_FREERATIO);
+	cv::namedWindow("trackbars", CV_WINDOW_FREERATIO);
 
-	cv::createTrackbar("threshold", "detection result", &(encoding->threshold), 100);
-	cv::createTrackbar("Blue weight", "detection result", &(encoding->blue), 200);
-	cv::createTrackbar("Red weight", "detection result", &(encoding->red), 200);
-	cv::createTrackbar("Hue Min", "detection result", &(encoding->hueMin), 256);
-	cv::createTrackbar("Hue Max", "detection result", &(encoding->hueMax), 256);
+	cv::createTrackbar("threshold", "trackbars", &(encoding->threshold), 100);
+	cv::createTrackbar("Blue weight", "trackbars", &(encoding->blue), 200);
+	cv::createTrackbar("Red weight", "trackbars", &(encoding->red), 200);
+	cv::createTrackbar("Hue Min", "trackbars", &(encoding->hueMin), 256);
+	cv::createTrackbar("Hue Max", "trackbars", &(encoding->hueMax), 256);
 }
-
-
 
 int main()
 {
@@ -132,7 +175,9 @@ int main()
 
 	int useYCrCb = 1;// is an Int because we can only use a trackbar to set this :(
 	setWindow(&colorEncodingVars);
-	cv::createTrackbar("HSV / YCrCb", "detection result", &useYCrCb, 1);
+	cv::createTrackbar("useYCrCb", "trackbars", &useYCrCb, 1);
+
+	//cv::imshow("trackbars");
 
 	// Open the webcam
 	cv::VideoCapture video_capture(0);
@@ -230,7 +275,7 @@ int main()
 
 			// get bounding rectangle
 			cv::Rect boundingBox = cv::boundingRect(cv::Mat(contours[largestIdx]));
-			float maxFingerLength = boundingBox.height / 2;
+			float maxFingerLength = boundingBox.height / 1.5f;
 			float minFingerLength = boundingBox.height / 6;
 
 			convexHull(contours[largestIdx], hullI[0]);
@@ -262,34 +307,16 @@ int main()
 
 		calcNFingers(&gesture_recorder, nFingers);
 		nFingers = gesture_recorder.nFingers;
-		char buff[20];
+		checkForCommand(&gesture_recorder);
+
+		char buff[64] = { 0 };
 		sprintf(buff, "N Fingers: %d", nFingers);
 		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
 
 		// Place the mask color image under the original webcam image
 		cv::Mat canvas;
 		cv::vconcat(capture_rgb, tm_color, canvas);
-
-		// Handle showing recognized gestures, we should have a last_result and we should not have shown it
-		if (gesture_recorder.last_result != nullptr && gesture_recorder.is_result_shown == false)
-		{
-			// Threshold showing the result to avoid bad recognitions
-			if (gesture_recorder.last_result->score > 0.75)
-			{
-				CVLog(INFO) << gesture_recorder.last_result->name << "\t\t" << gesture_recorder.last_result->score;
-				ofstream myfile;
-				myfile.open("commands\\water.txt", ios::app);
-				if (myfile.is_open()) {
-					myfile << gesture_recorder.last_result->name << "\t\t" << gesture_recorder.last_result->score;
-				}
-				else { CVLog(INFO) << "Unable to open file"; }
-				myfile.close();
-			}
-
-			// Disarm is_result_shown so we show the result only once
-			gesture_recorder.is_result_shown = true;
-		}
-
+		
 		// Show the canvas
 		cv::imshow("detection result", canvas);
 
