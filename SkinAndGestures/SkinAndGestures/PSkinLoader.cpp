@@ -42,8 +42,7 @@ namespace DollarRecognizer
 		float prob = p_skin_HSV.at<float>(loc);
 		int hue = value[0];
 		if (hue < hueMin || hue > hueMax) {
-			prob *= 2;
-			if (prob > 1) prob = 1;
+			prob = 0;
 		}
 		return prob;
 	}
