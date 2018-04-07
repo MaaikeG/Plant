@@ -175,8 +175,6 @@ cv::BackgroundSubtractorMOG2* pMOG2; //MOG2 Background subtractor
 int main()
 {
 	int bin_size = 32;    // TODO find suitable size
-	int threshold = 20;
-
 	int useYCrCb = 1;// is an Int because we can only use a trackbar to set this :(
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size);
@@ -193,8 +191,8 @@ int main()
 	std::vector<std::string> active_templates = { "Triangle", "X", "Rectangle", "Circle" };
 	ActiveCanvas gesture_recorder(active_templates);
 
-	pMOG2 = cv::createBackgroundSubtractorMOG2();
-	cv::namedWindow("fgmask", CV_WINDOW_FREERATIO);
+	//pMOG2 = cv::createBackgroundSubtractorMOG2();
+	//cv::namedWindow("fgmask", CV_WINDOW_FREERATIO);
 
 	int key = -1;
 	while (key != 27)
@@ -234,7 +232,7 @@ int main()
 					else {
 						prob = pSkinLoader.getp_skin_HSV(value, colorEncodingVars.hueMin, colorEncodingVars.hueMax);
 					}
-					float theta = threshold / 100.0f;   // TODO find suitable 
+					float theta = colorEncodingVars.threshold / 100.0f;   // TODO find suitable 
 					t_scanline[x] = prob > theta ? 255 : 0;
 				}
 			}
