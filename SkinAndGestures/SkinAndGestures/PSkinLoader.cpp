@@ -16,8 +16,6 @@ namespace DollarRecognizer
 		for (int i = 0; i < 3; ++i) {
 			hist_size[i] = _bin_size;
 		}
-		sum_hist_skin = cv::Mat::zeros(3, hist_size, CV_32F);     // Construct the skin histogram
-		sum_hist_nonskin = cv::Mat::zeros(3, hist_size, CV_32F);  // Construct the non-skin histogram
 		init();
 	}
 
@@ -36,7 +34,7 @@ namespace DollarRecognizer
 
 	const float PSkinLoader::getp_skin_HSV(const uchar* value, int hueMin, int hueMax) {
 		// encode the each color channel as a position in the probabilistic look-up histogram
-		const int loc[3] = { cvFloor(value[0] * factor), cvFloor(value[1] * factor), cvFloor(value[2] * factor) };
+		const int loc[2] = { cvFloor(value[0] * factor), cvFloor(value[1] * factor) };// , cvFloor(value[1] * factor), cvFloor(value[2] * factor)};
 
 		// read the probability a given color is a skin color
 		float prob = p_skin_HSV.at<float>(loc);
@@ -48,6 +46,9 @@ namespace DollarRecognizer
 	}
 
 	cv::Mat PSkinLoader::set_P_skin(bool isYCrCb) {
+		sum_hist_skin = cv::Mat::zeros(3, hist_size, CV_32F);     // Construct the skin histogram
+		sum_hist_nonskin = cv::Mat::zeros(3, hist_size, CV_32F);  // Construct the non-skin histogram
+
 		const float color_range[2] = { 0,  256 };                            // Color range
 		const float *ranges[3] = { color_range, color_range, color_range }; // Pointer to 3D array, range for every color channel
 																			// Iterate over all training image filenames
@@ -81,11 +82,11 @@ namespace DollarRecognizer
 					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
 				}
 				else {
-					// Use 3 channels for YCrCb
-					int channels[3] = { 0, 1, 2 };                                // Channels to work with
+					// Use 1 channel for HSV
+					int channels[2] = { 0, 1 };                                // Channels to work with
 					cv::cvtColor(image, image_converted, cv::ColorConversionCodes::COLOR_RGB2HSV);
-					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 3, hist_size, ranges, true, true);
-					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 3, hist_size, ranges, true, true);
+					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
+					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
 				}
 					
 			}
