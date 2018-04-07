@@ -100,14 +100,14 @@ void calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
 	gesture_recorder->nFingers = max_index;
 }
 
-void checkForCommand(ActiveCanvas* gesture_recorder) {
+string checkForCommand(ActiveCanvas* gesture_recorder) {
 
 	if ((clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC <= 3) {
-		return;
+		return gesture_recorder->lastCommand;
 	}
 
-	if ((clock() - gesture_recorder->nRecognizedAt) / CLOCKS_PER_SEC > 1
-		&& (clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC > 3)
+	if (/*(clock() - gesture_recorder->nRecognizedAt) / CLOCKS_PER_SEC > 0.5
+		&& */(clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC > 3)
 	{
 		string command ="";
 		string fileName = "";
@@ -131,10 +131,12 @@ void checkForCommand(ActiveCanvas* gesture_recorder) {
 			else { CVLog(INFO) << "Unable to open file"; }
 			myfile.close();
 
+			gesture_recorder->lastCommand = command;
 			gesture_recorder->lastResultAt = clock();
 		}
-		gesture_recorder->lastCommand = command;
 	}
+	
+	return "No command given.";
 }
 
 
@@ -205,7 +207,7 @@ int main()
 
 		video_capture.read(frame);
 	//	pMOG2->apply(frame, fgmask, 0);
-		cv::imshow("fgmask", fgmask);
+	//	cv::imshow("fgmask", fgmask);
 
 		cv::cvtColor(capture_rgb, gesture_recorder.canvas, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
 
@@ -328,10 +330,10 @@ int main()
 		calcNFingers(&gesture_recorder, nFingers);
 		nFingers = gesture_recorder.nFingers;
 		// check if this is a command
-		checkForCommand(&gesture_recorder);
+		string command = checkForCommand(&gesture_recorder);
 
 		char buff[64] = { 0 };
-		sprintf(buff, "N Fingers: %d", nFingers);
+		sprintf(buff, "N Fingers: %d. Command: %s", nFingers, command.c_str());
 		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
 
 		// Place the mask color image under the original webcam image

@@ -75,14 +75,14 @@ namespace DollarRecognizer
 				cv::bitwise_not(mask, inverseMask);
 
 				if (isYCrCb) {
-					// Use only 2 channels for YCrCb
+					// Use only Cr and Cb channels for YCrCb
 					int channels[3] = { 1, 2 };                                // Channels to work with
 					cv::cvtColor(image, image_converted, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
 					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
 					cv::calcHist(&image_converted, 1, channels, inverseMask, sum_hist_nonskin, 2, hist_size, ranges, true, true);
 				}
 				else {
-					// Use 1 channel for HSV
+					// Use first 2 channels of for HSV
 					int channels[2] = { 0, 1 };                                // Channels to work with
 					cv::cvtColor(image, image_converted, cv::ColorConversionCodes::COLOR_RGB2HSV);
 					cv::calcHist(&image_converted, 1, channels, mask, sum_hist_skin, 2, hist_size, ranges, true, true);
