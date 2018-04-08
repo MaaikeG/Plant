@@ -73,19 +73,35 @@ namespace DollarRecognizer
 				convexityDefects(contours[largestIdx], hullI[0], defects);
 
 				for (cv::Vec4i defect : defects) {
-					// Draw defects
-					cv::line(mask_color, contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
-					cv::line(mask_color, contours[largestIdx][defect[1]], contours[largestIdx][defect[2]], cv::Scalar(0, 0, 255));
 
-					float angle = getAngle(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]], contours[largestIdx][defect[1]]);
-					float distance1 = getDistance(contours[largestIdx][defect[0]], contours[largestIdx][defect[2]]);
-					float distance2 = getDistance(contours[largestIdx][defect[1]], contours[largestIdx][defect[2]]);
+					cv::Point farPt = contours[largestIdx][defect[2]];
+					cv::Point start = contours[largestIdx][defect[0]];
+					cv::Point end = contours[largestIdx][defect[1]];
+					
+					// Draw defects
+					cv::line(mask_color, start, farPt, cv::Scalar(0, 0, 255));
+					cv::line(mask_color, end, farPt, cv::Scalar(0, 0, 255));
+
+					float angle = getAngle(start, farPt, end);
+					float distance1 = getDistance(start, farPt);
+					float distance2 = getDistance(end, farPt);
+
+					cv::Point x1 = cv::Point(start.x, farPt.y);
+					float angleWithX1 = getAngle(start, farPt, x1);
+
+					cv::Point x2 = cv::Point(end.x, farPt.y);
+					float angleWithX2 = getAngle(end, farPt, x2);
+					
+					float anglewithx = (angleWithX1 + angleWithX2) / 2;
 
 					// Check if this defect is within range to be a defect between two fingers.
 					if (angle < 90
+						&& angleWithX1 > 30 && anglewithx < 150
 						&& distance1 < maxFingerLength && distance2 < maxFingerLength
-						&& distance1 > minFingerLength && distance2 > minFingerLength) {
-						cv::circle(mask_color, contours[largestIdx][defect[2]], 4, cv::Scalar(180, 180, 0), 3);
+						&& distance1 > minFingerLength && distance2 > minFingerLength
+						&& farPt.y > boundingBox.height/3 + boundingBox.y - boundingBox.height ) 
+					{
+						cv::circle(mask_color, farPt, 4, cv::Scalar(180, 180, 0), 3);
 						nFingers++;
 					}
 				}

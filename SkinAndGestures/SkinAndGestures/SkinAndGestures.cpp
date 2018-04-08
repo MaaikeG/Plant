@@ -25,7 +25,7 @@ The ActiveCanvas is a struct that keeps track of the button status and gestures.
 
 INPUT: active_templates, a list of template names which are to be recognized
  */
-const int nFrames = 20;
+const int nFrames = 30;
 
 struct ActiveCanvas
 {
@@ -105,37 +105,40 @@ void calcNFingers(ActiveCanvas* gesture_recorder, int currentNFingers) {
 
 string checkForCommand(ActiveCanvas* gesture_recorder) {
 
-	if ((clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC <= 3) {
-		return gesture_recorder->lastCommand;
-	}
-
-	if (/*(clock() - gesture_recorder->nRecognizedAt) / CLOCKS_PER_SEC > 0.5
-		&& */(clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC > 3)
+	if (clock() / CLOCKS_PER_SEC > 10) 
 	{
-		string command ="";
-		string fileName = "";
+		if ((clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC <= 3) {
+			return gesture_recorder->lastCommand;
+		}
 
-		if (gesture_recorder->nFingers == 3) {
-			command = "water";
-			fileName = "commands\\water.txt";
-		}
-		else if (gesture_recorder->nFingers >= 4) {
-			command = "read sensors";
-			fileName = "commands\\readSensors.txt";
-		}
-		
-		ofstream myfile;
-		if (fileName != "") {
-			myfile.open(fileName, ios::app);
-			if (myfile.is_open()) {
-				CVLog(INFO) << command;
-				myfile << command << ". Command executed at: " << clock();
+		if (/*(clock() - gesture_recorder->nRecognizedAt) / CLOCKS_PER_SEC > 0.5
+			&& */(clock() - gesture_recorder->lastResultAt) / CLOCKS_PER_SEC > 3)
+		{
+			string command = "";
+			string fileName = "";
+
+			if (gesture_recorder->nFingers == 3) {
+				command = "water";
+				fileName = "commands\\water.txt";
 			}
-			else { CVLog(INFO) << "Unable to open file"; }
-			myfile.close();
+			else if (gesture_recorder->nFingers >= 4) {
+				command = "read sensors";
+				fileName = "commands\\readSensors.txt";
+			}
 
-			gesture_recorder->lastCommand = command;
-			gesture_recorder->lastResultAt = clock();
+			ofstream myfile;
+			if (fileName != "") {
+				myfile.open(fileName, ios::app);
+				if (myfile.is_open()) {
+					CVLog(INFO) << command;
+					myfile << command << ". Command executed at: " << clock();
+				}
+				else { CVLog(INFO) << "Unable to open file"; }
+				myfile.close();
+
+				gesture_recorder->lastCommand = command;
+				gesture_recorder->lastResultAt = clock();
+			}
 		}
 	}
 	return "No command given.";
@@ -181,11 +184,11 @@ string ExePath() {
 int main()
 {
 	bool useYCrCb = true; // set to false if you want to use HSV color encoding.
-	int bin_size = 32;    // TODO find suitable size
+	int bin_size = 16;    // TODO find suitable size
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size, ExePath());
 
-	colorEncodingVariables colorEncodingVars;
+	colorEncodingVariables colorEncodingVars  = colorEncodingVariables();
 	setWindow(&colorEncodingVars);
 
 	// Open the webcam
@@ -201,9 +204,12 @@ int main()
 	{
 		// Grab the webcam image
 		cv::Mat capture_rgb;
+		cv::Mat capture_rgb_flipped;
+		
 		video_capture >> capture_rgb;
+		cv::flip(capture_rgb, capture_rgb_flipped, 1);
 
-		cv::cvtColor(capture_rgb, gesture_recorder.canvas, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
+		cv::cvtColor(capture_rgb_flipped, gesture_recorder.canvas, cv::ColorConversionCodes::COLOR_RGB2YCrCb);
 
 		// Initialize an empty mask
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
@@ -232,7 +238,7 @@ int main()
 
 		// Place the mask color image under the original webcam image
 		cv::Mat canvas;
-		cv::vconcat(capture_rgb, processor.mask_color, canvas);
+		cv::hconcat(capture_rgb_flipped, processor.mask_color, canvas);
 		
 		// Show the canvas
 		cv::imshow("detection result", canvas);
