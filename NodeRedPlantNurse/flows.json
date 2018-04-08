@@ -546,7 +546,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 760,
+        "y": 840,
         "wires": [
             [],
             []
@@ -561,7 +561,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 760,
+        "y": 840,
         "wires": [
             [
                 "3b77896.6744a76"
@@ -604,7 +604,7 @@
         ],
         "useOldStyle": false,
         "x": 360,
-        "y": 920,
+        "y": 1000,
         "wires": [
             [],
             []
@@ -619,7 +619,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 920,
+        "y": 1000,
         "wires": [
             [
                 "24f19f9d.72222"
@@ -635,7 +635,7 @@
         "order": 0,
         "width": 0,
         "height": 0,
-        "label": "soilMoisture chart",
+        "label": "Soil moisture chart",
         "chartType": "line",
         "legend": "false",
         "xformat": "HH:mm:ss",
@@ -662,7 +662,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 1000,
+        "y": 1160,
         "wires": [
             [],
             []
@@ -677,7 +677,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 1000,
+        "y": 1160,
         "wires": [
             [
                 "a018aedc.8cb5a"
@@ -720,7 +720,7 @@
         ],
         "useOldStyle": false,
         "x": 340,
-        "y": 1080,
+        "y": 1320,
         "wires": [
             [],
             []
@@ -735,7 +735,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 1080,
+        "y": 1320,
         "wires": [
             [
                 "6a46792a.dbed28"
@@ -783,7 +783,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 840,
+        "y": 920,
         "wires": [
             [
                 "38014abc.3ac516"
@@ -803,7 +803,133 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 370,
-        "y": 840,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "8eeb804.dca4e8",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/humidity",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 760,
+        "wires": [
+            [
+                "215873b3.a9bc9c"
+            ]
+        ]
+    },
+    {
+        "id": "215873b3.a9bc9c",
+        "type": "ui_gauge",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "252d06f8.aca44a",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humidity gauge",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#3c01b4",
+            "#d7a50f",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 360,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "280f0640.5391aa",
+        "type": "ui_gauge",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "6623049.ebd89fc",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Soil moisture gauge",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#53462d",
+            "#568f74",
+            "#4581bc"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 380,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "baba40c1.35259",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/soilMoisture",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 1080,
+        "wires": [
+            [
+                "280f0640.5391aa"
+            ]
+        ]
+    },
+    {
+        "id": "3d0cdfed.de516",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/light",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 120,
+        "y": 1240,
+        "wires": [
+            [
+                "81f0a153.744a7"
+            ]
+        ]
+    },
+    {
+        "id": "81f0a153.744a7",
+        "type": "ui_gauge",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "6eb3edad.cac8e4",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Light gauge",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#3f3701",
+            "#dece07",
+            "#f1fe03"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 350,
+        "y": 1240,
         "wires": []
     }
 ]
