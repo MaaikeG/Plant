@@ -180,14 +180,13 @@ string ExePath() {
 
 int main()
 {
+	bool useYCrCb = true; // set to false if you want to use HSV color encoding.
 	int bin_size = 32;    // TODO find suitable size
-	int useYCrCb = 1;// is an Int because we can only use a trackbar to set this :(
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size, ExePath());
 
 	colorEncodingVariables colorEncodingVars;
 	setWindow(&colorEncodingVars);
-	cv::createTrackbar("useYCrCb", "trackbars", &useYCrCb, 1);
 
 	// Open the webcam
 	cv::VideoCapture video_capture(0);

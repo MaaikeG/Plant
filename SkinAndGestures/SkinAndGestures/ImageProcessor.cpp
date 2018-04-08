@@ -7,7 +7,7 @@ namespace DollarRecognizer
 		canvas = _canvas;
 	}
 
-	void ImageProcessor::getSkinProbabilities(cv::Mat* test_mask, PSkinLoader* pSkinLoader, colorEncodingVariables colorEncodingVars, int useYCrCb) {
+	void ImageProcessor::getSkinProbabilities(cv::Mat* test_mask, PSkinLoader* pSkinLoader, colorEncodingVariables colorEncodingVars, bool useYCrCb) {
 		if (!pSkinLoader->p_skin_YCrCb.empty())
 		{
 #pragma omp parallel for

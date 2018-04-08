@@ -28,7 +28,7 @@ namespace DollarRecognizer
 	public:
 		cv::Mat mask_color;
 		ImageProcessor(cv::Mat* canvas);
-		void getSkinProbabilities(cv::Mat * test_mask, PSkinLoader* pSkinLoader, colorEncodingVariables colorEncodingVars, int useYCrCb);
+		void getSkinProbabilities(cv::Mat * test_mask, PSkinLoader* pSkinLoader, colorEncodingVariables colorEncodingVars, bool useYCrCb);
 		void makeMask(cv::Mat * test_mask);
 		void makeBinaryImage(cv::Mat * test_mask);
 		int process();
