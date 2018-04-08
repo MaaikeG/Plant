@@ -3,6 +3,7 @@
 
 #include <SSD1306.h>
 #include <Servo.h>
+#include "TimedTicker.h"
 
 // clang-format off
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -14,11 +15,15 @@
 
 // Variables are lower for testing. Should be increased for real-life use to
 // commented values.
-#define wateringDuration 3000     // 5000
+#define wateringDuration 1500
 #define soilMoistureThreshold 20  // if soil is this dry we need to water.
 #define reservoirEmptyTimeCheck \
   3000  // 60000 // is one minute is not enough for soil moisture to increase,
         // reservoir must be empty.
+#define WATER_FLOW_ANGLE 90
+#define NO_WATER_FLOW_ANGLE 0
+#define STOP_WATERING_DURATION 1000
+#define STOP_WATERING_UPDATE_PERIOD 50
 
 class WateringController {
  private:
@@ -30,6 +35,7 @@ class WateringController {
   unsigned long wateringStart;
   void (*onReservoirEmpty)();
   void (*onReservoirFilled)();
+	TimedTicker slowStopTicker;
 
  public:
   WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin,
@@ -44,6 +50,8 @@ class WateringController {
   bool isWatering;
   bool reservoirEmpty;  // use this to blink a red led?
   unsigned long lastWatering;
+	uint16_t angle;
+	void setAngle(uint16_t newAngle);
 };
 
 #endif
