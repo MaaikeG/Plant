@@ -15,8 +15,8 @@ namespace DollarRecognizer
 	class PSkinLoader
 	{
 	private:
-		const std::string path_images = "C:/Face_Dataset/Photos";
-		const std::string path_masks = "C:/Face_Dataset/masks";
+		const std::string path_images = "\\Face_Dataset\\Photos";
+		const std::string path_masks = "\\Face_Dataset\\masks";
 
 		std::vector<std::string> files_images;
 		std::vector<std::string> files_masks;
@@ -37,7 +37,7 @@ namespace DollarRecognizer
 		cv::Mat p_skin_YCrCb;
 		cv::Mat p_skin_HSV;
 
-		PSkinLoader(int bin_size);
+		PSkinLoader(int bin_size, string exePath);
 		const float getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier, int minY, int maxY);
 		const float getp_skin_HSV(const uchar* value, int hueMin, int hueMax);
 	};

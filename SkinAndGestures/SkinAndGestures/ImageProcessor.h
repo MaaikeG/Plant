@@ -20,9 +20,10 @@ namespace DollarRecognizer
 		vector < vector<int> > hullI = vector<vector<int> >(1);
 		vector < vector<cv::Point> > hullPoints = vector<vector<cv::Point> >(1);
 		vector<cv::Vec4i> defects;
+
 		float getDistance(cv::Point a, cv::Point b);
 		float getAngle(cv::Point s, cv::Point f, cv::Point e);
-
+		int getLargestContourIndex();
 
 	public:
 		cv::Mat mask_color;

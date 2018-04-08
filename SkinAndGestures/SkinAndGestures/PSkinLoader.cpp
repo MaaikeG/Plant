@@ -3,10 +3,11 @@
 
 namespace DollarRecognizer
 {
-	PSkinLoader::PSkinLoader(int _bin_size)
+	PSkinLoader::PSkinLoader(int _bin_size, string exePath)
 	{
-		Utilities::getDirectory(path_images, "jpg", files_images);
-		Utilities::getDirectory(path_masks, "png", files_masks);
+		string dir = exePath + path_images;
+		Utilities::getDirectory(exePath + path_images, "jpg", files_images);
+		Utilities::getDirectory(exePath + path_masks, "png", files_masks);
 
 		CVLog(INFO) << files_images;
 		CVLog(INFO) << files_masks;

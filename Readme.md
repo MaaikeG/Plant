@@ -25,5 +25,4 @@ Utrecht university interaction technology project
 
 ## SkinAndGestures
 Download face dataset (pictures and corresponding masks) from https://surfdrive.surf.nl/files/index.php/s/7d2647093409cec90119a0bea4fcc779
-Place images and masks in separate folders and adjust paths in line 110 an 115
-of SkinAndGestures.cpp accordingly.
+Place images and masks in a folder called 'Face_Dataset'. Put images and masks in separate folders named 'Photos' (skin color photo's) and 'Masks' respectively. Make sure the Face_Dataset folder is in the same folder as the .exe file.
