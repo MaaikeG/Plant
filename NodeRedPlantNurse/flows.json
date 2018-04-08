@@ -461,7 +461,65 @@
         "order": 0,
         "width": 0,
         "height": 0,
-        "label": "temperature chart",
+        "label": "Temperature over 24h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "24",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 380,
+        "y": 680,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e288ef83.566b3",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/temperature",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 680,
+        "wires": [
+            [
+                "8f1cf046.1bf5c"
+            ]
+        ]
+    },
+    {
+        "id": "3b77896.6744a76",
+        "type": "ui_chart",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "group": "252d06f8.aca44a",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity over 24h",
         "chartType": "line",
         "legend": "false",
         "xformat": "HH:mm:ss",
@@ -488,65 +546,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 600,
-        "wires": [
-            [],
-            []
-        ]
-    },
-    {
-        "id": "e288ef83.566b3",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/temperature",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 140,
-        "y": 600,
-        "wires": [
-            [
-                "8f1cf046.1bf5c"
-            ]
-        ]
-    },
-    {
-        "id": "3b77896.6744a76",
-        "type": "ui_chart",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "group": "252d06f8.aca44a",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "label": "humidity chart",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "bezier",
-        "nodata": "",
-        "dot": false,
-        "ymin": "",
-        "ymax": "",
-        "removeOlder": "24",
-        "removeOlderPoints": "",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "useOldStyle": false,
-        "x": 360,
-        "y": 680,
+        "y": 760,
         "wires": [
             [],
             []
@@ -561,7 +561,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 680,
+        "y": 760,
         "wires": [
             [
                 "3b77896.6744a76"
@@ -604,7 +604,7 @@
         ],
         "useOldStyle": false,
         "x": 360,
-        "y": 760,
+        "y": 920,
         "wires": [
             [],
             []
@@ -619,7 +619,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 760,
+        "y": 920,
         "wires": [
             [
                 "24f19f9d.72222"
@@ -662,7 +662,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 840,
+        "y": 1000,
         "wires": [
             [],
             []
@@ -677,7 +677,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 840,
+        "y": 1000,
         "wires": [
             [
                 "a018aedc.8cb5a"
@@ -720,7 +720,7 @@
         ],
         "useOldStyle": false,
         "x": 340,
-        "y": 920,
+        "y": 1080,
         "wires": [
             [],
             []
@@ -735,11 +735,75 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 920,
+        "y": 1080,
         "wires": [
             [
                 "6a46792a.dbed28"
             ]
         ]
+    },
+    {
+        "id": "399066fd.1fe02a",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/temperature",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 140,
+        "y": 600,
+        "wires": [
+            [
+                "fee46d48.4d505"
+            ]
+        ]
+    },
+    {
+        "id": "fee46d48.4d505",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "31f4f725.38fb18",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Current temperature",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 380,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "9e04ced7.ad71d",
+        "type": "mqtt in",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/pressure",
+        "qos": "1",
+        "broker": "ad1b817.507cd8",
+        "x": 130,
+        "y": 840,
+        "wires": [
+            [
+                "38014abc.3ac516"
+            ]
+        ]
+    },
+    {
+        "id": "38014abc.3ac516",
+        "type": "ui_text",
+        "z": "3d2431d.466d3ce",
+        "group": "f5c57ae8.688748",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Current Pressure",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 370,
+        "y": 840,
+        "wires": []
     }
 ]
