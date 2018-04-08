@@ -138,18 +138,6 @@ string checkForCommand(ActiveCanvas* gesture_recorder) {
 	return "No command given.";
 }
 
-
-float getDistance(cv::Point a, cv::Point b) {
-	return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
-}
-
-float getAngle(cv::Point s, cv::Point f, cv::Point e) {
-	float l1 = getDistance(f, s);
-	float l2 = getDistance(f, e);
-	float rad = acos((s - f).dot(e - f) / (l1*l2));
-	return rad * 180 / CV_PI;
-}
-
 void setWindow(colorEncodingVariables * encoding)
 {
 	cv::namedWindow("trackbars", CV_WINDOW_FREERATIO);
@@ -208,20 +196,15 @@ int main()
 		// Initialize an empty mask
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
 		
+		// Get probability of being skin for each pixel
 		processor.getSkinProbabilities(&test_mask, &pSkinLoader, colorEncodingVars, useYCrCb);
 
-
-		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(1, 1));
-		cv::morphologyEx(test_mask, test_mask, cv::MORPH_CLOSE, close_element);
-
-		// Convert the 1-channel mask into a 3-channel color image
-		cv::Mat tm_color;
-		cv::Mat binary;
-		cv::cvtColor(test_mask, tm_color, CV_GRAY2BGR);
+		// Turn into a skin mask
+		processor.makeMask(&test_mask);
+		processor.makeBinaryImage(&test_mask);
 
 		// Height of the canvas	
 		const int canvas_height = gesture_recorder.canvas.rows;
-
 		// Draw the recorded gesture onto the mask color image	
 		for (size_t p = 1; p < gesture_recorder.positions.size(); ++p)
 		{
@@ -232,7 +215,6 @@ int main()
 			cv::line(tm_color, cv::Point2d(p1.x, p1.y - canvas_height), cv::Point2d(p2.x, p2.y - canvas_height), Color_RED, 2, CV_AA);
 		}
 
-		vector<vector<cv::Point> > contours;
 		vector < vector<int> > hullI = vector<vector<int> >(1);
 		vector < vector<cv::Point> > hullPoints = vector<vector<cv::Point> >(1);
 		vector<cv::Vec4i> defects;
@@ -254,7 +236,6 @@ int main()
 			}
 		}
 
-		int nFingers = 0;
 
 		// Draw convex hull and convexity defects, calculate number of fingers held up.
 		if (largestIdx != -1) {
@@ -296,6 +277,7 @@ int main()
 		if (nFingers > 0) {
 			nFingers++;
 		}
+		int nFingers = processor.process();
 
 		// Get number of fingers over last n frames
 		calcNFingers(&gesture_recorder, nFingers);
@@ -305,11 +287,11 @@ int main()
 
 		char buff[64] = { 0 };
 		sprintf(buff, "N Fingers: %d. Command: %s", nFingers, command.c_str());
-		cv::putText(tm_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
+		cv::putText(processor.mask_color, buff, cv::Point(8, 24), CV_FONT_NORMAL, 0.75, Color_WHITE, 1, CV_AA);
 
 		// Place the mask color image under the original webcam image
 		cv::Mat canvas;
-		cv::vconcat(capture_rgb, tm_color, canvas);
+		cv::vconcat(capture_rgb, processor.mask_color, canvas);
 		
 		// Show the canvas
 		cv::imshow("detection result", canvas);
