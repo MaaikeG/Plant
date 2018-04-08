@@ -30,7 +30,7 @@ namespace DollarRecognizer
 			return 0;
 		}
 		// encode the each color channel as a position in the probabilistic look-up histogram
-		const int loc[2] = { cvFloor(value[1] * factor * (redModifier / 100.0f)), cvFloor(value[2] * factor * (blueModifier / 100.0f)) };
+		const int loc[2] = { cvFloor(value[1] * factor + redModifier / 100.0f), cvFloor(value[2] * factor + (blueModifier / 100.0f)) };
 
 		// read the probability a given color is a skin color
 		return p_skin_YCrCb.at<float>(loc);
