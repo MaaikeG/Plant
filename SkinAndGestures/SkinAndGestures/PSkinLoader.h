@@ -38,7 +38,7 @@ namespace DollarRecognizer
 		cv::Mat p_skin_HSV;
 
 		PSkinLoader(int bin_size);
-		const float getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier);
+		const float getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier, int minY, int maxY);
 		const float getp_skin_HSV(const uchar* value, int hueMin, int hueMax);
 	};
 }

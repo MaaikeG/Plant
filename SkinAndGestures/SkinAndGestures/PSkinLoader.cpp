@@ -24,7 +24,10 @@ namespace DollarRecognizer
 		p_skin_HSV = set_P_skin(false);
 	}
 
-	const float PSkinLoader::getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier) {
+	const float PSkinLoader::getp_skin_YCrCb(const uchar* value, int redModifier, int blueModifier, int minY, int maxY) {
+		if (value[0] < minY || value[0] > maxY) {
+			return 0;
+		}
 		// encode the each color channel as a position in the probabilistic look-up histogram
 		const int loc[2] = { cvFloor(value[1] * factor * (redModifier / 100.0f)), cvFloor(value[2] * factor * (blueModifier / 100.0f)) };
 

@@ -13,7 +13,7 @@
 #include <strsafe.h>
 #include <string>
 #include <iostream>
-#include "PSkinLoader.h"
+#include "ImageProcessor.h"
 
 using namespace DollarRecognizer;
 
@@ -135,7 +135,6 @@ string checkForCommand(ActiveCanvas* gesture_recorder) {
 			gesture_recorder->lastResultAt = clock();
 		}
 	}
-	
 	return "No command given.";
 }
 
@@ -151,20 +150,16 @@ float getAngle(cv::Point s, cv::Point f, cv::Point e) {
 	return rad * 180 / CV_PI;
 }
 
-struct colorEncodingVariables {
-	int threshold = 20;
-	int blue = 100, red = 100, hueMin = 0, hueMax = 256;
-};
-
-void setWindow(colorEncodingVariables* encoding)
+void setWindow(colorEncodingVariables * encoding)
 {
 	cv::namedWindow("trackbars", CV_WINDOW_FREERATIO);
 
 	cv::createTrackbar("threshold", "trackbars", &(encoding->threshold), 100);
 	cv::createTrackbar("Blue weight", "trackbars", &(encoding->blue), 200);
 	cv::createTrackbar("Red weight", "trackbars", &(encoding->red), 200);
-	cv::createTrackbar("Hue Min", "trackbars", &(encoding->hueMin), 256);
-	cv::createTrackbar("Hue Max", "trackbars", &(encoding->hueMax), 256);
+	cv::createTrackbar("Y min", "trackbars", &(encoding->minY), 256);
+	cv::createTrackbar("Y max", "trackbars", &(encoding->maxY), 256);
+
 }
 
 // Global variables
@@ -178,8 +173,8 @@ int main()
 	int useYCrCb = 1;// is an Int because we can only use a trackbar to set this :(
 
 	PSkinLoader pSkinLoader = PSkinLoader(bin_size);
-	colorEncodingVariables colorEncodingVars;
 
+	colorEncodingVariables colorEncodingVars;
 	setWindow(&colorEncodingVars);
 	cv::createTrackbar("useYCrCb", "trackbars", &useYCrCb, 1);
 
@@ -190,6 +185,7 @@ int main()
 	// see http://depts.washington.edu/aimgroup/proj/dollar/
 	std::vector<std::string> active_templates = { "Triangle", "X", "Rectangle", "Circle" };
 	ActiveCanvas gesture_recorder(active_templates);
+	ImageProcessor processor = ImageProcessor(&(gesture_recorder.canvas));
 
 	//pMOG2 = cv::createBackgroundSubtractorMOG2();
 	//cv::namedWindow("fgmask", CV_WINDOW_FREERATIO);
@@ -201,9 +197,9 @@ int main()
 		cv::Mat capture_rgb;
 		video_capture >> capture_rgb;
 		
-		fgmask = cv::Mat::zeros(capture_rgb.size(), CV_8U);
+	//	fgmask = cv::Mat::zeros(capture_rgb.size(), CV_8U);
 
-		video_capture.read(frame);
+	//	video_capture.read(frame);
 	//	pMOG2->apply(frame, fgmask, 0);
 	//	cv::imshow("fgmask", fgmask);
 
@@ -212,31 +208,8 @@ int main()
 		// Initialize an empty mask
 		cv::Mat test_mask = cv::Mat::zeros(gesture_recorder.canvas.size(), CV_8U);
 		
-				
-		if (!pSkinLoader.p_skin_YCrCb.empty())
-		{
-#pragma omp parallel for
-			for (int y = 0; y < gesture_recorder.canvas.rows; ++y)
-			{
-				const uchar* c_scanline = gesture_recorder.canvas.ptr(y); // skip to row in the canvas
-				uchar* t_scanline = test_mask.ptr(y);                     // skip to row in the mask
+		processor.getSkinProbabilities(&test_mask, &pSkinLoader, colorEncodingVars, useYCrCb);
 
-				for (int x = 0; x < gesture_recorder.canvas.cols; ++x)
-				{
-					// skip to column (3 colors per cell)
-					const uchar* value = c_scanline + x * 3;
-					float prob;
-					if (useYCrCb) {
-						prob = pSkinLoader.getp_skin_YCrCb(value, colorEncodingVars.red, colorEncodingVars.blue);
-					}
-					else {
-						prob = pSkinLoader.getp_skin_HSV(value, colorEncodingVars.hueMin, colorEncodingVars.hueMax);
-					}
-					float theta = colorEncodingVars.threshold / 100.0f;   // TODO find suitable 
-					t_scanline[x] = prob > theta ? 255 : 0;
-				}
-			}
-		}
 
 		cv::Mat close_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5), cv::Point(1, 1));
 		cv::morphologyEx(test_mask, test_mask, cv::MORPH_CLOSE, close_element);
