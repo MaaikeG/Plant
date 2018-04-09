@@ -937,10 +937,10 @@
         "type": "mqtt in",
         "z": "3d2431d.466d3ce",
         "name": "",
-        "topic": "plantNurse/waterReservoirEmpty",
+        "topic": "plantNurse/waterReservoirEmptyness",
         "qos": "1",
         "broker": "ad1b817.507cd8",
-        "x": 170,
+        "x": 190,
         "y": 1400,
         "wires": [
             [
