@@ -128,6 +128,10 @@ void MqttClient::connect() {
   } else {
     Serial.print("Failed: ");
     switch (state()) {
+      case -2:
+        Serial.println("Unable to connect to the server.");
+        Serial.println("Check server address and port.");
+        badParametersReset();
       case 2:
         Serial.println("The server rejected the client id.");
         badParametersReset();
