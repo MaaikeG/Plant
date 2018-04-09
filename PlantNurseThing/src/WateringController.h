@@ -17,7 +17,7 @@
 // commented values.
 #define wateringDuration 1500
 #define soilMoistureThreshold 20  // if soil is this dry we need to water.
-#define reservoirEmptyTimeCheck \
+#define reservoirEmptyCheckTime \
   3000  // 60000 // is one minute is not enough for soil moisture to increase,
         // reservoir must be empty.
 #define WATER_FLOW_ANGLE 90
@@ -31,27 +31,29 @@ class WateringController {
   uint8_t servoPin;
   uint8_t reservoirEmptyLedPin;
   SSD1306& oled;
-  bool reservoirEmptyCheckDone = true;
   unsigned long wateringStart;
   void (*onReservoirEmpty)();
   void (*onReservoirFilled)();
 	TimedTicker slowStopTicker;
+  bool shouldWater();
+  Ticker checkReservoirEmptyTicker;
 
  public:
   WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin,
                      SSD1306& _oled, void (*_onReservoirEmpty)(),
-                     void (*_onReservoirFilled)());
+                     void (*_onReservoirFilled)(), uint8_t (*_getSoilMoisture)());
   void startWatering();
   void stopWatering();
-  bool shouldWater(uint8_t soilMoisture);
   void begin();
-  void update(uint8_t soilMoisture);
-  void checkReservoirEmpty(uint8_t soilMoisture);
+  void update();
   bool isWatering;
-  bool reservoirEmpty;  // use this to blink a red led?
+  bool reservoirEmpty;
   unsigned long lastWatering;
-	uint16_t angle;
 	void setAngle(uint16_t newAngle);
+  uint8_t (*getSoilMoisture)();
+  bool reservoirEmptyCheckDone = true;
+  void reservoirEmptied();
+  void reservoirFilled();
 };
 
 #endif

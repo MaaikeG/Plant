@@ -23,9 +23,11 @@
 
 SensorsController sensorsController(AMUX_OUTPUT_PIN, AMUX_SELECTOR_PIN);
 SSD1306 oled(0x3c, I2C_SDA, I2C_SCL);
-void onReservoirEmpty(); // forward declarations
+void onReservoirEmpty();  // forward declarations
 void onReservoirFilled();
-WateringController wateringController(SERVO_PIN, RESERVOIR_EMPTY_LED, oled, onReservoirEmpty, onReservoirFilled);
+WateringController wateringController(
+    SERVO_PIN, RESERVOIR_EMPTY_LED, oled, onReservoirEmpty, onReservoirFilled,
+    []() { return sensorsController.getSoilMoisture(); });
 ScreenCarousel screenCarousel(oled, sensorsController, wateringController);
 Ticker updateSensorValuesTicker;
 bool updateSensorValuesNextIteration = true;
@@ -55,7 +57,7 @@ MqttClient* mqttClient;
 
 void setup() {
   Serial.begin(9600);
-  oled.init(); // wire.begin is called here
+  oled.init();  // wire.begin is called here
   wateringController.begin();
   sensorsController.begin();
 
@@ -77,7 +79,7 @@ void setup() {
 
   WiFiManager wiFiManager;
   // reset settings - for testing
-  //wiFiManager.resetSettings();
+  // wiFiManager.resetSettings();
   mqttClient = new MqttClient(managedWiFiClient, wiFiManager);
   mqttClient->addParameters();
   managedWiFiClient.begin(wiFiManager, [](WiFiManager* wiFiManager) {
@@ -95,30 +97,28 @@ void setup() {
 
 void loop() {
   if (currentMode == Automatic || wateringController.isWatering) {
-    wateringController.update(sensorsController.getSoilMoisture());
+    wateringController.update();
   }
 
   if (!wateringController.isWatering) {
     int remainingTimeBudget = screenCarousel.update();
-    void (*todos[]) () = {
-      []() {
-        if (updateSensorValuesNextIteration) {
-          updateSensorValuesNextIteration = false;
-          sensorsController.updateSensorValues();
-        }
-      },
-      []() {
-        if(publishSensorValuesNextIteration){
-          publishSensorValuesNextIteration = false;
-          mqttClient->publishSensorValues(sensorsController);
-        }
-      }
-    };
+    void (*todos[])() = {[]() {
+                           if (updateSensorValuesNextIteration) {
+                             updateSensorValuesNextIteration = false;
+                             sensorsController.updateSensorValues();
+                           }
+                         },
+                         []() {
+                           if (publishSensorValuesNextIteration) {
+                             publishSensorValuesNextIteration = false;
+                             mqttClient->publishSensorValues(sensorsController);
+                           }
+                         }};
     unsigned long start = millis();
     for (auto const& todo : todos) {
-      if(millis() - remainingTimeBudget > start){
+      if (millis() - remainingTimeBudget > start) {
         todo();
-      }else
+      } else
         break;
     }
   }
@@ -126,13 +126,15 @@ void loop() {
   if (modeToggleButton.read() == LOW) {
     if (!modeToggled) {
       Mode newMode = currentMode == Automatic ? Manual : Automatic;
-      mqttClient->publish(MODE_TOGGLE_TOPIC, newMode == Automatic ? "automatic" : "manual", (boolean) true);
+      mqttClient->publish(MODE_TOGGLE_TOPIC,
+                          newMode == Automatic ? "automatic" : "manual",
+                          (boolean) true);
       setMode(newMode);
     }
   } else {
     modeToggled = false;
   }
-  
+
   mqttClient->update();
 }
 
@@ -148,28 +150,29 @@ void messageCallback(char* topic, byte* payload, unsigned int length) {
     for (int i = 0; i < length; i++) {
       Serial.print((char)payload[i]);
     }
-  }else if(strcmp(WATERING_TOPIC, topic) == 0){
+  } else if (strcmp(WATERING_TOPIC, topic) == 0) {
     wateringController.startWatering();
-  }else if(strcmp(UPDATE_SENSOR_TOPIC, topic) == 0){
+  } else if (strcmp(UPDATE_SENSOR_TOPIC, topic) == 0) {
     updateSensorValuesNextIteration = true;
     publishSensorValuesNextIteration = true;
-  }else if(strcmp(MODE_TOGGLE_TOPIC, topic) == 0){
+  } else if (strcmp(MODE_TOGGLE_TOPIC, topic) == 0) {
     payload[length] = '\0';
     String payloadString = String((char*)payload);
-    if(payloadString == "manual"){
+    if (payloadString == "manual") {
       setMode(Manual);
-    }else if(payloadString == "automatic"){
+    } else if (payloadString == "automatic") {
       setMode(Automatic);
-    }else{
+    } else {
       Serial.println("Invalid setMode payload!");
     }
   }
 }
 
-void onReservoirEmpty(){
-  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "empty", 1);
+void onReservoirEmpty() {
+  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "empty", (boolean) true);
 }
 
-void onReservoirFilled(){
-  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "not empty", 1);
+void onReservoirFilled() {
+  mqttClient->publish(WATER_RESERVOIR_EMPTYNESS_TOPIC, "not empty",
+                      (boolean) true);
 }

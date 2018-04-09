@@ -4,17 +4,17 @@ WateringController::WateringController(uint8_t _servoPin,
                                        uint8_t _reservoirEmptyLedPin,
                                        SSD1306& _oled,
                                        void (*_onReservoirEmpty)(),
-                                       void (*_onReservoirFilled)())
-    : oled(_oled) {
+                                       void (*_onReservoirFilled)(),
+                                       uint8_t (*_getSoilMoisture)())
+    : oled(_oled), slowStopTicker(), checkReservoirEmptyTicker() {
   servoPin = _servoPin;
   reservoirEmptyLedPin = _reservoirEmptyLedPin;
   onReservoirEmpty = _onReservoirEmpty;
   onReservoirFilled = _onReservoirFilled;
+  getSoilMoisture = _getSoilMoisture;
 }
 
-void WateringController::setAngle(uint16_t newAngle) {
-  servo.write(newAngle);
-}
+void WateringController::setAngle(uint16_t newAngle) { servo.write(newAngle); }
 
 void WateringController::startWatering() {
   setAngle(WATER_FLOW_ANGLE);
@@ -33,13 +33,24 @@ void decreaseAngle(WateringController* wateringController) {
                                    STOP_WATERING_DURATION);
 }
 
+void checkReservoirEmpty(WateringController* wateringController) {
+  if (wateringController->getSoilMoisture() < soilMoistureThreshold) {
+    wateringController->reservoirEmptied();
+  } else {
+    wateringController->reservoirFilled();
+  }
+  wateringController->reservoirEmptyCheckDone = true;
+}
+
 void WateringController::stopWatering() {
   slowStopTicker.attach_ms(STOP_WATERING_UPDATE_PERIOD, decreaseAngle, this,
                            STOP_WATERING_DURATION);
+  checkReservoirEmptyTicker.once_ms(reservoirEmptyCheckTime, checkReservoirEmpty, this);
   oled.setFont(ArialMT_Plain_10);
   oled.setTextAlignment(TEXT_ALIGN_LEFT);
   lastWatering = millis();
   isWatering = false;
+  reservoirEmptyCheckDone = false;
 }
 
 void WateringController::begin() {
@@ -48,47 +59,34 @@ void WateringController::begin() {
   pinMode(reservoirEmptyLedPin, OUTPUT);
 }
 
-void WateringController::update(uint8_t soilMoisture) {
+void WateringController::update() {
   if (isWatering) {
     if (millis() - wateringStart > wateringDuration) {
       stopWatering();
-      reservoirEmptyCheckDone = false;
-      Serial.println("stopped watering");
     } else {
       oled.drawProgressBar(
           12, 40, 100, 8,
           100.0 * (float)(millis() - wateringStart) / (float)wateringDuration);
+      oled.display();
     }
-    oled.display();
-  } else {
-    checkReservoirEmpty(soilMoisture);
-
-    if (shouldWater(soilMoisture)) {
-      startWatering();
-      Serial.println("started watering");
-    }
+  } else if (shouldWater()) {
+    startWatering();
   }
 }
 
-bool WateringController::shouldWater(uint8_t soilMoisture) {
+bool WateringController::shouldWater() {
   return !reservoirEmpty && reservoirEmptyCheckDone &&
-         soilMoisture < soilMoistureThreshold;
+         getSoilMoisture() < soilMoistureThreshold;
 }
 
-void WateringController::checkReservoirEmpty(uint8_t soilMoisture) {
-  // do this check only once after giving the water time to spread to the
-  // sensor.
-  if (!reservoirEmptyCheckDone &&
-      millis() - lastWatering > reservoirEmptyTimeCheck) {
-    if (soilMoisture < soilMoistureThreshold && !reservoirEmpty) {
-      reservoirEmpty = true;
-      digitalWrite(reservoirEmptyLedPin, HIGH);
-      onReservoirEmpty();
-    } else if (reservoirEmpty) {
-      reservoirEmpty = false;
-      digitalWrite(reservoirEmptyLedPin, LOW);
-      onReservoirFilled();
-    }
-    reservoirEmptyCheckDone = true;
-  }
+void WateringController::reservoirEmptied() {
+  reservoirEmpty = true;
+  digitalWrite(reservoirEmptyLedPin, HIGH);
+  onReservoirEmpty();
+}
+
+void WateringController::reservoirFilled() {
+  reservoirEmpty = false;
+  digitalWrite(reservoirEmptyLedPin, LOW);
+  onReservoirFilled();
 }
