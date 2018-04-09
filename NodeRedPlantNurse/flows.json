@@ -414,7 +414,7 @@
         "name": "plantNurse/setMode",
         "topic": "plantNurse/mode",
         "qos": "1",
-        "retain": "",
+        "retain": "true",
         "broker": "ad1b817.507cd8",
         "x": 580,
         "y": 440,
