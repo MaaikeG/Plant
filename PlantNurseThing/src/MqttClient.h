@@ -44,7 +44,7 @@ class MqttClient : public PubSubClient {
   WiFiManager& wiFiManager;
   unsigned long lastPingMillis;
   WiFiManagerParameter* mqttServerParameter;
-  WiFiManagerParameter* mqtPortParameter;
+  WiFiManagerParameter* mqttPortParameter;
   WiFiManagerParameter* mqttClientIdParameter;
   WiFiManagerParameter* mqttUsernameParameter;
   WiFiManagerParameter* mqttPasswordParameter;
