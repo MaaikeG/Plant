@@ -15,11 +15,9 @@
 
 // Variables are lower for testing. Should be increased for real-life use to
 // commented values.
-#define WATERING_DURATION 1500
+#define WATERING_DURATION 3000
 #define SOIL_MOISTURE_THRESHOLD 20  // if soil is this dry we need to water.
-#define RESERVOIR_EMPTY_CHECK_TIME \
-  3000  // 60000 // is one minute is not enough for soil moisture to increase,
-        // reservoir must be empty.
+#define RESERVOIR_EMPTY_CHECK_TIME 5 * 60 * 1000  // reservoir must be empty after this period.
 #define WATER_FLOW_ANGLE 90
 #define NO_WATER_FLOW_ANGLE 0
 #define STOP_WATERING_DURATION 1000
@@ -34,14 +32,15 @@ class WateringController {
   unsigned long wateringStart;
   void (*onReservoirEmpty)();
   void (*onReservoirFilled)();
-	TimedTicker slowStopTicker;
+  TimedTicker slowStopTicker;
   bool shouldWater();
   Ticker checkReservoirEmptyTicker;
 
  public:
   WateringController(uint8_t _servoPin, uint8_t _reservoirEmptyLedPin,
                      SSD1306& _oled, void (*_onReservoirEmpty)(),
-                     void (*_onReservoirFilled)(), uint8_t (*_getSoilMoisture)());
+                     void (*_onReservoirFilled)(),
+                     uint8_t (*_getSoilMoisture)());
   void startWatering();
   void stopWatering();
   void begin();
@@ -49,7 +48,7 @@ class WateringController {
   bool isWatering;
   bool reservoirEmpty;
   unsigned long lastWatering;
-	void setAngle(uint16_t newAngle);
+  void setAngle(uint16_t newAngle);
   uint8_t (*getSoilMoisture)();
   bool reservoirEmptyCheckDone = true;
   void reservoirEmptied();
