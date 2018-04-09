@@ -15,9 +15,9 @@
 
 // Variables are lower for testing. Should be increased for real-life use to
 // commented values.
-#define wateringDuration 1500
-#define soilMoistureThreshold 20  // if soil is this dry we need to water.
-#define reservoirEmptyCheckTime \
+#define WATERING_DURATION 1500
+#define SOIL_MOISTURE_THRESHOLD 20  // if soil is this dry we need to water.
+#define RESERVOIR_EMPTY_CHECK_TIME \
   3000  // 60000 // is one minute is not enough for soil moisture to increase,
         // reservoir must be empty.
 #define WATER_FLOW_ANGLE 90

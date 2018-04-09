@@ -34,7 +34,7 @@ void decreaseAngle(WateringController* wateringController) {
 }
 
 void checkReservoirEmpty(WateringController* wateringController) {
-  if (wateringController->getSoilMoisture() < soilMoistureThreshold) {
+  if (wateringController->getSoilMoisture() < SOIL_MOISTURE_THRESHOLD) {
     wateringController->reservoirEmptied();
   } else {
     wateringController->reservoirFilled();
@@ -45,7 +45,7 @@ void checkReservoirEmpty(WateringController* wateringController) {
 void WateringController::stopWatering() {
   slowStopTicker.attach_ms(STOP_WATERING_UPDATE_PERIOD, decreaseAngle, this,
                            STOP_WATERING_DURATION);
-  checkReservoirEmptyTicker.once_ms(reservoirEmptyCheckTime, checkReservoirEmpty, this);
+  checkReservoirEmptyTicker.once_ms(RESERVOIR_EMPTY_CHECK_TIME, checkReservoirEmpty, this);
   oled.setFont(ArialMT_Plain_10);
   oled.setTextAlignment(TEXT_ALIGN_LEFT);
   lastWatering = millis();
@@ -61,12 +61,12 @@ void WateringController::begin() {
 
 void WateringController::update() {
   if (isWatering) {
-    if (millis() - wateringStart > wateringDuration) {
+    if (millis() - wateringStart > WATERING_DURATION) {
       stopWatering();
     } else {
       oled.drawProgressBar(
           12, 40, 100, 8,
-          100.0 * (float)(millis() - wateringStart) / (float)wateringDuration);
+          100.0 * (float)(millis() - wateringStart) / (float)WATERING_DURATION);
       oled.display();
     }
   } else if (shouldWater()) {
@@ -76,7 +76,7 @@ void WateringController::update() {
 
 bool WateringController::shouldWater() {
   return !reservoirEmpty && reservoirEmptyCheckDone &&
-         getSoilMoisture() < soilMoistureThreshold;
+         getSoilMoisture() < SOIL_MOISTURE_THRESHOLD;
 }
 
 void WateringController::reservoirEmptied() {
