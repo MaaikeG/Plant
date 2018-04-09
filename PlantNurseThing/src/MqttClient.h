@@ -18,9 +18,10 @@
 #include "SensorsController.h"
 #include <list>
 #include <utility>
+#include <stdlib.h>
 
 #define MQTT_SERVER_LENGTH 40
-#define MQTT_PORT_LENGTH 5
+#define MQTT_PORT_LENGTH 6
 #define MQTT_CLIENT_ID_LENGTH 20
 #define MQTT_USERNAME_LENGTH 20
 #define MQTT_PASSWORD_LENGTH 20
