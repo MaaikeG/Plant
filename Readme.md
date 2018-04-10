@@ -6,18 +6,14 @@ Utrecht university interaction technology project
 
 First download the zip or clone the project to your machine.
 
-### 1. Setting up the NodeRed server
+### Setting up the NodeRed server
 
 1. Run `npm install` in /NodeRedPlantNurse
 2. To Run the NodeRed server, run `npm run dev`
+3. Open the NodeRed interface on http://127.0.0.1:1880/admin
+4. Set up a your MQTT broker by clicking on a MQTT node and adding a new server config
 
-### 2. Adding credentials for your MQTT server
-
-1. Copy src/CredentialsExample.h and rename the copy to Credentials.h
-2. Fill in your server details in Credentials.h
-3. You can now upload the project to your device.
-
-### 3. Connecting your device to your WiFi network
+### Setting up the device
 
 1. When the device runs the code for the first time, it will create a WiFi you can connect to. The name and password will be displayed on the OLED screen.
 2. Upon connection you have to "log in" to the access point and it will open a web interface in which you can fill in the credentials for your WiFi network
