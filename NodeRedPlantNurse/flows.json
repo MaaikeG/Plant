@@ -495,22 +495,6 @@
         ]
     },
     {
-        "id": "e288ef83.566b3",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/temperature",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 140,
-        "y": 680,
-        "wires": [
-            [
-                "8f1cf046.1bf5c"
-            ]
-        ]
-    },
-    {
         "id": "3b77896.6744a76",
         "type": "ui_chart",
         "z": "3d2431d.466d3ce",
@@ -550,22 +534,6 @@
         "wires": [
             [],
             []
-        ]
-    },
-    {
-        "id": "fecca4fe.ca2d08",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/humidity",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 130,
-        "y": 840,
-        "wires": [
-            [
-                "3b77896.6744a76"
-            ]
         ]
     },
     {
@@ -611,22 +579,6 @@
         ]
     },
     {
-        "id": "3594fb1b.7cbb04",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/pressure",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 130,
-        "y": 1000,
-        "wires": [
-            [
-                "24f19f9d.72222"
-            ]
-        ]
-    },
-    {
         "id": "a018aedc.8cb5a",
         "type": "ui_chart",
         "z": "3d2431d.466d3ce",
@@ -666,22 +618,6 @@
         "wires": [
             [],
             []
-        ]
-    },
-    {
-        "id": "a3779c90.a213b",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/soilMoisture",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 140,
-        "y": 1160,
-        "wires": [
-            [
-                "a018aedc.8cb5a"
-            ]
         ]
     },
     {
@@ -727,22 +663,6 @@
         ]
     },
     {
-        "id": "3f4ad79.9917528",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "topic": "plantNurse/light",
-        "qos": "1",
-        "broker": "ad1b817.507cd8",
-        "x": 120,
-        "y": 1320,
-        "wires": [
-            [
-                "6a46792a.dbed28"
-            ]
-        ]
-    },
-    {
         "id": "399066fd.1fe02a",
         "type": "mqtt in",
         "z": "3d2431d.466d3ce",
@@ -751,10 +671,11 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 600,
+        "y": 640,
         "wires": [
             [
-                "fee46d48.4d505"
+                "fee46d48.4d505",
+                "8f1cf046.1bf5c"
             ]
         ]
     },
@@ -783,10 +704,11 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 920,
+        "y": 960,
         "wires": [
             [
-                "38014abc.3ac516"
+                "38014abc.3ac516",
+                "24f19f9d.72222"
             ]
         ]
     },
@@ -815,10 +737,11 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 760,
+        "y": 800,
         "wires": [
             [
-                "215873b3.a9bc9c"
+                "215873b3.a9bc9c",
+                "3b77896.6744a76"
             ]
         ]
     },
@@ -883,10 +806,11 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 1080,
+        "y": 1120,
         "wires": [
             [
-                "280f0640.5391aa"
+                "280f0640.5391aa",
+                "a018aedc.8cb5a"
             ]
         ]
     },
@@ -899,10 +823,11 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 1240,
+        "y": 1280,
         "wires": [
             [
-                "81f0a153.744a7"
+                "81f0a153.744a7",
+                "6a46792a.dbed28"
             ]
         ]
     },
@@ -960,7 +885,7 @@
         "label": "Reservoir emptyness",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
-        "x": 440,
+        "x": 480,
         "y": 1400,
         "wires": []
     }
