@@ -27,6 +27,13 @@ First download the zip or clone the project to your machine.
 5. At the top change the path of the wfwatch node to the absolute path to {project-root}/SkinAndGestures/SkinAndGestures/commands on your system.
 6. Change the value of the Search for field in the Remove filepath node that is connected to the wfwatch node to the same path as above.
 
+### Setting up IoT MQTT Panel on Android
+
+1. Download [IoT MQTT Panel](https://play.google.com/store/apps/details?id=snr.lab.iotmqttpanel.prod) on your device
+2. Add the credentials for your MQTT broker to the .json file (you might also have to play with connection_id, if you already have other connections configured)
+3. Copy the IoT MQTT Panel export.json to your device
+4. Import json file in the app
+
 ## Pin mapping
 
 | Pin  | Use                                                          |      |      |
