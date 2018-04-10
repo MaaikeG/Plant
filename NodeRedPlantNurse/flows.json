@@ -124,7 +124,7 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "Water",
+                "to": "",
                 "tot": "str"
             }
         ],
@@ -151,7 +151,7 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "ReadSensors",
+                "to": "",
                 "tot": "str"
             }
         ],
