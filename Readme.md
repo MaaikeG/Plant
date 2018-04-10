@@ -10,6 +10,8 @@ Utrecht university interaction technology project
 4. Put images and masks in separate folders named 'Photos' (skin color photo's) and 'Masks' respectively.
 5. Run `npm install` in /NodeRedPlantNurse
 6. To Run the NodeRed server, run `npm run dev`
+7. Open the NodeRed interface on http://127.0.0.1:1880/admin
+8. At the top change the path of the wfwatch node to the absolute path to {project-root}/SkinAndGestures/SkinAndGestures/commands on your system.
 
 ## Pin mapping
 
