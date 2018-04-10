@@ -68,5 +68,134 @@
         "x": 660,
         "y": 200,
         "wires": []
+    },
+    {
+        "id": "de5eb2ee.d7abe",
+        "type": "wfwatch",
+        "z": "3d2431d.466d3ce",
+        "folder": "D:\\Users\\Maaike\\Documents\\Informatica\\Jaar 2\\Interactie Technologie\\Plant\\SkinAndGestures\\SkinAndGestures\\commands",
+        "x": 430,
+        "y": 300,
+        "wires": [
+            [
+                "73ed1af.bd02ce4"
+            ]
+        ]
+    },
+    {
+        "id": "73ed1af.bd02ce4",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "Remove filepath",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload.filePath",
+                "pt": "msg",
+                "from": "D:\\Users\\Maaike\\Documents\\Informatica\\Jaar 2\\Interactie Technologie\\Plant\\SkinAndGestures\\SkinAndGestures\\commands\\",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 400,
+        "wires": [
+            [
+                "57832641.b09ef8"
+            ]
+        ]
+    },
+    {
+        "id": "57832641.b09ef8",
+        "type": "switch",
+        "z": "3d2431d.466d3ce",
+        "name": "Split",
+        "property": "payload.filePath",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "water.txt",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "readSensors.txt",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 630,
+        "y": 400,
+        "wires": [
+            [
+                "b784e926.1e44c8"
+            ],
+            [
+                "5623d4bb.1d407c"
+            ]
+        ]
+    },
+    {
+        "id": "b784e926.1e44c8",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "Water",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Water",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 360,
+        "wires": [
+            [
+                "1d52d7f4.05ffe8"
+            ]
+        ]
+    },
+    {
+        "id": "5623d4bb.1d407c",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "ReadSensors",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ReadSensors",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 420,
+        "wires": [
+            [
+                "1d52d7f4.05ffe8"
+            ]
+        ]
     }
 ]
