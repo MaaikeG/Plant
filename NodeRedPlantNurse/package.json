@@ -46,9 +46,10 @@
   "dependencies": {
     "express": "4.*",
     "node-red": ">=0.17.3",
+    "node-red-contrib-contextbrowser": ">=0.0.4",
+    "node-red-contrib-wfwatch": "0.0.1",
     "paint-console": "0.0.1",
-    "syslog-client": "^1.1.0",
-    "node-red-contrib-contextbrowser": ">=0.0.4"
+    "syslog-client": "^1.1.0"
   },
   "engines": {
     "node": ">=4.0.0"
