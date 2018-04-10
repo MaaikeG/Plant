@@ -50,6 +50,7 @@
     "node-red": ">=0.17.3",
     "node-red-contrib-contextbrowser": ">=0.0.4",
     "node-red-dashboard": "^2.8.2",
+    "node-red-contrib-wfwatch": "0.0.1",
     "paint-console": "0.0.1",
     "syslog-client": "^1.1.0"
   },

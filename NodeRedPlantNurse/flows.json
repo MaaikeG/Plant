@@ -224,7 +224,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 140,
+        "y": 300,
         "wires": [
             [
                 "834e9c41.d462b"
@@ -241,7 +241,7 @@
         "retain": "",
         "broker": "ad1b817.507cd8",
         "x": 280,
-        "y": 80,
+        "y": 240,
         "wires": []
     },
     {
@@ -262,7 +262,7 @@
         "payloadType": "date",
         "topic": "",
         "x": 90,
-        "y": 80,
+        "y": 240,
         "wires": [
             [
                 "760906ee.f0fd68"
@@ -282,7 +282,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 330,
-        "y": 140,
+        "y": 300,
         "wires": []
     },
     {
@@ -295,7 +295,7 @@
         "retain": "",
         "broker": "ad1b817.507cd8",
         "x": 300,
-        "y": 240,
+        "y": 400,
         "wires": []
     },
     {
@@ -316,7 +316,7 @@
         "payloadType": "str",
         "topic": "",
         "x": 110,
-        "y": 240,
+        "y": 400,
         "wires": [
             [
                 "92735b7c.193668"
@@ -333,7 +333,7 @@
         "retain": "",
         "broker": "ad1b817.507cd8",
         "x": 410,
-        "y": 340,
+        "y": 500,
         "wires": []
     },
     {
@@ -354,7 +354,7 @@
         "payloadType": "str",
         "topic": "",
         "x": 140,
-        "y": 340,
+        "y": 500,
         "wires": [
             [
                 "21e15878.de01f8"
@@ -384,7 +384,7 @@
         "officon": "",
         "offcolor": "",
         "x": 350,
-        "y": 440,
+        "y": 600,
         "wires": [
             [
                 "1720353b.db571b"
@@ -400,7 +400,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 440,
+        "y": 600,
         "wires": [
             [
                 "424186d.0a5ff78"
@@ -417,7 +417,7 @@
         "retain": "true",
         "broker": "ad1b817.507cd8",
         "x": 570,
-        "y": 440,
+        "y": 600,
         "wires": []
     },
     {
@@ -433,7 +433,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 330,
-        "y": 520,
+        "y": 680,
         "wires": []
     },
     {
@@ -445,7 +445,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 520,
+        "y": 680,
         "wires": [
             [
                 "8140ab33.286af8"
@@ -488,7 +488,7 @@
         ],
         "useOldStyle": false,
         "x": 380,
-        "y": 680,
+        "y": 840,
         "wires": [
             [],
             []
@@ -530,7 +530,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 840,
+        "y": 1000,
         "wires": [
             [],
             []
@@ -572,7 +572,7 @@
         ],
         "useOldStyle": false,
         "x": 360,
-        "y": 1000,
+        "y": 1160,
         "wires": [
             [],
             []
@@ -614,7 +614,7 @@
         ],
         "useOldStyle": false,
         "x": 370,
-        "y": 1160,
+        "y": 1320,
         "wires": [
             [],
             []
@@ -656,7 +656,7 @@
         ],
         "useOldStyle": false,
         "x": 340,
-        "y": 1320,
+        "y": 1480,
         "wires": [
             [],
             []
@@ -671,7 +671,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 640,
+        "y": 800,
         "wires": [
             [
                 "fee46d48.4d505",
@@ -692,7 +692,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 380,
-        "y": 600,
+        "y": 760,
         "wires": []
     },
     {
@@ -704,7 +704,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 960,
+        "y": 1120,
         "wires": [
             [
                 "38014abc.3ac516",
@@ -725,7 +725,7 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 370,
-        "y": 920,
+        "y": 1080,
         "wires": []
     },
     {
@@ -737,7 +737,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 130,
-        "y": 800,
+        "y": 960,
         "wires": [
             [
                 "215873b3.a9bc9c",
@@ -768,7 +768,7 @@
         "seg1": "",
         "seg2": "",
         "x": 360,
-        "y": 760,
+        "y": 920,
         "wires": []
     },
     {
@@ -794,7 +794,7 @@
         "seg1": "",
         "seg2": "",
         "x": 380,
-        "y": 1080,
+        "y": 1240,
         "wires": []
     },
     {
@@ -806,7 +806,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 140,
-        "y": 1120,
+        "y": 1280,
         "wires": [
             [
                 "280f0640.5391aa",
@@ -823,7 +823,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 120,
-        "y": 1280,
+        "y": 1440,
         "wires": [
             [
                 "81f0a153.744a7",
@@ -854,7 +854,7 @@
         "seg1": "",
         "seg2": "",
         "x": 350,
-        "y": 1240,
+        "y": 1400,
         "wires": []
     },
     {
@@ -866,7 +866,7 @@
         "qos": "1",
         "broker": "ad1b817.507cd8",
         "x": 190,
-        "y": 1400,
+        "y": 1560,
         "wires": [
             [
                 "b173f36e.f3b89"
@@ -886,7 +886,162 @@
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "x": 480,
-        "y": 1400,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "de5eb2ee.d7abe",
+        "type": "wfwatch",
+        "z": "3d2431d.466d3ce",
+        "folder": "D:\\Users\\Maaike\\Documents\\Informatica\\Jaar 2\\Interactie Technologie\\Plant\\SkinAndGestures\\SkinAndGestures\\commands",
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "73ed1af.bd02ce4"
+            ]
+        ]
+    },
+    {
+        "id": "73ed1af.bd02ce4",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "Remove filepath",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload.filePath",
+                "pt": "msg",
+                "from": "D:\\Users\\Maaike\\Documents\\Informatica\\Jaar 2\\Interactie Technologie\\Plant\\SkinAndGestures\\SkinAndGestures\\commands\\",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 100,
+        "wires": [
+            [
+                "57832641.b09ef8"
+            ]
+        ]
+    },
+    {
+        "id": "57832641.b09ef8",
+        "type": "switch",
+        "z": "3d2431d.466d3ce",
+        "name": "Split",
+        "property": "payload.filePath",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "water.txt",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "readSensors.txt",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1150,
+        "y": 100,
+        "wires": [
+            [
+                "b784e926.1e44c8"
+            ],
+            [
+                "5623d4bb.1d407c"
+            ]
+        ]
+    },
+    {
+        "id": "b784e926.1e44c8",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "Water",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1270,
+        "y": 60,
+        "wires": [
+            [
+                "8dd25e64.9e773"
+            ]
+        ]
+    },
+    {
+        "id": "5623d4bb.1d407c",
+        "type": "change",
+        "z": "3d2431d.466d3ce",
+        "name": "ReadSensors",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1300,
+        "y": 120,
+        "wires": [
+            [
+                "6b8c23b1.a1b46c"
+            ]
+        ]
+    },
+    {
+        "id": "8dd25e64.9e773",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/waterNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 1540,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6b8c23b1.a1b46c",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/updateSensorsNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 1570,
+        "y": 120,
         "wires": []
     }
 ]
