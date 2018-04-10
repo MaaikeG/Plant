@@ -40,36 +40,6 @@
         "birthPayload": ""
     },
     {
-        "id": "ca0a91ca.9c096",
-        "type": "mqtt in",
-        "z": "3d2431d.466d3ce",
-        "name": "Test",
-        "topic": "test",
-        "qos": "2",
-        "broker": "ad1b817.507cd8",
-        "x": 340,
-        "y": 180,
-        "wires": [
-            [
-                "1d52d7f4.05ffe8"
-            ]
-        ]
-    },
-    {
-        "id": "1d52d7f4.05ffe8",
-        "type": "debug",
-        "z": "3d2431d.466d3ce",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 660,
-        "y": 200,
-        "wires": []
-    },
-    {
         "id": "de5eb2ee.d7abe",
         "type": "wfwatch",
         "z": "3d2431d.466d3ce",
@@ -103,8 +73,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 460,
-        "y": 400,
+        "x": 960,
+        "y": 300,
         "wires": [
             [
                 "57832641.b09ef8"
@@ -133,8 +103,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 630,
-        "y": 400,
+        "x": 1130,
+        "y": 300,
         "wires": [
             [
                 "b784e926.1e44c8"
@@ -163,11 +133,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 750,
-        "y": 360,
+        "x": 1250,
+        "y": 260,
         "wires": [
             [
-                "1d52d7f4.05ffe8"
+                "8dd25e64.9e773"
             ]
         ]
     },
@@ -190,12 +160,38 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 780,
-        "y": 420,
+        "x": 1280,
+        "y": 320,
         "wires": [
             [
-                "1d52d7f4.05ffe8"
+                "6b8c23b1.a1b46c"
             ]
         ]
+    },
+    {
+        "id": "8dd25e64.9e773",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/waterNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 1520,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6b8c23b1.a1b46c",
+        "type": "mqtt out",
+        "z": "3d2431d.466d3ce",
+        "name": "",
+        "topic": "plantNurse/updateSensorsNow",
+        "qos": "1",
+        "retain": "",
+        "broker": "ad1b817.507cd8",
+        "x": 1550,
+        "y": 320,
+        "wires": []
     }
 ]
